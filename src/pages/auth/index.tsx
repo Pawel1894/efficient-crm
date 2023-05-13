@@ -49,7 +49,12 @@ export default function Page() {
                 Efficient CRM
               </Typography>
             </Box>
-            <SignIn appearance={{ baseTheme: dark }} signUpUrl="/auth/signup" afterSignInUrl={"/home"} />
+            <SignIn
+              appearance={{ baseTheme: dark }}
+              signUpUrl="/auth/signup"
+              afterSignInUrl={"/home"}
+              afterSignUpUrl={"/home"}
+            />
           </Box>
         </Container>
       </main>

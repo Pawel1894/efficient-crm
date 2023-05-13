@@ -26,6 +26,7 @@ import {
 import { FormControl, InputLabel, Link, Menu, MenuItem, Select } from "@mui/material";
 import { api } from "@/utils/api";
 import { UserButton, useUser } from "@clerk/nextjs";
+import TeamSwitcher from "./TeamSwitcher";
 
 const drawerWidth = 240;
 
@@ -85,10 +86,6 @@ export default function Layout({ children, breadcrumbs }: Props) {
   const [open, setOpen] = useState(false);
   const { user, isSignedIn } = useUser();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { data: teams } = api.user.myTeams.useQuery();
-  const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -118,18 +115,7 @@ export default function Layout({ children, breadcrumbs }: Props) {
           {breadcrumbs}
           {isSignedIn && (
             <Box ml={"auto"} display="flex" alignItems={"center"} gap="1rem">
-              {/* {teams?.team?.length ? (
-                <FormControl fullWidth>
-                  <InputLabel>Current Team</InputLabel>
-                  <Select sx={{ height: "2.3rem" }} fullWidth value={10} label="Current Team">
-                    {teams?.team.map((team) => (
-                      <MenuItem key={team.id} value={team.id}>
-                        {team.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              ) : null} */}
+              <TeamSwitcher />
               <UserButton />
               <Menu
                 id="menu-appbar"

@@ -9,9 +9,10 @@ datasource db {
 }
 
 model UserControl {
-    id            String @id @default(cuid())
     userId        String
     lastActiveOrg String
+
+    @@unique([userId])
 }
 
 model Lead {

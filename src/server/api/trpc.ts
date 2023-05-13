@@ -28,7 +28,7 @@ export const createTRPCContext = (opts: CreateNextContextOptions) => {
   const { req } = opts;
   const sesh = getAuth(req);
   const user = {
-    ...sesh.user,
+    id: sesh.userId,
     orgId: sesh.orgId,
     orgSlug: sesh.orgSlug,
     role: sesh.orgRole,
