@@ -17,10 +17,11 @@ export default function TeamSwitcher() {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     handleInit();
-  }, [isLoaded, isSignedIn, isSuccess]);
+  }, [isLoaded, isSignedIn, isSuccess, isLoadedOrganization]);
 
-  async function handleOrgChange(e: string) {
-    if (setActive) await setActive({ organization: e });
+  async function handleOrgChange(organization: string) {
+    if (setActive) await setActive({ organization });
+    setSettings(organization);
   }
 
   async function handleInit() {
@@ -32,6 +33,7 @@ export default function TeamSwitcher() {
         setSettings(organization.id);
       } else {
         const lastOrg = organizationList.find((org) => org.organization.id === userSettings?.lastActiveOrg);
+        console.log("lastOrg", lastOrg);
         if (lastOrg) {
           await setActive({ organization: lastOrg.organization.id });
         } else if (organizationList.length > 0 && organizationList[0]) {
