@@ -25,8 +25,9 @@ import {
 } from "@mui/icons-material";
 import { FormControl, InputLabel, Link, Menu, MenuItem, Select } from "@mui/material";
 import { api } from "@/utils/api";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { UserButton, useOrganization, useOrganizations, useUser } from "@clerk/nextjs";
 import TeamSwitcher from "./TeamSwitcher";
+import CenterLoad from "./CenterLoad";
 
 const drawerWidth = 240;
 
@@ -83,21 +84,18 @@ type Props = {
 };
 
 export default function Layout({ children, breadcrumbs }: Props) {
-  const [open, setOpen] = useState(false);
-  const { user, isSignedIn } = useUser();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const [open, setOpen] = useState(true);
+  const { isLoaded } = useOrganization();
+  const { isLoaded: orgsLoad } = useOrganizations();
+  const { isLoaded: userLoad } = useUser();
 
   const handleDrawerOpen = () => {
     setOpen(true);
   };
 
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
+  if (!isLoaded && !orgsLoad && !userLoad) {
+    return <CenterLoad />;
+  }
 
   return (
     <>
@@ -113,83 +111,97 @@ export default function Layout({ children, breadcrumbs }: Props) {
             <MenuIcon />
           </IconButton>
           {breadcrumbs}
-          {isSignedIn && (
-            <Box ml={"auto"} display="flex" alignItems={"center"} gap="1rem">
-              <TeamSwitcher />
-              <UserButton />
-              <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={handleClose}>My account</MenuItem>
-                <MenuItem onClick={handleClose}>Logout</MenuItem>
-              </Menu>
-            </Box>
-          )}
+          <Box ml={"auto"} display="flex" alignItems={"center"} gap="1rem">
+            <TeamSwitcher />
+            <UserButton />
+          </Box>
         </Toolbar>
       </AppBar>
+      <DrawerComponent open={open} setOpen={setOpen} />
+      <Main open={open}>
+        <DrawerHeader />
+        {children}
+      </Main>
+    </>
+  );
+}
 
-      <Drawer
-        sx={{
+function DrawerComponent({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  return (
+    <Drawer
+      sx={{
+        width: drawerWidth,
+        flexShrink: 0,
+        "& .MuiDrawer-paper": {
           width: drawerWidth,
-          flexShrink: 0,
-          "& .MuiDrawer-paper": {
-            width: drawerWidth,
-            boxSizing: "border-box",
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <aside>
-          <DrawerHeader>
-            <IconButton onClick={handleDrawerClose}>
-              <ChevronLeftIcon />
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
-          <nav>
-            <List>
-              {commonMenu.map((item) => (
+          boxSizing: "border-box",
+        },
+      }}
+      variant="persistent"
+      anchor="left"
+      open={open}
+    >
+      <aside>
+        <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            <ChevronLeftIcon />
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+        <Navigation />
+      </aside>
+    </Drawer>
+  );
+}
+
+function Navigation() {
+  const { organization, membership } = useOrganization();
+
+  return (
+    <nav>
+      {organization ? (
+        <>
+          <List>
+            {commonMenu.map((item) => {
+              return (
                 <ListItem key={item.id} disablePadding>
                   <ListItemButton href={item.link}>
                     <ListItemIcon>{item.icon}</ListItemIcon>
                     <ListItemText primary={item.text} />
                   </ListItemButton>
                 </ListItem>
-              ))}
-            </List>
-            <Divider />
-            <List>
-              <ListItem disablePadding>
-                <ListItemButton href={"/setting/create-team"}>
+              );
+            })}
+
+            {membership?.role === "admin" ? (
+              <ListItem key={"dictionary"} disablePadding>
+                <ListItemButton href={"/admin/dictionary"}>
                   <ListItemIcon>
-                    <Add />
+                    <Settings />
                   </ListItemIcon>
-                  <ListItemText primary={"Create new team"} />
+                  <ListItemText primary="Dictionary" />
                 </ListItemButton>
               </ListItem>
-            </List>
-          </nav>
-        </aside>
-      </Drawer>
-      <Main open={open}>
-        <DrawerHeader />
-        {children}
-      </Main>
-    </>
+            ) : null}
+          </List>
+          <Divider />
+        </>
+      ) : null}
+      <List>
+        <ListItem disablePadding>
+          <ListItemButton href={"/setting/create-team"}>
+            <ListItemIcon>
+              <Add />
+            </ListItemIcon>
+            <ListItemText primary={"Create new team"} />
+          </ListItemButton>
+        </ListItem>
+      </List>
+    </nav>
   );
 }
 
@@ -230,11 +242,5 @@ const commonMenu: Array<MenuItem> = [
     text: "Team",
     link: "/team",
     icon: <Group />,
-  },
-  {
-    id: 5,
-    text: "Dictionary",
-    link: "/setting/dictionary",
-    icon: <Settings />,
   },
 ];

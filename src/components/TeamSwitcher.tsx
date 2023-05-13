@@ -1,11 +1,13 @@
 import { api } from "@/utils/api";
 import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { Box } from "@mui/system";
 import React, { useEffect } from "react";
 
 export default function TeamSwitcher() {
   const { user, isSignedIn } = useUser();
   const { setActive, organizationList, isLoaded, createOrganization } = useOrganizationList();
-  const { organization, ...rest } = useOrganization();
+  const { organization, isLoaded: isLoadedOrganization } = useOrganization();
   const { data: userSettings, isSuccess } = api.user.settings.useQuery(undefined, {
     refetchOnMount: false,
     refetchOnWindowFocus: false,
@@ -16,6 +18,10 @@ export default function TeamSwitcher() {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     handleInit();
   }, [isLoaded, isSignedIn, isSuccess]);
+
+  async function handleOrgChange(e: string) {
+    if (setActive) await setActive({ organization: e });
+  }
 
   async function handleInit() {
     if (isLoaded && isSignedIn && isSuccess) {
@@ -38,5 +44,32 @@ export default function TeamSwitcher() {
     }
   }
 
-  return <div>{organization?.name}</div>;
+  return organizationList && organizationList?.length > 0 ? (
+    <Box
+      sx={{
+        width: "10rem",
+      }}
+    >
+      <FormControl fullWidth>
+        <InputLabel id="org-select">Active team</InputLabel>
+        <Select
+          sx={{
+            height: "2.5rem",
+          }}
+          labelId="org-select"
+          value={organization?.id}
+          label="Active team"
+          onChange={(e) => void handleOrgChange(e.target.value)}
+        >
+          {organizationList.map((org) => {
+            return (
+              <MenuItem key={org.organization.id} value={org.organization.id}>
+                {org.organization.name}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
+    </Box>
+  ) : null;
 }
