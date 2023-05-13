@@ -8,84 +8,23 @@ datasource db {
     relationMode = "prisma"
 }
 
-model Account {
-    id                String  @id @default(cuid())
-    userId            String
-    type              String
-    provider          String
-    providerAccountId String
-    refresh_token     String? @db.Text
-    access_token      String? @db.Text
-    expires_at        Int?
-    token_type        String?
-    scope             String?
-    id_token          String? @db.Text
-    session_state     String?
-    user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@unique([provider, providerAccountId])
-    @@index([userId])
-}
-
-model Session {
-    id           String   @id @default(cuid())
-    sessionToken String   @unique
-    userId       String
-    expires      DateTime
-    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@index([userId])
-}
-
-model User {
-    id            String     @id @default(cuid())
-    name          String?
-    email         String?    @unique
-    emailVerified DateTime?
-    image         String?
-    firstLogin    Boolean
-    accounts      Account[]
-    sessions      Session[]
-    lead          Lead[]
-    deal          Deal[]
-    contact       Contact[]
-    activity      Activity[]
-    team          Team[]
-
-    leadCreator    Lead[]    @relation("leadCreator")
-    leadEditor     Lead[]    @relation("leadEditor")
-    dealCreator    Deal[]    @relation("dealCreator")
-    dealEditor     Deal[]    @relation("dealEditor")
-    contactCreator Contact[] @relation("contactCreator")
-    contactEditor  Contact[] @relation("contactEditor")
-}
-
-model VerificationToken {
-    identifier String
-    token      String   @unique
-    expires    DateTime
-
-    @@unique([identifier, token])
-}
-
-model Team {
-    id      String    @id @default(cuid())
-    name    String
-    user    User[]
-    contact Contact[]
+model UserControl {
+    id            String @id @default(cuid())
+    userId        String
+    lastActiveOrg String
 }
 
 model Lead {
     id         String     @id @default(cuid())
     activities Activity[]
     deals      Deal[]
-    owner      User?      @relation(fields: [ownerId], references: [id])
+    owner      String
     status     String     @db.Text
     comment    String?    @db.LongText
     createdAt  DateTime   @default(now())
     updatedAt  DateTime   @updatedAt
-    createdBy  User       @relation("leadCreator", fields: [creatorId], references: [id])
-    updatedBy  User       @relation("leadEditor", fields: [editorId], references: [id])
+    createdBy  String
+    updatedBy  String
 
     contact Contact @relation(fields: [contactId], references: [id])
 
@@ -105,13 +44,13 @@ model Deal {
     id               String   @id @default(cuid())
     forecast         Float    @db.Float
     value            Float    @db.Float
-    owner            User?    @relation(fields: [ownerId], references: [id])
+    owner            String
     stage            String   @db.Text
     comment          String?  @db.LongText
     closeProbability Float    @db.Float
     lead             Lead?    @relation(fields: [leadId], references: [id])
-    createdBy        User     @relation("dealCreator", fields: [creatorId], references: [id])
-    updatedBy        User     @relation("dealEditor", fields: [editorId], references: [id])
+    createdBy        String
+    updatedBy        String
     createdAt        DateTime @default(now())
     updatedAt        DateTime @updatedAt
 
@@ -137,31 +76,29 @@ model Contact {
     phone      String
     location   String
     comment    String
-    owner      User       @relation(fields: [ownerId], references: [id])
+    owner      String
     type       String
     activities Activity[]
     leads      Lead[]
-    createdBy  User       @relation("contactCreator", fields: [creatorId], references: [id])
-    updatedBy  User       @relation("contactEditor", fields: [editorId], references: [id])
+    createdBy  String
+    updatedBy  String
     createdAt  DateTime   @default(now())
     updatedAt  DateTime   @updatedAt
-    team       Team       @relation(fields: [teamId], references: [id])
+    orgId      String
+    orgSlug    String
 
     editorId  String
     creatorId String
     ownerId   String
-    teamId    String
 
     @@index([editorId])
     @@index([creatorId])
-    @@index([teamId])
     @@index([ownerId])
-    @@index([teamId, ownerId])
 }
 
 model Activity {
     id        String   @id @default(cuid())
-    owner     User     @relation(fields: [ownerId], references: [id])
+    owner     String
     startTime DateTime
     endTime   DateTime
     status    String
@@ -185,6 +122,7 @@ model Dictionary {
     type  Type
     value String
     label String
+    orgId String
 }
 
 enum Type {
