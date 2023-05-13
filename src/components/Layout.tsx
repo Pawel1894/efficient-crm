@@ -178,12 +178,12 @@ function Navigation() {
             })}
 
             {membership?.role === "admin" ? (
-              <ListItem key={"dictionary"} disablePadding>
-                <ListItemButton href={"/admin/dictionary"}>
+              <ListItem key={"settings"} disablePadding>
+                <ListItemButton href={"/admin/settings"}>
                   <ListItemIcon>
                     <Settings />
                   </ListItemIcon>
-                  <ListItemText primary="Dictionary" />
+                  <ListItemText primary="Settings" />
                 </ListItemButton>
               </ListItem>
             ) : null}
