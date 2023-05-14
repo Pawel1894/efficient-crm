@@ -17,6 +17,13 @@ model UserControl {
 
 model Lead {
     id         String     @id @default(cuid())
+    firstName  String
+    lastName   String
+    company    String?
+    title      String?
+    email      String
+    phone      String?
+    location   String?
     activities Activity[]
     deals      Deal[]
     owner      String
@@ -26,25 +33,13 @@ model Lead {
     updatedAt  DateTime   @updatedAt
     createdBy  String
     updatedBy  String
-
-    contact Contact @relation(fields: [contactId], references: [id])
-
-    creatorId String
-    editorId  String
-    contactId String
-    ownerId   String?
-
-    @@index([creatorId])
-    @@index([editorId])
-    @@index([contactId])
-    @@index([ownerId])
-    @@index([contactId, ownerId])
+    team       String
 }
 
 model Deal {
     id               String   @id @default(cuid())
     forecast         Float    @db.Float
-    value            Float    @db.Float
+    value            Float?   @db.Float
     owner            String
     stage            String   @db.Text
     comment          String?  @db.LongText
@@ -55,67 +50,47 @@ model Deal {
     createdAt        DateTime @default(now())
     updatedAt        DateTime @updatedAt
 
-    leadId    String?
-    creatorId String
-    editorId  String
-    ownerId   String?
+    leadId String?
 
     @@index([leadId])
-    @@index([creatorId])
-    @@index([editorId])
-    @@index([ownerId])
-    @@index([leadId, ownerId])
 }
 
 model Contact {
     id         String     @id @default(cuid())
     firstName  String
     lastName   String
-    company    String
-    title      String
+    company    String?
+    title      String?
     email      String
-    phone      String
-    location   String
-    comment    String
-    owner      String
+    phone      String?
+    location   String?
+    comment    String?
+    owner      String?
     type       String
     activities Activity[]
-    leads      Lead[]
     createdBy  String
     updatedBy  String
     createdAt  DateTime   @default(now())
     updatedAt  DateTime   @updatedAt
-    orgId      String
-    orgSlug    String
-
-    editorId  String
-    creatorId String
-    ownerId   String
-
-    @@index([editorId])
-    @@index([creatorId])
-    @@index([ownerId])
+    team       String
 }
 
 model Activity {
-    id        String   @id @default(cuid())
-    owner     String
-    startTime DateTime
-    endTime   DateTime
-    status    String
-    type      String
-    contact   Contact? @relation(fields: [contactId], references: [id])
-    Lead      Lead?    @relation(fields: [leadId], references: [id])
+    id          String   @id @default(cuid())
+    owner       String
+    date        DateTime
+    status      String
+    contact     Contact? @relation(fields: [contactId], references: [id])
+    lead        Lead?    @relation(fields: [leadId], references: [id])
+    description String?
+    title       String
+    location    String?
 
     leadId    String?
     contactId String?
-    ownerId   String
 
     @@index([leadId])
     @@index([contactId])
-    @@index([ownerId])
-    @@index([ownerId, contactId])
-    @@index([ownerId, leadId])
 }
 
 model Dictionary {

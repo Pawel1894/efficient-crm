@@ -1,7 +1,5 @@
 import { z } from "zod";
-
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { CreateOrganization } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
 
 export const userRouter = createTRPCRouter({

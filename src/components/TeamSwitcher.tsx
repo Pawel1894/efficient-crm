@@ -13,6 +13,7 @@ export default function TeamSwitcher() {
     refetchOnWindowFocus: false,
   });
   const { mutate: setSettings } = api.user.setSettings.useMutation();
+  const { mutate: coldStart } = api.system.coldStart.useMutation();
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -31,6 +32,7 @@ export default function TeamSwitcher() {
         const organization = await createOrganization({ name: orgName });
         await setActive({ organization });
         setSettings(organization.id);
+        coldStart(organization.id);
       } else {
         const lastOrg = organizationList.find((org) => org.organization.id === userSettings?.lastActiveOrg);
         console.log("lastOrg", lastOrg);

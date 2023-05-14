@@ -17,6 +17,11 @@ export default function Page() {
       }
     >
       <div>{organization?.name}</div>
+      {/* Add glossary info? */}
+      {/* last updated contact */}
+      {/* last updated  activities */}
+      {/* last updated 10 comin activities */}
+      {/* dashboards? */}
     </Layout>
   );
 }
