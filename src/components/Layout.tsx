@@ -14,7 +14,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { useState } from "react";
 import {
-  AccountCircle,
   Add,
   AttachMoney,
   ContactPage,
@@ -23,8 +22,7 @@ import {
   ModeStandby,
   Settings,
 } from "@mui/icons-material";
-import { FormControl, InputLabel, Link, Menu, MenuItem, Select } from "@mui/material";
-import { api } from "@/utils/api";
+import { MenuItem } from "@mui/material";
 import { UserButton, useOrganization, useOrganizations, useUser } from "@clerk/nextjs";
 import TeamSwitcher from "./TeamSwitcher";
 import CenterLoad from "./CenterLoad";
@@ -40,13 +38,14 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  ...(open && {
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
+  ...(open &&
+    window.innerWidth > 600 && {
+      marginLeft: `${drawerWidth}px`,
+      transition: theme.transitions.create("margin", {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     }),
-  }),
 }));
 
 interface AppBarProps extends MuiAppBarProps {
@@ -60,14 +59,15 @@ const AppBar = styled(MuiAppBar, {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(["margin", "width"], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
+  ...(open &&
+    window.innerWidth > 600 && {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: `${drawerWidth}px`,
+      transition: theme.transitions.create(["margin", "width"], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
     }),
-  }),
 }));
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -134,7 +134,6 @@ function DrawerComponent({ open, setOpen }: { open: boolean; setOpen: (open: boo
   return (
     <Drawer
       sx={{
-        width: drawerWidth,
         flexShrink: 0,
         "& .MuiDrawer-paper": {
           width: drawerWidth,

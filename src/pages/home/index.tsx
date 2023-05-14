@@ -1,6 +1,10 @@
+import Glossary from "@/components/Glossary";
+import IncomingActivities from "@/components/IncomingActivities";
 import Layout from "@/components/Layout";
+import RecentlyUpdated from "@/components/RecentlyUpdated";
 import { useOrganization } from "@clerk/nextjs";
-import { Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import React from "react";
 
@@ -11,17 +15,39 @@ export default function Page() {
     <Layout
       breadcrumbs={
         <Breadcrumbs aria-label="breadcrumb">
-          <Typography color="text.primary">{organization?.name}</Typography>
           <Typography color="text.primary">Homepage</Typography>
         </Breadcrumbs>
       }
     >
-      <div>{organization?.name}</div>
-      {/* Add glossary info? */}
-      {/* last updated contact */}
-      {/* last updated  activities */}
-      {/* last updated 10 comin activities */}
-      {/* dashboards? */}
+      <>
+        <Typography component={"h1"} variant="h4" color={"primary.light"}>
+          {organization?.name}
+        </Typography>
+        <Box mt={4}>
+          <Grid container spacing={2}>
+            <Grid xs={12} md={6}>
+              <Paper>
+                <Glossary />
+              </Paper>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <Paper>
+                <RecentlyUpdated />
+              </Paper>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <Paper>
+                <RecentlyUpdated />
+              </Paper>
+            </Grid>
+            <Grid xs={12} md={6}>
+              <Paper>
+                <IncomingActivities />
+              </Paper>
+            </Grid>
+          </Grid>
+        </Box>
+      </>
     </Layout>
   );
 }
