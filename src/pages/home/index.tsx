@@ -23,7 +23,7 @@ export default function Page() {
       }
     >
       <>
-        <Typography component={"h1"} variant="h4" color={"primary.light"}>
+        <Typography component={"h1"} variant="h4" color={"primary.main"}>
           {organization?.name}
         </Typography>
         <Box mt={4}>

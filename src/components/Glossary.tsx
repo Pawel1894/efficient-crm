@@ -9,7 +9,7 @@ export default function Glossary() {
       <List>
         <ListItem>
           <ListItemAvatar>
-            <Avatar>
+            <Avatar sx={{ backgroundColor: "primary.main" }}>
               <ContactPage />
             </Avatar>
           </ListItemAvatar>
@@ -24,7 +24,7 @@ export default function Glossary() {
         </ListItem>
         <ListItem>
           <ListItemAvatar>
-            <Avatar>
+            <Avatar sx={{ backgroundColor: "primary.main" }}>
               <ModeStandby />
             </Avatar>
           </ListItemAvatar>
@@ -39,7 +39,7 @@ export default function Glossary() {
         </ListItem>
         <ListItem>
           <ListItemAvatar>
-            <Avatar>
+            <Avatar sx={{ backgroundColor: "primary.main" }}>
               <AttachMoney />
             </Avatar>
           </ListItemAvatar>
@@ -54,7 +54,7 @@ export default function Glossary() {
         </ListItem>
         <ListItem>
           <ListItemAvatar>
-            <Avatar>
+            <Avatar sx={{ backgroundColor: "primary.main" }}>
               <LocalActivity />
             </Avatar>
           </ListItemAvatar>

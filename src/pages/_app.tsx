@@ -16,12 +16,6 @@ import { dark } from "@clerk/themes";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
-    primary: {
-      light: "#a786e0",
-      main: "#9876d3",
-      dark: "#673ab7",
-      contrastText: "#fff",
-    },
     secondary: {
       light: "#ff8a65",
       main: "#ff7043",
