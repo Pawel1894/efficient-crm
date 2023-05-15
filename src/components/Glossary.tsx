@@ -5,7 +5,7 @@ import React from "react";
 export default function Glossary() {
   return (
     <Box p={2}>
-      <Typography>Glossary</Typography>
+      <Typography component={"span"}>Glossary</Typography>
       <List>
         <ListItem>
           <ListItemAvatar>

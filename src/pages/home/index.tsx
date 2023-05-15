@@ -7,6 +7,9 @@ import { Box, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import React from "react";
+import { api } from "@/utils/api";
+import RecentContacts from "@/components/RecentContacts";
+import RecentLeads from "@/components/RecentLeads";
 
 export default function Page() {
   const { organization } = useOrganization();
@@ -31,14 +34,10 @@ export default function Page() {
               </Paper>
             </Grid>
             <Grid xs={12} md={6}>
-              <Paper>
-                <RecentlyUpdated />
-              </Paper>
+              <RecentContacts />
             </Grid>
             <Grid xs={12} md={6}>
-              <Paper>
-                <RecentlyUpdated />
-              </Paper>
+              <RecentLeads />
             </Grid>
             <Grid xs={12} md={6}>
               <Paper>

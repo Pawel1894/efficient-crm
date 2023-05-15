@@ -26,7 +26,7 @@ model Lead {
     location   String?
     activities Activity[]
     deals      Deal[]
-    owner      String
+    owner      String?
     status     String     @db.Text
     comment    String?    @db.LongText
     createdAt  DateTime   @default(now())
