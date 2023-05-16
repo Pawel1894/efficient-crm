@@ -7,12 +7,12 @@ import { useOrganization } from "@clerk/nextjs";
 export default function RecentContacts() {
   const { organization } = useOrganization();
   const { data: recentContacts } = api.contact.recentlyUpdated.useQuery(organization?.id, {
-    refetchInterval: 5000,
+    refetchInterval: 10000,
   });
 
   return (
     <Paper>
-      <RecentlyUpdated title="Recently updated contacts" data={recentContacts} />
+      <RecentlyUpdated pathname="/contact" title="Recently updated contacts" data={recentContacts} />
     </Paper>
   );
 }

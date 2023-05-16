@@ -34,15 +34,15 @@ export default function Page() {
               </Paper>
             </Grid>
             <Grid xs={12} md={6}>
+              <Paper>
+                <IncomingActivities />
+              </Paper>
+            </Grid>
+            <Grid xs={12} md={6}>
               <RecentContacts />
             </Grid>
             <Grid xs={12} md={6}>
               <RecentLeads />
-            </Grid>
-            <Grid xs={12} md={6}>
-              <Paper>
-                <IncomingActivities />
-              </Paper>
             </Grid>
           </Grid>
         </Box>

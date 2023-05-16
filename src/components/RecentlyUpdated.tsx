@@ -1,16 +1,19 @@
 import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
-import { Box, Button, Divider, Grid, Link, List, ListItemText, Typography } from "@mui/material";
+import { Box, Button, Divider, Grid, IconButton, Link, List, ListItemText, Typography } from "@mui/material";
 import type { Contact, Lead } from "@prisma/client";
 import React from "react";
 import dayjs from "dayjs";
 import { grey } from "@mui/material/colors";
+import { Visibility } from "@mui/icons-material";
 
 export default function RecentlyUpdated({
   data,
   title,
+  pathname,
 }: {
   data?: Array<Partial<Contact | Lead>>;
   title: string;
+  pathname: string;
 }) {
   const { membershipList } = useOrganization({
     membershipList: {},
@@ -36,7 +39,7 @@ export default function RecentlyUpdated({
     <Box p={2} position="relative">
       <Typography component={"span"}>{title}</Typography>
       <Box position={"absolute"} top={16} right={16}>
-        <div className="pulse"></div>
+        <div title="data refreshing every 10 seconds" className="pulse"></div>
       </Box>
       <List>
         {data && data.length > 0 ? (
@@ -49,52 +52,49 @@ export default function RecentlyUpdated({
                   }}
                   key={item.id}
                   primary={
-                    <Grid container>
+                    <Grid container columns={13}>
                       <Grid xs={3}>
-                        <Typography component="span" variant="caption" color="text.primary">
+                        <Typography color={"primary.dark"} component="span" variant="caption">
                           Name
                         </Typography>
                         <br />
-                        <Typography component="span" variant="body2" color="text.primary">
+                        <Typography component="span" variant="body2">
                           {`${item.firstName ?? ""} ${item.lastName ?? ""}`}
                         </Typography>
                       </Grid>
                       <Grid xs={3}>
-                        <Typography component="span" variant="caption" color="text.primary">
+                        <Typography color={"primary.dark"} component="span" variant="caption">
                           Owner
                         </Typography>
                         <br />
-                        <Typography component="span" variant="body2" color="text.primary">
+                        <Typography component="span" variant="body2">
                           {item.owner ? getMemberById(item.owner) : "None"}
                         </Typography>
                       </Grid>
                       <Grid xs={3}>
-                        <Typography component="span" variant="caption" color="text.primary">
+                        <Typography color={"primary.dark"} component="span" variant="caption">
                           Updated by
                         </Typography>
                         <br />
-                        <Typography
-                          sx={{ display: "inline" }}
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
+                        <Typography sx={{ display: "inline" }} component="span" variant="body2">
                           {item.updatedBy ? getMemberById(item.updatedBy) : "None"}
                         </Typography>
                       </Grid>
                       <Grid xs={3}>
-                        <Typography component="span" variant="caption" color="text.primary">
+                        <Typography color={"primary.dark"} component="span" variant="caption">
                           Updated at
                         </Typography>
                         <br />
-                        <Typography
-                          sx={{ display: "inline" }}
-                          component="span"
-                          variant="body2"
-                          color="text.primary"
-                        >
+                        <Typography sx={{ display: "inline" }} component="span" variant="body2">
                           {dayjs(item.updatedAt?.toString()).format("DD/MM/YYYY HH:mm:ss")}
                         </Typography>
+                      </Grid>
+                      <Grid xs={1}>
+                        {item.id ? (
+                          <IconButton href={`${pathname}/${item.id}`} title="View">
+                            <Visibility />
+                          </IconButton>
+                        ) : null}
                       </Grid>
                     </Grid>
                   }

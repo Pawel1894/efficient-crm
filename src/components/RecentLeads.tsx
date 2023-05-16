@@ -7,12 +7,12 @@ import { useOrganization } from "@clerk/nextjs";
 export default function RecentLeads() {
   const { organization } = useOrganization();
   const { data: recentLeads } = api.lead.recentlyUpdated.useQuery(organization?.id, {
-    refetchInterval: 5000,
+    refetchInterval: 10000,
   });
 
   return (
     <Paper>
-      <RecentlyUpdated title="Recently updated leads" data={recentLeads} />
+      <RecentlyUpdated pathname="/lead" title="Recently updated leads" data={recentLeads} />
     </Paper>
   );
 }
