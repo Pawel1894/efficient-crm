@@ -1,5 +1,6 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
+import dayjs from "dayjs";
 import { z } from "zod";
 
 export const systemRouter = createTRPCRouter({
@@ -123,6 +124,7 @@ export const systemRouter = createTRPCRouter({
         owner: ctx.user.id,
         stage: "open",
         updatedBy: ctx.user.id,
+        team: input,
         lead: {
           connect: {
             id: lead.id,
@@ -133,9 +135,11 @@ export const systemRouter = createTRPCRouter({
 
     await ctx.prisma.activity.create({
       data: {
-        date: new Date("2023-05-16T11:25").toISOString(),
+        date: dayjs().add(1, "day").toISOString(),
+        time: dayjs().add(1, "day").toISOString(),
         owner: ctx.user.id,
         status: "open",
+        team: input,
         contact: {
           connect: {
             id: contact.id,
@@ -148,9 +152,11 @@ export const systemRouter = createTRPCRouter({
 
     await ctx.prisma.activity.create({
       data: {
-        date: new Date("2023-05-16T11:25").toISOString(),
+        date: dayjs().add(1, "day").toISOString(),
+        time: dayjs().add(1, "day").toISOString(),
         owner: ctx.user.id,
         status: "open",
+        team: input,
         lead: {
           connect: {
             id: lead.id,

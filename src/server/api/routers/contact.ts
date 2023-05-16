@@ -18,7 +18,7 @@ export const contactRouter = createTRPCRouter({
         orderBy: {
           updatedAt: "desc",
         },
-        take: 10,
+        take: 5,
       });
     } else {
       contacts = await ctx.prisma.contact.findMany({
@@ -31,7 +31,7 @@ export const contactRouter = createTRPCRouter({
         orderBy: {
           updatedAt: "desc",
         },
-        take: 10,
+        take: 5,
       });
     }
     return contacts;

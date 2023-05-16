@@ -1,9 +1,9 @@
 import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
-import { Box, Button, Divider, Grid, IconButton, Link, List, ListItemText, Typography } from "@mui/material";
+import { Box, Divider, IconButton, Link, List, ListItemText, Typography } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import type { Contact, Lead } from "@prisma/client";
 import React from "react";
 import dayjs from "dayjs";
-import { grey } from "@mui/material/colors";
 import { Visibility } from "@mui/icons-material";
 
 export default function RecentlyUpdated({
@@ -45,13 +45,13 @@ export default function RecentlyUpdated({
         {data && data.length > 0 ? (
           data.map((item) => {
             return (
-              <>
-                <ListItemText
-                  sx={{
-                    marginTop: "1rem",
-                  }}
-                  key={item.id}
-                  primary={
+              <ListItemText
+                sx={{
+                  marginTop: "1rem",
+                }}
+                key={item.id}
+                primary={
+                  <>
                     <Grid container columns={13}>
                       <Grid xs={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
@@ -97,10 +97,10 @@ export default function RecentlyUpdated({
                         ) : null}
                       </Grid>
                     </Grid>
-                  }
-                />
-                <Divider sx={{ marginTop: "1rem" }} />
-              </>
+                    <Divider sx={{ marginTop: "1rem" }} />
+                  </>
+                }
+              />
             );
           })
         ) : (

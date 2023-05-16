@@ -18,7 +18,7 @@ export const leadRouter = createTRPCRouter({
         orderBy: {
           updatedAt: "desc",
         },
-        take: 10,
+        take: 5,
       });
     } else {
       leads = await ctx.prisma.lead.findMany({
@@ -31,7 +31,7 @@ export const leadRouter = createTRPCRouter({
         orderBy: {
           updatedAt: "desc",
         },
-        take: 10,
+        take: 5,
       });
     }
     return leads;

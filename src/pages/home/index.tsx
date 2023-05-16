@@ -1,19 +1,16 @@
 import Glossary from "@/components/Glossary";
 import IncomingActivities from "@/components/IncomingActivities";
 import Layout from "@/components/Layout";
-import RecentlyUpdated from "@/components/RecentlyUpdated";
 import { useOrganization } from "@clerk/nextjs";
 import { Box, Paper, Typography } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
+import Grid from "@mui/material/Unstable_Grid2";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import React from "react";
-import { api } from "@/utils/api";
 import RecentContacts from "@/components/RecentContacts";
 import RecentLeads from "@/components/RecentLeads";
 
 export default function Page() {
   const { organization } = useOrganization();
-
   return (
     <Layout
       breadcrumbs={

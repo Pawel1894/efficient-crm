@@ -49,8 +49,8 @@ model Deal {
     updatedBy        String
     createdAt        DateTime @default(now())
     updatedAt        DateTime @updatedAt
-
-    leadId String?
+    team             String
+    leadId           String?
 
     @@index([leadId])
 }
@@ -77,17 +77,18 @@ model Contact {
 
 model Activity {
     id          String   @id @default(cuid())
-    owner       String
-    date        DateTime
+    owner       String?
+    date        DateTime @db.Date
+    time        DateTime @db.Time()
     status      String
     contact     Contact? @relation(fields: [contactId], references: [id])
     lead        Lead?    @relation(fields: [leadId], references: [id])
     description String?
     title       String
     location    String?
-
-    leadId    String?
-    contactId String?
+    team        String
+    leadId      String?
+    contactId   String?
 
     @@index([leadId])
     @@index([contactId])
