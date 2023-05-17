@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import handleViewport, { type InjectedViewportProps } from "react-in-viewport";
 import { grey } from "@mui/material/colors";
+import { useRouter } from "next/router";
 
 function AboutBlock(props: InjectedViewportProps<HTMLDivElement>) {
   const { inViewport, forwardedRef } = props;
@@ -51,6 +52,7 @@ const IntersectAboutBlock = handleViewport(AboutBlock, {
 }) as React.FC;
 
 const Home: NextPage = () => {
+  const router = useRouter();
   return (
     <>
       <Head>
@@ -74,7 +76,7 @@ const Home: NextPage = () => {
             >
               <div>🍕</div>
               <div>
-                <Button color="primary" variant="outlined" href={"/auth"}>
+                <Button color="primary" variant="outlined" onClick={() => void router.push("/auth")}>
                   Login
                 </Button>
               </div>
@@ -172,7 +174,7 @@ const Home: NextPage = () => {
                     paddingInline: "1.875rem",
                   }}
                   variant="contained"
-                  href={"/auth"}
+                  onClick={() => void router.push("/auth")}
                 >
                   Get started
                 </Button>

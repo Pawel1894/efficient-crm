@@ -1,18 +1,19 @@
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import { AttachMoney, ContactPage, LocalActivity, ModeStandby } from "@mui/icons-material";
 import React from "react";
+import grey from "@mui/material/colors/grey";
 
 export default function Glossary() {
   return (
     <Box p={2}>
       <Typography component={"span"}>Glossary</Typography>
-      <List>
+      <List sx={{ paddingBottom: 0 }}>
         <ListItem sx={{ paddingLeft: 0 }}>
-          <ListItemAvatar sx={{ minWidth: "auto", marginRight: "1rem" }}>
+          <ListItemAvatar sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
             <Avatar
               sx={{
                 backgroundColor: "transparent",
-                color: "#fff",
+                color: grey["300"],
                 width: "max-content",
                 height: "max-content",
               }}
@@ -22,62 +23,50 @@ export default function Glossary() {
           </ListItemAvatar>
           <ListItemText>
             <Box display={"flex"}>
-              <Typography variant="body1">
-                <Typography fontWeight={700} component={"span"}>
-                  Contact -{" "}
-                </Typography>{" "}
-                {"\b"} it is a client with closed deal/contract
-              </Typography>
+              <Typography variant="body1">Contact - client that has a closed deal or contract.</Typography>
             </Box>
           </ListItemText>
         </ListItem>
         <ListItem sx={{ paddingLeft: 0 }}>
-          <ListItemAvatar sx={{ minWidth: "auto", marginRight: "1rem" }}>
-            <Avatar sx={{ backgroundColor: "transparent", color: "#fff", width: "auto", height: "auto" }}>
+          <ListItemAvatar sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
+            <Avatar
+              sx={{ backgroundColor: "transparent", color: grey["300"], width: "auto", height: "auto" }}
+            >
               <ModeStandby />
             </Avatar>
           </ListItemAvatar>
           <ListItemText>
             <Box display={"flex"}>
-              <Typography variant="body1">
-                <Typography fontWeight={700} component={"span"}>
-                  Lead -{" "}
-                </Typography>
-                {"\b"} potential client
-              </Typography>
+              <Typography variant="body1">Lead - potential client.</Typography>
             </Box>
           </ListItemText>
         </ListItem>
         <ListItem sx={{ paddingLeft: 0 }}>
-          <ListItemAvatar sx={{ minWidth: "auto", marginRight: "1rem" }}>
-            <Avatar sx={{ backgroundColor: "transparent", color: "#fff", width: "auto", height: "auto" }}>
+          <ListItemAvatar sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
+            <Avatar
+              sx={{ backgroundColor: "transparent", color: grey["300"], width: "auto", height: "auto" }}
+            >
               <AttachMoney />
             </Avatar>
           </ListItemAvatar>
           <ListItemText>
             <Box display={"flex"}>
-              <Typography variant="body1">
-                <Typography fontWeight={700} component={"span"}>
-                  Deal -{" "}
-                </Typography>
-                forecast offert made for lead
-              </Typography>
+              <Typography variant="body1">Deal - forecast offer made to a lead.</Typography>
             </Box>
           </ListItemText>
         </ListItem>
         <ListItem sx={{ paddingLeft: 0 }}>
-          <ListItemAvatar sx={{ minWidth: "auto", marginRight: "1rem" }}>
-            <Avatar sx={{ backgroundColor: "transparent", color: "#fff", width: "auto", height: "auto" }}>
+          <ListItemAvatar sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
+            <Avatar
+              sx={{ backgroundColor: "transparent", color: grey["300"], width: "auto", height: "auto" }}
+            >
               <LocalActivity />
             </Avatar>
           </ListItemAvatar>
           <ListItemText>
             <Box display={"flex"}>
               <Typography variant="body1">
-                <Typography fontWeight={700} component={"span"}>
-                  Activity -{" "}
-                </Typography>
-                {"\b"} event which can be made for either client or lead
+                Activity - event that can be made for a client or a lead.
               </Typography>
             </Box>
           </ListItemText>

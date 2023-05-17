@@ -18,6 +18,7 @@ import {
   AttachMoney,
   ContactPage,
   Group,
+  Home,
   LocalActivity,
   ModeStandby,
   Settings,
@@ -26,6 +27,7 @@ import { MenuItem } from "@mui/material";
 import { UserButton, useOrganization, useOrganizations, useUser } from "@clerk/nextjs";
 import TeamSwitcher from "./TeamSwitcher";
 import CenterLoad from "./CenterLoad";
+import { useRouter } from "next/router";
 
 const drawerWidth = 240;
 
@@ -84,6 +86,7 @@ type Props = {
 };
 
 export default function Layout({ children, breadcrumbs }: Props) {
+  const router = useRouter();
   const [open, setOpen] = useState(true);
   const { isLoaded } = useOrganization();
   const { isLoaded: orgsLoad } = useOrganizations();
@@ -158,6 +161,7 @@ function DrawerComponent({ open, setOpen }: { open: boolean; setOpen: (open: boo
 }
 
 function Navigation() {
+  const router = useRouter();
   const { organization, membership } = useOrganization();
 
   return (
@@ -168,8 +172,8 @@ function Navigation() {
             {commonMenu.map((item) => {
               return (
                 <ListItem key={item.id} disablePadding>
-                  <ListItemButton href={item.link}>
-                    <ListItemIcon>{item.icon}</ListItemIcon>
+                  <ListItemButton onClick={() => void router.push(item.link)}>
+                    <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>{item.icon}</ListItemIcon>
                     <ListItemText primary={item.text} />
                   </ListItemButton>
                 </ListItem>
@@ -178,8 +182,8 @@ function Navigation() {
 
             {membership?.role === "admin" ? (
               <ListItem key={"settings"} disablePadding>
-                <ListItemButton href={"/admin/settings"}>
-                  <ListItemIcon>
+                <ListItemButton onClick={() => void router.push("/admin/settings")}>
+                  <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
                     <Settings />
                   </ListItemIcon>
                   <ListItemText primary="Settings" />
@@ -192,8 +196,8 @@ function Navigation() {
       ) : null}
       <List>
         <ListItem disablePadding>
-          <ListItemButton href={"/setting/create-team"}>
-            <ListItemIcon>
+          <ListItemButton onClick={() => void router.push("/setting/create-team")}>
+            <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
               <Add />
             </ListItemIcon>
             <ListItemText primary={"Create new team"} />
@@ -214,30 +218,36 @@ type MenuItem = {
 const commonMenu: Array<MenuItem> = [
   {
     id: 0,
+    text: "Home",
+    link: "/home",
+    icon: <Home />,
+  },
+  {
+    id: 1,
     text: "Contacts",
     link: "/contact",
     icon: <ContactPage />,
   },
   {
-    id: 1,
+    id: 2,
     text: "Leads",
     link: "/lead",
     icon: <ModeStandby />,
   },
   {
-    id: 2,
+    id: 3,
     text: "Deals",
     link: "/deal",
     icon: <AttachMoney />,
   },
   {
-    id: 3,
+    id: 4,
     text: "Activities",
     link: "/activity",
     icon: <LocalActivity />,
   },
   {
-    id: 4,
+    id: 5,
     text: "Team",
     link: "/team",
     icon: <Group />,

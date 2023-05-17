@@ -10,9 +10,9 @@ export default function IncomingActivities() {
   const { organization } = useOrganization();
   const { data } = api.activity.incoming.useQuery(organization?.id);
   return (
-    <Box p={2} height={264}>
+    <Box p={2} height={256}>
       <Typography>Incoming activities</Typography>
-      <List style={{ height: "93%", overflow: "auto" }}>
+      <List style={{ height: "87%", overflow: "auto" }}>
         {data && data.length > 0 ? (
           data.map((item) => {
             return (
@@ -23,7 +23,7 @@ export default function IncomingActivities() {
                 key={item.id}
                 primary={
                   <>
-                    <Grid container columns={13}>
+                    <Grid alignItems={"center"} container columns={13}>
                       <Grid xs={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
                           Title

@@ -33,4 +33,20 @@ export const contactRouter = createTRPCRouter({
 
     return contacts;
   }),
+  contacts: protectedProcedure.query(async ({ ctx }) => {
+    const where: { owner?: string | null } = {};
+
+    if (ctx.user.role !== "admin") {
+      where.owner = ctx.user.id;
+    }
+
+    const results = await ctx.prisma.contact.findMany({
+      where: where,
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+
+    return results;
+  }),
 });

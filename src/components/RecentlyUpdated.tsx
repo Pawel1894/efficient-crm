@@ -52,7 +52,7 @@ export default function RecentlyUpdated({
                 key={item.id}
                 primary={
                   <>
-                    <Grid container columns={13}>
+                    <Grid alignItems={"center"} container columns={13}>
                       <Grid xs={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
                           Name
