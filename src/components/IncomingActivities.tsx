@@ -44,7 +44,7 @@ export default function IncomingActivities() {
                       </Grid>
                       <Grid xs={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
-                          Due to
+                          Date
                         </Typography>
                         <br />
                         <Typography component="span" variant="body2">
