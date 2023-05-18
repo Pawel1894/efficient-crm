@@ -1,4 +1,5 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { clerkClient } from "@clerk/nextjs";
 import type { Contact } from "@prisma/client";
 import { z } from "zod";
 

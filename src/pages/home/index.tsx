@@ -8,11 +8,14 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import React from "react";
 import RecentContacts from "@/components/RecentContacts";
 import RecentLeads from "@/components/RecentLeads";
+import { api } from "@/utils/api";
 
 export default function Page() {
   const { organization } = useOrganization();
+  const { mutate } = api.system.coldStart.useMutation();
   return (
     <Layout
+      title="Efficient CRM - Homepage"
       breadcrumbs={
         <Breadcrumbs aria-label="breadcrumb">
           <Typography color="text.primary">Homepage</Typography>
@@ -20,6 +23,17 @@ export default function Page() {
       }
     >
       <>
+        <button
+          onClick={() =>
+            mutate({
+              id: "org_2Pm3RfjjE1MNzv6ReXt9Vf6Mjwy",
+              name: "Paweł P's team",
+              userName: "Paweł P",
+            })
+          }
+        >
+          test
+        </button>
         <Typography component={"h1"} variant="h4" color={"primary.main"}>
           {organization?.name}
         </Typography>

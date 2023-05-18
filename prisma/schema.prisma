@@ -16,90 +16,112 @@ model UserControl {
 }
 
 model Lead {
-    id         String     @id @default(cuid())
-    firstName  String
-    lastName   String
-    company    String?
-    title      String?
-    email      String
-    phone      String?
-    location   String?
-    activities Activity[]
-    deals      Deal[]
-    owner      String?
-    status     String     @db.Text
-    comment    String?    @db.LongText
-    createdAt  DateTime   @default(now())
-    updatedAt  DateTime   @updatedAt
-    createdBy  String
-    updatedBy  String
-    team       String
+    id            String      @id @default(cuid())
+    firstName     String
+    lastName      String
+    company       String?
+    title         String?
+    email         String
+    phone         String?
+    location      String?
+    activities    Activity[]
+    deals         Deal[]
+    owner         String?
+    ownerFullname String?
+    status        Dictionary? @relation(fields: [dictionaryId], references: [id])
+    comment       String?     @db.LongText
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    createdBy     String
+    updatedBy     String
+    team          String
+    teamName      String
+    dictionaryId  String?
+
+    @@index([dictionaryId])
 }
 
 model Deal {
-    id               String   @id @default(cuid())
-    forecast         Float    @db.Float
-    value            Float?   @db.Float
+    id               String      @id @default(cuid())
+    forecast         Float       @db.Float
+    value            Float?      @db.Float
     owner            String
-    stage            String   @db.Text
-    comment          String?  @db.LongText
-    closeProbability Float    @db.Float
-    lead             Lead?    @relation(fields: [leadId], references: [id])
+    ownerFullname    String?
+    stage            Dictionary? @relation(fields: [dictionaryId], references: [id])
+    comment          String?     @db.LongText
+    closeProbability Float       @db.Float
+    lead             Lead?       @relation(fields: [leadId], references: [id])
     createdBy        String
     updatedBy        String
-    createdAt        DateTime @default(now())
-    updatedAt        DateTime @updatedAt
+    createdAt        DateTime    @default(now())
+    updatedAt        DateTime    @updatedAt
     team             String
+    teamName         String
     leadId           String?
+    dictionaryId     String?
 
     @@index([leadId])
+    @@index([dictionaryId])
 }
 
 model Contact {
-    id         String     @id @default(cuid())
-    firstName  String
-    lastName   String
-    company    String?
-    title      String?
-    email      String
-    phone      String?
-    location   String?
-    comment    String?
-    owner      String?
-    type       String
-    activities Activity[]
-    createdBy  String
-    updatedBy  String
-    createdAt  DateTime   @default(now())
-    updatedAt  DateTime   @updatedAt
-    team       String
+    id            String      @id @default(cuid())
+    firstName     String
+    lastName      String
+    company       String?
+    title         String?
+    email         String
+    phone         String?
+    location      String?
+    comment       String?
+    owner         String?
+    ownerFullname String?
+    type          Dictionary? @relation(fields: [dictionaryId], references: [id])
+    activities    Activity[]
+    createdBy     String
+    updatedBy     String
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    team          String
+    teamName      String
+    dictionaryId  String?
+
+    @@index([dictionaryId])
 }
 
 model Activity {
-    id          String   @id @default(cuid())
-    owner       String?
-    date        DateTime @db.Date
-    time        DateTime @db.Time()
-    status      String
-    contact     Contact? @relation(fields: [contactId], references: [id])
-    lead        Lead?    @relation(fields: [leadId], references: [id])
-    description String?
-    title       String
-    location    String?
-    team        String
-    leadId      String?
-    contactId   String?
+    id            String      @id @default(cuid())
+    owner         String?
+    ownerFullname String?
+    date          DateTime    @db.Date
+    time          DateTime    @db.Time()
+    status        Dictionary? @relation(fields: [dictionaryId], references: [id])
+    contact       Contact?    @relation(fields: [contactId], references: [id])
+    lead          Lead?       @relation(fields: [leadId], references: [id])
+    description   String?
+    title         String
+    location      String?
+    team          String
+    teamName      String
+    leadId        String?
+    contactId     String?
+    dictionaryId  String?
 
     @@index([leadId])
     @@index([contactId])
+    @@index([dictionaryId])
 }
 
 model Dictionary {
-    id    String @id @default(cuid())
-    type  Type
-    value String
-    label String
-    orgId String
+    id       String     @id @default(cuid())
+    type     Type
+    value    String
+    label    String
+    orgId    String
+    Activity Activity[]
+    Contact  Contact[]
+    Deal     Deal[]
+    Lead     Lead[]
 }
 
 enum Type {

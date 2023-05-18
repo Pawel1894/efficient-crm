@@ -32,7 +32,11 @@ export default function TeamSwitcher() {
         const organization = await createOrganization({ name: orgName });
         await setActive({ organization });
         setSettings(organization.id);
-        coldStart(organization.id);
+        coldStart({
+          id: organization.id,
+          name: organization.name,
+          userName: `${user.firstName ?? ""} ${user.lastName ?? ""}`,
+        });
       } else {
         const lastOrg = organizationList.find((org) => org.organization.id === userSettings?.lastActiveOrg);
 

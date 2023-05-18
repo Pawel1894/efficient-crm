@@ -1,11 +1,11 @@
-import { Box, Button, Container, Fade, Link, Typography } from "@mui/material";
+import { Box, Button, Container, Fade, Typography } from "@mui/material";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import handleViewport, { type InjectedViewportProps } from "react-in-viewport";
 import { grey } from "@mui/material/colors";
-import { useRouter } from "next/router";
+import Link from "next/link";
 
 function AboutBlock(props: InjectedViewportProps<HTMLDivElement>) {
   const { inViewport, forwardedRef } = props;
@@ -52,7 +52,6 @@ const IntersectAboutBlock = handleViewport(AboutBlock, {
 }) as React.FC;
 
 const Home: NextPage = () => {
-  const router = useRouter();
   return (
     <>
       <Head>
@@ -76,9 +75,9 @@ const Home: NextPage = () => {
             >
               <div>🍕</div>
               <div>
-                <Button color="primary" variant="outlined" onClick={() => void router.push("/auth")}>
-                  Login
-                </Button>
+                <Link href={"/auth"}>
+                  <Button color="primary">Login</Button>
+                </Link>
               </div>
             </Box>
           </Container>
@@ -161,23 +160,24 @@ const Home: NextPage = () => {
                 >
                   Simple and efficient crm application created using modern tools.
                 </Typography>
-                <Button
-                  sx={{
-                    width: "max-content",
-                    marginInline: {
-                      xs: "auto",
-                      md: "unset",
-                    },
-                    fontSize: {
-                      xs: "1rem",
-                    },
-                    paddingInline: "1.875rem",
-                  }}
-                  variant="contained"
-                  onClick={() => void router.push("/auth")}
-                >
-                  Get started
-                </Button>
+                <Link href={"/auth"}>
+                  <Button
+                    sx={{
+                      width: "max-content",
+                      marginInline: {
+                        xs: "auto",
+                        md: "unset",
+                      },
+                      fontSize: {
+                        xs: "1rem",
+                      },
+                      paddingInline: "1.875rem",
+                    }}
+                    variant="contained"
+                  >
+                    Get started
+                  </Button>
+                </Link>
               </Box>
             </Fade>
             <Box

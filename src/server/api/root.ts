@@ -4,6 +4,7 @@ import { systemRouter } from "./routers/system";
 import { contactRouter } from "./routers/contact";
 import { leadRouter } from "./routers/lead";
 import { activityRouter } from "./routers/activity";
+import { dictionaryRouter } from "./routers/dictionary";
 
 /**
  * This is the primary router for your server.
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   contact: contactRouter,
   lead: leadRouter,
   activity: activityRouter,
+  dictionary: dictionaryRouter,
 });
 
 // export type definition of API

@@ -1,9 +1,10 @@
 import { api } from "@/utils/api";
 import { useOrganization } from "@clerk/nextjs";
 import { Visibility } from "@mui/icons-material";
-import { Box, Divider, IconButton, Link, List, ListItemText, Typography } from "@mui/material";
+import { Box, Divider, IconButton, List, ListItemText, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import dayjs from "dayjs";
+import Link from "next/link";
 import React from "react";
 
 export default function IncomingActivities() {
@@ -12,7 +13,7 @@ export default function IncomingActivities() {
   return (
     <Box p={2} height={256}>
       <Typography>Incoming activities</Typography>
-      <List style={{ height: "87%", overflow: "auto" }}>
+      <List style={{ height: "85%", overflow: "auto" }}>
         {data && data.length > 0 ? (
           data.map((item) => {
             return (
@@ -61,13 +62,13 @@ export default function IncomingActivities() {
                         <Typography component="span" variant="body2">
                           {item.contact ? (
                             <Link
-                              color={"text.primary"}
+                              style={{ color: "#fff" }}
                               href={`/contact/${item.contact.id}`}
                             >{`${item.contact.firstName} ${item.contact.lastName}`}</Link>
                           ) : null}
                           {item.lead ? (
                             <Link
-                              color={"text.primary"}
+                              style={{ color: "#fff" }}
                               href={`/lead/${item.lead.id}`}
                             >{`${item.lead.firstName} ${item.lead.lastName}`}</Link>
                           ) : null}
@@ -75,9 +76,11 @@ export default function IncomingActivities() {
                       </Grid>
                       <Grid xs={1}>
                         {item.id ? (
-                          <IconButton href={`activity/${item.id}`} title="View">
-                            <Visibility />
-                          </IconButton>
+                          <Link href={`activity/${item.id}`}>
+                            <IconButton title="View">
+                              <Visibility />
+                            </IconButton>
+                          </Link>
                         ) : null}
                       </Grid>
                     </Grid>

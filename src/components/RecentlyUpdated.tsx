@@ -1,10 +1,11 @@
 import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
-import { Box, Divider, IconButton, Link, List, ListItemText, Typography } from "@mui/material";
+import { Box, Divider, IconButton, List, ListItemText, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import type { Contact, Lead } from "@prisma/client";
 import React from "react";
 import dayjs from "dayjs";
 import { Visibility } from "@mui/icons-material";
+import Link from "next/link";
 
 export default function RecentlyUpdated({
   data,
@@ -15,26 +16,6 @@ export default function RecentlyUpdated({
   title: string;
   pathname: string;
 }) {
-  const { membershipList } = useOrganization({
-    membershipList: {},
-  });
-
-  function getMemberById(userId: string) {
-    if (membershipList) {
-      const user = membershipList.find((user) => user.publicUserData.userId === userId);
-
-      return user ? (
-        <Link color={"text.primary"} href={`/user/${user.publicUserData.userId!}`}>{`${
-          user.publicUserData.firstName ?? ""
-        } ${user.publicUserData.lastName ?? ""}`}</Link>
-      ) : (
-        "Not found"
-      );
-    }
-
-    return "Not found";
-  }
-
   return (
     <Box p={2} position="relative">
       <Typography component={"span"}>{title}</Typography>
@@ -68,7 +49,7 @@ export default function RecentlyUpdated({
                         </Typography>
                         <br />
                         <Typography component="span" variant="body2">
-                          {item.owner ? getMemberById(item.owner) : "None"}
+                          {item.ownerFullname?.trim() ? item.ownerFullname : "None"}
                         </Typography>
                       </Grid>
                       <Grid xs={3}>
@@ -77,7 +58,7 @@ export default function RecentlyUpdated({
                         </Typography>
                         <br />
                         <Typography sx={{ display: "inline" }} component="span" variant="body2">
-                          {item.updatedBy ? getMemberById(item.updatedBy) : "None"}
+                          {item.updatedBy?.trim() ? item.updatedBy : "None"}
                         </Typography>
                       </Grid>
                       <Grid xs={3}>
@@ -91,9 +72,11 @@ export default function RecentlyUpdated({
                       </Grid>
                       <Grid xs={1}>
                         {item.id ? (
-                          <IconButton href={`${pathname}/${item.id}`} title="View">
-                            <Visibility />
-                          </IconButton>
+                          <Link href={`${pathname}/${item.id}`}>
+                            <IconButton title="View">
+                              <Visibility />
+                            </IconButton>
+                          </Link>
                         ) : null}
                       </Grid>
                     </Grid>

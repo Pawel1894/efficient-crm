@@ -1,7 +1,7 @@
 import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import { AttachMoney, ContactPage, LocalActivity, ModeStandby } from "@mui/icons-material";
 import React from "react";
-import grey from "@mui/material/colors/grey";
+import { grey } from "@mui/material/colors";
 
 export default function Glossary() {
   return (
@@ -23,7 +23,7 @@ export default function Glossary() {
           </ListItemAvatar>
           <ListItemText>
             <Box display={"flex"}>
-              <Typography variant="body1">Contact - client that has a closed deal or contract.</Typography>
+              <Typography variant="body1">Contact – client that has a closed deal or contract.</Typography>
             </Box>
           </ListItemText>
         </ListItem>
@@ -37,7 +37,7 @@ export default function Glossary() {
           </ListItemAvatar>
           <ListItemText>
             <Box display={"flex"}>
-              <Typography variant="body1">Lead - potential client.</Typography>
+              <Typography variant="body1">Lead – potential client.</Typography>
             </Box>
           </ListItemText>
         </ListItem>
@@ -51,7 +51,7 @@ export default function Glossary() {
           </ListItemAvatar>
           <ListItemText>
             <Box display={"flex"}>
-              <Typography variant="body1">Deal - forecast offer made to a lead.</Typography>
+              <Typography variant="body1">Deal – forecast offer made to a lead.</Typography>
             </Box>
           </ListItemText>
         </ListItem>
@@ -66,7 +66,7 @@ export default function Glossary() {
           <ListItemText>
             <Box display={"flex"}>
               <Typography variant="body1">
-                Activity - event that can be made for a client or a lead.
+                Activity – event that can be made for a client or a lead.
               </Typography>
             </Box>
           </ListItemText>

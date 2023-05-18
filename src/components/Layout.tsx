@@ -28,6 +28,8 @@ import { UserButton, useOrganization, useOrganizations, useUser } from "@clerk/n
 import TeamSwitcher from "./TeamSwitcher";
 import CenterLoad from "./CenterLoad";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import Head from "next/head";
 
 const drawerWidth = 240;
 
@@ -83,9 +85,10 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 type Props = {
   children: JSX.Element;
   breadcrumbs: JSX.Element;
+  title: string;
 };
 
-export default function Layout({ children, breadcrumbs }: Props) {
+export default function Layout({ children, breadcrumbs, title }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const { isLoaded } = useOrganization();
@@ -102,6 +105,9 @@ export default function Layout({ children, breadcrumbs }: Props) {
 
   return (
     <>
+      <Head>
+        <title>{title}</title>
+      </Head>
       <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton
@@ -171,38 +177,46 @@ function Navigation() {
           <List>
             {commonMenu.map((item) => {
               return (
-                <ListItem key={item.id} disablePadding>
-                  <ListItemButton onClick={() => void router.push(item.link)}>
-                    <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>{item.icon}</ListItemIcon>
-                    <ListItemText primary={item.text} />
-                  </ListItemButton>
-                </ListItem>
+                <Link key={item.id} style={{ textDecoration: "unset" }} href={item.link}>
+                  <ListItem disablePadding>
+                    <ListItemButton>
+                      <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
+                        {item.icon}
+                      </ListItemIcon>
+                      <ListItemText sx={{ color: "#fff" }} primary={item.text} />
+                    </ListItemButton>
+                  </ListItem>
+                </Link>
               );
             })}
 
             {membership?.role === "admin" ? (
-              <ListItem key={"settings"} disablePadding>
-                <ListItemButton onClick={() => void router.push("/admin/settings")}>
-                  <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
-                    <Settings />
-                  </ListItemIcon>
-                  <ListItemText primary="Settings" />
-                </ListItemButton>
-              </ListItem>
+              <Link style={{ textDecoration: "unset" }} href={"/admin/settings"}>
+                <ListItem key={"settings"} disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
+                      <Settings />
+                    </ListItemIcon>
+                    <ListItemText sx={{ color: "#fff" }} primary="Settings" />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
             ) : null}
           </List>
           <Divider />
         </>
       ) : null}
       <List>
-        <ListItem disablePadding>
-          <ListItemButton onClick={() => void router.push("/setting/create-team")}>
-            <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
-              <Add />
-            </ListItemIcon>
-            <ListItemText primary={"Create new team"} />
-          </ListItemButton>
-        </ListItem>
+        <Link style={{ textDecoration: "unset" }} href={"/setting/create-team"}>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
+                <Add />
+              </ListItemIcon>
+              <ListItemText sx={{ color: "#fff" }} primary={"Create new team"} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
       </List>
     </nav>
   );
