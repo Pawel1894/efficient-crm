@@ -74,8 +74,13 @@ export default function Page() {
 
 export const getServerSideProps = async ({ req, res }: { req: NextApiRequest; res: NextApiResponse }) => {
   const session = getAuth(req);
-  if (!session?.orgId) {
-    return {};
+  if (!session?.userId) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
   }
 
   const helpers = createServerSideHelpers({
@@ -87,9 +92,9 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest; re
     transformer: superjson,
   });
 
-  await helpers.lead.recentlyUpdated.prefetch(session.orgId);
-  await helpers.contact.recentlyUpdated.prefetch(session.orgId);
-  await helpers.activity.incoming.prefetch(session.orgId);
+  await helpers.lead.recentlyUpdated.prefetch();
+  await helpers.contact.recentlyUpdated.prefetch();
+  await helpers.activity.incoming.prefetch();
 
   return {
     props: {

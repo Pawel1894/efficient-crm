@@ -36,9 +36,12 @@ export const contactRouter = createTRPCRouter({
 
     return contact;
   }),
-  recentlyUpdated: protectedProcedure.input(z.string().optional()).query(async ({ ctx, input }) => {
-    if (!input) {
-      return [];
+  recentlyUpdated: protectedProcedure.query(async ({ ctx }) => {
+    if (!ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Cannot fetch contacts",
+      });
     }
 
     const where: {
@@ -47,7 +50,7 @@ export const contactRouter = createTRPCRouter({
         owner: string | null;
       };
     } = {
-      team: input,
+      team: ctx.user.orgId,
     };
 
     if (ctx.user.role !== "admin") {
@@ -67,10 +70,26 @@ export const contactRouter = createTRPCRouter({
     return contacts;
   }),
   contacts: protectedProcedure.query(async ({ ctx }) => {
-    const where: { owner?: string | null } = {};
+    let where;
+
+    if (!ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Cannot fetch contacts",
+      });
+    }
 
     if (ctx.user.role !== "admin") {
-      where.owner = ctx.user.id;
+      where = {
+        owner: ctx.user.id,
+        AND: {
+          team: ctx.user.orgId,
+        },
+      };
+    } else {
+      where = {
+        team: ctx.user.orgId,
+      };
     }
 
     const results = await ctx.prisma.contact.findMany({

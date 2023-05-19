@@ -93,7 +93,6 @@ export default function Page() {
 
 export const getServerSideProps = async ({ req, res }: { req: NextApiRequest; res: NextApiResponse }) => {
   const session = getAuth(req);
-  console.log("sessionsession", session);
   if (!session?.userId) {
     return {
       redirect: {

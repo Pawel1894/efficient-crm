@@ -1,16 +1,18 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import type { Activity } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
-import { z } from "zod";
 
 export const activityRouter = createTRPCRouter({
-  incoming: protectedProcedure.input(z.string().optional()).query(async ({ ctx, input }) => {
-    if (!input) {
-      return [];
+  incoming: protectedProcedure.query(async ({ ctx, input }) => {
+    if (!ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Cannot fetch activities",
+      });
     }
 
     const where: { owner?: string | null; team: string; AND: { date: { gt: string; lt: string } } } = {
-      team: input,
+      team: ctx.user.orgId,
       AND: {
         date: {
           gt: dayjs().startOf("day").subtract(1, "day").toISOString(),

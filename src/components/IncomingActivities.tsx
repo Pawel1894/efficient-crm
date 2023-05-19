@@ -1,5 +1,4 @@
 import { api } from "@/utils/api";
-import { useOrganization } from "@clerk/nextjs";
 import { Visibility } from "@mui/icons-material";
 import { Box, Divider, IconButton, List, ListItemText, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
@@ -8,8 +7,7 @@ import Link from "next/link";
 import React from "react";
 
 export default function IncomingActivities() {
-  const { organization } = useOrganization();
-  const { data } = api.activity.incoming.useQuery(organization?.id);
+  const { data } = api.activity.incoming.useQuery();
   return (
     <Box p={2} height={256}>
       <Typography>Incoming activities</Typography>

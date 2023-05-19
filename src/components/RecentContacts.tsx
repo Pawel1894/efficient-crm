@@ -2,11 +2,9 @@ import { api } from "@/utils/api";
 import { Paper } from "@mui/material";
 import React from "react";
 import RecentlyUpdated from "./RecentlyUpdated";
-import { useOrganization } from "@clerk/nextjs";
 
 export default function RecentContacts() {
-  const { organization } = useOrganization();
-  const { data: recentContacts } = api.contact.recentlyUpdated.useQuery(organization?.id, {
+  const { data: recentContacts } = api.contact.recentlyUpdated.useQuery(undefined, {
     refetchInterval: 10000,
   });
 

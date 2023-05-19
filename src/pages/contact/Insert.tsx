@@ -36,9 +36,10 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
       toast.error(err.message);
     },
     onSettled: async () => {
-      await context.contact.contacts.invalidate();
-      setInsertOpen(false);
+      toast.success("Contact created");
       formik.resetForm();
+      setInsertOpen(false);
+      await context.contact.contacts.invalidate();
     },
   });
 

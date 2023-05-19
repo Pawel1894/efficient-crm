@@ -1,10 +1,14 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 export const leadRouter = createTRPCRouter({
-  recentlyUpdated: protectedProcedure.input(z.string().optional()).query(async ({ ctx, input }) => {
-    if (!input) {
-      return [];
+  recentlyUpdated: protectedProcedure.query(async ({ ctx }) => {
+    if (!ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Cannot fetch leads",
+      });
     }
 
     const where: {
@@ -13,7 +17,7 @@ export const leadRouter = createTRPCRouter({
         owner: string | null;
       };
     } = {
-      team: input,
+      team: ctx.user.orgId,
     };
 
     if (ctx.user.role !== "admin") {
