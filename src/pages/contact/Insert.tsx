@@ -11,29 +11,13 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import * as yup from "yup";
-import React, { type SetStateAction } from "react";
+import React, { useState, type SetStateAction } from "react";
 import { useFormik } from "formik";
 import { Close } from "@mui/icons-material";
 import { useOrganization } from "@clerk/nextjs";
 import { api } from "@/utils/api";
-
-const validationSchema = yup.object({
-  firstName: yup.string().required("First name is required").max(50, "max characters is 50"),
-  lastName: yup.string().required("Last name is required").max(50, "max characters is 50"),
-  company: yup.string().optional(),
-  title: yup.string().optional(),
-  email: yup.string().email("Enter a valid email").required(),
-  phone: yup.string().optional(),
-  location: yup.string().optional(),
-  comment: yup.string().optional(),
-  owner: yup
-    .object({
-      identifier: yup.string(),
-      userId: yup.string(),
-    })
-    .optional(),
-  type: yup.string(),
-});
+import Link from "next/link";
+import { ContactSchema } from "@/utils/schema";
 
 type Props = {
   setInsertOpen: React.Dispatch<SetStateAction<boolean>>;
@@ -42,10 +26,15 @@ type Props = {
 
 export default function Insert({ insertOpen, setInsertOpen }: Props) {
   const desktopBr = useMediaQuery("(min-width:600px)");
+  const [serverErrors, setServerErrors] = useState<Array<{
+    name: string;
+    value: string | undefined;
+  }> | null>(null);
   const { data: types } = api.dictionary.byType.useQuery("CONTACT_TYPE");
   const { membershipList } = useOrganization({
     membershipList: {},
   });
+  const { mutate: submit } = api.contact.create.useMutation();
 
   const formik = useFormik({
     initialValues: {
@@ -63,9 +52,10 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
       },
       type: "",
     },
-    validationSchema: validationSchema,
+    validationSchema: ContactSchema,
     onSubmit: (values) => {
       console.log(values);
+      submit(values);
     },
   });
 
@@ -208,7 +198,7 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                     fullWidth
                     disablePortal
                     getOptionLabel={(option) => option.publicUserData.identifier}
-                    renderInput={(params) => <TextField {...params} name="owner" label="Owner" />}
+                    renderInput={(params) => <TextField {...params} id="owner" name="owner" label="Owner" />}
                     options={membershipList ?? []}
                     onChange={(e, value) =>
                       void formik.setFieldValue("owner", {
@@ -224,7 +214,7 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                   <Autocomplete
                     fullWidth
                     disablePortal
-                    renderInput={(params) => <TextField {...params} name="type" label="Type" />}
+                    renderInput={(params) => <TextField {...params} id="type" name="type" label="Type" />}
                     options={types ?? []}
                     onChange={(e, value) => void formik.setFieldValue("type", value?.id)}
                   />
@@ -247,6 +237,13 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                 </Box>
               </Grid>
             </Grid>
+            {serverErrors &&
+              serverErrors?.length > 0 &&
+              serverErrors.map((i) => (
+                <Link key={i.name} className="text-sm text-accent-100 underline" href={`#${i.name ?? ""}`}>
+                  <Typography color={"text.primary"}>{`${i.name ?? ""} ${i.value ?? ""}`}</Typography>
+                </Link>
+              ))}
             <Box px={1} my={3} display={"flex"}>
               <Button
                 sx={{

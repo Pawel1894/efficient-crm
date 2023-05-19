@@ -33,7 +33,6 @@ export const createTRPCContext = (opts: CreateNextContextOptions) => {
     orgId: sesh.orgId,
     orgSlug: sesh.orgSlug,
     role: sesh.orgRole,
-    organization: sesh.organization,
   };
   return {
     prisma,

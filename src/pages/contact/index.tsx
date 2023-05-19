@@ -34,7 +34,14 @@ const columns: GridColDef[] = [
   { field: "firstName", headerName: "First Name", flex: 1, minWidth: 170 },
   { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 170 },
   { field: "email", headerName: "Email", flex: 1, minWidth: 170 },
-  { field: "type", headerName: "Type", flex: 1 },
+  {
+    field: "type",
+    valueGetter: (params) => {
+      return params.row.type?.value ?? "";
+    },
+    headerName: "Type",
+    flex: 1,
+  },
   { field: "ownerFullname", headerName: "Owner", flex: 1 },
 ];
 
@@ -42,7 +49,7 @@ export default function Page() {
   const [insertOpen, setInsertOpen] = useState(false);
   const { data: contacts, isSuccess } = api.contact.contacts.useQuery();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
-
+  console.log("contacts", contacts);
   useEffect(() => {
     setBreadcrumbs(
       <Breadcrumbs aria-label="breadcrumb">
