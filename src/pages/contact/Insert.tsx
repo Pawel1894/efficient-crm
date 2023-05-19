@@ -7,17 +7,14 @@ import {
   Modal,
   Stack,
   TextField,
-  TextareaAutosize,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import * as yup from "yup";
-import React from "react";
+import React, { type SetStateAction } from "react";
 import { useFormik } from "formik";
 import { Close } from "@mui/icons-material";
-import { MuiTelInput } from "mui-tel-input";
 import { useOrganization } from "@clerk/nextjs";
-import { z } from "zod";
 import { api } from "@/utils/api";
 
 const validationSchema = yup.object({
@@ -40,7 +37,12 @@ const validationSchema = yup.object({
   type: yup.string(),
 });
 
-export default function Insert() {
+type Props = {
+  setInsertOpen: React.Dispatch<SetStateAction<boolean>>;
+  insertOpen: boolean;
+};
+
+export default function Insert({ insertOpen, setInsertOpen }: Props) {
   const desktopBr = useMediaQuery("(min-width:600px)");
   const { data: types } = api.dictionary.byType.useQuery("CONTACT_TYPE");
   const { membershipList } = useOrganization({
@@ -72,7 +74,7 @@ export default function Insert() {
   });
 
   return (
-    <Modal sx={{ backgroundColor: "#202020" }} open={true}>
+    <Modal sx={{ backgroundColor: "#202020" }} open={insertOpen}>
       <>
         <Stack
           borderBottom={"1px solid"}
@@ -85,7 +87,7 @@ export default function Insert() {
           <Typography variant="h6" component={"span"}>
             Create new contact
           </Typography>
-          <IconButton size="large">
+          <IconButton size="large" onClick={() => setInsertOpen(false)}>
             <Close />
           </IconButton>
         </Stack>
@@ -96,6 +98,7 @@ export default function Insert() {
           mt={desktopBr ? 4 : 2}
           mb={4}
           mx={"auto"}
+          p={1}
           overflow={"auto"}
           maxWidth={"1400px"}
         >

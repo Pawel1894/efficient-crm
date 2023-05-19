@@ -40,7 +40,7 @@ export default function IncomingActivities() {
                         </Typography>
                         <br />
                         <Typography component="span" variant="body2">
-                          {`${item.status ?? ""}`}
+                          {`${item.status?.label ?? "None"}`}
                         </Typography>
                       </Grid>
                       <Grid xs={3}>
@@ -59,20 +59,21 @@ export default function IncomingActivities() {
                           {item.contact ? "Contact" : "Lead"}
                         </Typography>
                         <br />
-                        <Typography component="span" variant="body2">
-                          {item.contact ? (
-                            <Link
-                              style={{ color: "#fff" }}
-                              href={`/contact/${item.contact.id}`}
-                            >{`${item.contact.firstName} ${item.contact.lastName}`}</Link>
-                          ) : null}
-                          {item.lead ? (
-                            <Link
-                              style={{ color: "#fff" }}
-                              href={`/lead/${item.lead.id}`}
-                            >{`${item.lead.firstName} ${item.lead.lastName}`}</Link>
-                          ) : null}
-                        </Typography>
+
+                        {item.contact ? (
+                          <Link href={`/contact/${item.contact.id}`}>
+                            <Typography color={"text.primary"} component="span" variant="body2">
+                              {`${item.contact.firstName} ${item.contact.lastName}`}{" "}
+                            </Typography>
+                          </Link>
+                        ) : null}
+                        {item.lead ? (
+                          <Link href={`/lead/${item.lead.id}`}>
+                            <Typography color={"text.primary"} component="span" variant="body2">
+                              {`${item.lead.firstName} ${item.lead.lastName}`}{" "}
+                            </Typography>
+                          </Link>
+                        ) : null}
                       </Grid>
                       <Grid xs={1}>
                         {item.id ? (

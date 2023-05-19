@@ -12,6 +12,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { dark } from "@clerk/themes";
+import Layout from "@/components/Layout";
 
 const darkTheme = createTheme({
   palette: {
@@ -35,7 +36,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     >
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Component {...pageProps} />
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </ThemeProvider>
     </ClerkProvider>
   );

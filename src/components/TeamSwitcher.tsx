@@ -8,10 +8,7 @@ export default function TeamSwitcher() {
   const { user, isSignedIn } = useUser();
   const { setActive, organizationList, isLoaded, createOrganization } = useOrganizationList();
   const { organization, isLoaded: isLoadedOrganization } = useOrganization();
-  const { data: userSettings, isSuccess } = api.user.settings.useQuery(undefined, {
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-  });
+  const { data: userSettings, isSuccess } = api.user.settings.useQuery(undefined);
   const { mutate: setSettings } = api.user.setSettings.useMutation();
   const { mutate: coldStart } = api.system.coldStart.useMutation();
 

@@ -31,6 +31,7 @@ export const activityRouter = createTRPCRouter({
       include: {
         contact: true,
         lead: true,
+        status: true,
       },
       take: 5,
     });

@@ -84,11 +84,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 type Props = {
   children: JSX.Element;
-  breadcrumbs: JSX.Element;
-  title: string;
 };
 
-export default function Layout({ children, breadcrumbs, title }: Props) {
+export default function Layout({ children }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const { isLoaded } = useOrganization();
@@ -105,9 +103,6 @@ export default function Layout({ children, breadcrumbs, title }: Props) {
 
   return (
     <>
-      <Head>
-        <title>{title}</title>
-      </Head>
       <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton
@@ -119,7 +114,7 @@ export default function Layout({ children, breadcrumbs, title }: Props) {
           >
             <MenuIcon />
           </IconButton>
-          {breadcrumbs}
+          {/* {breadcrumbs} */}
           <Box ml={"auto"} display="flex" alignItems={"center"} gap="1rem">
             <TeamSwitcher />
             <UserButton />
