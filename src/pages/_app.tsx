@@ -3,7 +3,7 @@ import { api } from "@/utils/api";
 import { useStore } from "zustand";
 import { createStore } from "zustand/vanilla";
 import "@/styles/globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider, useUser } from "@clerk/nextjs";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import "../styles/globals.css";
@@ -15,6 +15,7 @@ import { dark } from "@clerk/themes";
 import Layout from "@/components/Layout";
 import { ToastContainer } from "react-toastify";
 import "@/styles/react-toastify.css";
+import { useRouter } from "next/router";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -44,6 +45,8 @@ export function useSystemStore<T>(selector?: (state: SystemSlice) => T, equals?:
 }
 
 const MyApp: AppType = ({ Component, pageProps }) => {
+  const { pathname } = useRouter();
+
   return (
     <ClerkProvider
       {...pageProps}
@@ -53,9 +56,13 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     >
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Layout>
+        {pathname !== "/" ? (
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        ) : (
           <Component {...pageProps} />
-        </Layout>
+        )}
       </ThemeProvider>
       <ToastContainer position="top-center" autoClose={3000} />
     </ClerkProvider>

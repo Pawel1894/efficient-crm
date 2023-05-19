@@ -1,3 +1,4 @@
+import { createServerSideHelpers } from "@trpc/react-query/server";
 import { Box, Breadcrumbs, Button, IconButton, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
@@ -8,7 +9,11 @@ import { Add, Edit, Visibility } from "@mui/icons-material";
 import Insert from "./Insert";
 import { useSystemStore } from "../_app";
 import Head from "next/head";
-
+import type { NextApiRequest, NextApiResponse } from "next";
+import { getAuth } from "@clerk/nextjs/server";
+import { createTRPCContext } from "@/server/api/trpc";
+import { appRouter } from "@/server/api/root";
+import superjson from "superjson";
 const columns: GridColDef[] = [
   {
     field: "action",
@@ -49,7 +54,7 @@ export default function Page() {
   const [insertOpen, setInsertOpen] = useState(false);
   const { data: contacts, isSuccess } = api.contact.contacts.useQuery();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
-  console.log("contacts", contacts);
+
   useEffect(() => {
     setBreadcrumbs(
       <Breadcrumbs aria-label="breadcrumb">
@@ -85,3 +90,33 @@ export default function Page() {
     </>
   );
 }
+
+export const getServerSideProps = async ({ req, res }: { req: NextApiRequest; res: NextApiResponse }) => {
+  const session = getAuth(req);
+  console.log("sessionsession", session);
+  if (!session?.userId) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: createTRPCContext({
+      req: req,
+      res: res,
+    }),
+    transformer: superjson,
+  });
+
+  await helpers.contact.contacts.prefetch();
+
+  return {
+    props: {
+      trpcState: helpers.dehydrate(),
+    },
+  };
+};

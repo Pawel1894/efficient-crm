@@ -1,3 +1,4 @@
+import superjson from "superjson";
 import Glossary from "@/components/Glossary";
 import IncomingActivities from "@/components/IncomingActivities";
 import { useOrganization } from "@clerk/nextjs";
@@ -9,6 +10,11 @@ import RecentLeads from "@/components/RecentLeads";
 import { api } from "@/utils/api";
 import { useSystemStore } from "../_app";
 import Head from "next/head";
+import { getAuth } from "@clerk/nextjs/server";
+import { NextApiRequest, NextApiResponse } from "next";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import { appRouter } from "@/server/api/root";
+import { createTRPCContext } from "@/server/api/trpc";
 
 export default function Page() {
   const { organization } = useOrganization();
@@ -65,3 +71,29 @@ export default function Page() {
     </>
   );
 }
+
+export const getServerSideProps = async ({ req, res }: { req: NextApiRequest; res: NextApiResponse }) => {
+  const session = getAuth(req);
+  if (!session?.orgId) {
+    return {};
+  }
+
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: createTRPCContext({
+      req: req,
+      res: res,
+    }),
+    transformer: superjson,
+  });
+
+  await helpers.lead.recentlyUpdated.prefetch(session.orgId);
+  await helpers.contact.recentlyUpdated.prefetch(session.orgId);
+  await helpers.activity.incoming.prefetch(session.orgId);
+
+  return {
+    props: {
+      trpcState: helpers.dehydrate(),
+    },
+  };
+};
