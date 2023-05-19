@@ -1,22 +1,33 @@
-import { withServerSideAuth } from "@clerk/nextjs/ssr";
 import Glossary from "@/components/Glossary";
 import IncomingActivities from "@/components/IncomingActivities";
-import Layout from "@/components/Layout";
 import { useOrganization } from "@clerk/nextjs";
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import React from "react";
+import React, { useEffect } from "react";
 import RecentContacts from "@/components/RecentContacts";
 import RecentLeads from "@/components/RecentLeads";
 import { api } from "@/utils/api";
-import { GetServerSideProps, NextApiRequest, NextApiResponse } from "next";
+import { useSystemStore } from "../_app";
+import Head from "next/head";
 
 export default function Page() {
   const { organization } = useOrganization();
   const { mutate } = api.system.coldStart.useMutation();
+  const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
+
+  useEffect(() => {
+    setBreadcrumbs(
+      <Breadcrumbs aria-label="breadcrumb">
+        <Typography color="text.primary">Homepage</Typography>
+      </Breadcrumbs>
+    );
+  }, [setBreadcrumbs]);
+
   return (
     <>
+      <Head>
+        <title>Home</title>
+      </Head>
       <button
         onClick={() =>
           mutate({

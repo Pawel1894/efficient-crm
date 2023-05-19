@@ -1,7 +1,7 @@
 import { organizations } from "@clerk/nextjs/api";
 import Layout from "@/components/Layout";
 import { Box, Breadcrumbs, Button, IconButton, Modal, Stack, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { api } from "@/utils/api";
 import type { GridColDef } from "@mui/x-data-grid";
@@ -14,6 +14,8 @@ import { appRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
 import superjson from "superjson";
 import { prisma } from "@/server/db";
+import { useSystemStore } from "../_app";
+import Head from "next/head";
 
 const columns: GridColDef[] = [
   {
@@ -47,9 +49,21 @@ const columns: GridColDef[] = [
 export default function Page() {
   const [insertOpen, setInsertOpen] = useState(false);
   const { data: contacts, isSuccess } = api.contact.contacts.useQuery();
+  const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
+
+  useEffect(() => {
+    setBreadcrumbs(
+      <Breadcrumbs aria-label="breadcrumb">
+        <Typography color="text.primary">Contacts</Typography>
+      </Breadcrumbs>
+    );
+  }, [setBreadcrumbs]);
 
   return (
     <>
+      <Head>
+        <title>Contacts</title>
+      </Head>
       <Insert insertOpen={insertOpen} setInsertOpen={setInsertOpen} />
       <Stack gap={"1rem"}>
         <Box>

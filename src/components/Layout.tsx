@@ -30,6 +30,7 @@ import CenterLoad from "./CenterLoad";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Head from "next/head";
+import { useSystemStore } from "@/pages/_app";
 
 const drawerWidth = 240;
 
@@ -87,7 +88,7 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  const router = useRouter();
+  const breadcrumbs = useSystemStore((state) => state.breadcrumbs);
   const [open, setOpen] = useState(true);
   const { isLoaded } = useOrganization();
   const { isLoaded: orgsLoad } = useOrganizations();
@@ -114,7 +115,7 @@ export default function Layout({ children }: Props) {
           >
             <MenuIcon />
           </IconButton>
-          {/* {breadcrumbs} */}
+          {breadcrumbs}
           <Box ml={"auto"} display="flex" alignItems={"center"} gap="1rem">
             <TeamSwitcher />
             <UserButton />

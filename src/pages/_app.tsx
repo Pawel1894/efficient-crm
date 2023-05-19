@@ -1,7 +1,7 @@
 import { type AppType } from "next/app";
-
 import { api } from "@/utils/api";
-
+import { useStore } from "zustand";
+import { createStore } from "zustand/vanilla";
 import "@/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -25,6 +25,22 @@ const darkTheme = createTheme({
     },
   },
 });
+
+export interface SystemSlice {
+  breadcrumbs: JSX.Element | null;
+  setBreadcrumbs: (value: JSX.Element) => void;
+}
+
+export const systemStore = createStore<SystemSlice>()((set) => ({
+  breadcrumbs: null,
+  setBreadcrumbs: (value: JSX.Element) => set((_) => ({ breadcrumbs: value })),
+}));
+
+export function useSystemStore(): SystemSlice;
+export function useSystemStore<T>(selector: (state: SystemSlice) => T, equals?: (a: T, b: T) => boolean): T;
+export function useSystemStore<T>(selector?: (state: SystemSlice) => T, equals?: (a: T, b: T) => boolean) {
+  return useStore(systemStore, selector!, equals);
+}
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
