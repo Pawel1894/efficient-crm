@@ -26,14 +26,12 @@ const validationSchema = yup.object({
   phone: yup.string().optional(),
   location: yup.string().optional(),
   comment: yup.string().optional(),
-  owner: yup.object({
-    publicUserData: yup
-      .object({
-        identifier: yup.string(),
-        userId: yup.string(),
-      })
-      .optional(),
-  }),
+  owner: yup
+    .object({
+      identifier: yup.string(),
+      userId: yup.string(),
+    })
+    .optional(),
   type: yup.string(),
 });
 
@@ -60,16 +58,14 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
       location: "",
       comment: "",
       owner: {
-        publicUserData: {
-          identifier: "",
-          userId: "",
-        },
+        identifier: "",
+        userId: "",
       },
       type: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      console.log(values);
     },
   });
 
@@ -104,7 +100,7 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
         >
           <form onSubmit={formik.handleSubmit}>
             <Grid justifyContent={"center"} container rowGap={2}>
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Box px={1}>
                   <TextField
                     fullWidth
@@ -119,7 +115,7 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                   />
                 </Box>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Box px={1}>
                   <TextField
                     fullWidth
@@ -134,7 +130,7 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                   />
                 </Box>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Box px={1}>
                   <TextField
                     fullWidth
@@ -149,7 +145,7 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                   />
                 </Box>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Box px={1}>
                   <TextField
                     fullWidth
@@ -163,7 +159,7 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                   />
                 </Box>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Box px={1}>
                   <TextField
                     fullWidth
@@ -177,7 +173,7 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                   />
                 </Box>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Box px={1}>
                   <TextField
                     fullWidth
@@ -191,7 +187,7 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                   />
                 </Box>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Box px={1}>
                   <TextField
                     fullWidth
@@ -206,7 +202,7 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                 </Box>
               </Grid>
 
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Box px={1}>
                   <Autocomplete
                     fullWidth
@@ -214,22 +210,27 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                     getOptionLabel={(option) => option.publicUserData.identifier}
                     renderInput={(params) => <TextField {...params} name="owner" label="Owner" />}
                     options={membershipList ?? []}
-                    onChange={formik.handleChange}
+                    onChange={(e, value) =>
+                      void formik.setFieldValue("owner", {
+                        identifier: value?.publicUserData.identifier,
+                        userId: value?.publicUserData.userId,
+                      })
+                    }
                   />
                 </Box>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Box px={1}>
                   <Autocomplete
                     fullWidth
                     disablePortal
                     renderInput={(params) => <TextField {...params} name="type" label="Type" />}
                     options={types ?? []}
-                    onChange={formik.handleChange}
+                    onChange={(e, value) => void formik.setFieldValue("type", value?.id)}
                   />
                 </Box>
               </Grid>
-              <Grid xs={12} md={6}>
+              <Grid item xs={12} md={6}>
                 <Box px={1}>
                   <TextField
                     fullWidth

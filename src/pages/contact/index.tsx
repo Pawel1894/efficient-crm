@@ -1,6 +1,4 @@
-import { organizations } from "@clerk/nextjs/api";
-import Layout from "@/components/Layout";
-import { Box, Breadcrumbs, Button, IconButton, Modal, Stack, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, IconButton, Stack, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { api } from "@/utils/api";
@@ -8,12 +6,6 @@ import type { GridColDef } from "@mui/x-data-grid";
 import Link from "next/link";
 import { Add, Edit, Visibility } from "@mui/icons-material";
 import Insert from "./Insert";
-import { NextApiRequest, NextApiResponse } from "next";
-import { withServerSideAuth } from "@clerk/nextjs/ssr";
-import { appRouter } from "@/server/api/root";
-import { createTRPCContext } from "@/server/api/trpc";
-import superjson from "superjson";
-import { prisma } from "@/server/db";
 import { useSystemStore } from "../_app";
 import Head from "next/head";
 
