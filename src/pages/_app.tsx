@@ -13,7 +13,8 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { dark } from "@clerk/themes";
 import Layout from "@/components/Layout";
-
+import { ToastContainer } from "react-toastify";
+import "@/styles/react-toastify.css";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -56,6 +57,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           <Component {...pageProps} />
         </Layout>
       </ThemeProvider>
+      <ToastContainer position="top-center" autoClose={3000} />
     </ClerkProvider>
   );
 };

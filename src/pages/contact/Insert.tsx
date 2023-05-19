@@ -18,6 +18,7 @@ import { useOrganization } from "@clerk/nextjs";
 import { api } from "@/utils/api";
 import Link from "next/link";
 import { ContactSchema } from "@/utils/schema";
+import { toast } from "react-toastify";
 
 type Props = {
   setInsertOpen: React.Dispatch<SetStateAction<boolean>>;
@@ -26,15 +27,16 @@ type Props = {
 
 export default function Insert({ insertOpen, setInsertOpen }: Props) {
   const desktopBr = useMediaQuery("(min-width:600px)");
-  const [serverErrors, setServerErrors] = useState<Array<{
-    name: string;
-    value: string | undefined;
-  }> | null>(null);
+
   const { data: types } = api.dictionary.byType.useQuery("CONTACT_TYPE");
   const { membershipList } = useOrganization({
     membershipList: {},
   });
-  const { mutate: submit } = api.contact.create.useMutation();
+  const { mutate: submit } = api.contact.create.useMutation({
+    onError: (err) => {
+      toast.error(err.message);
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -54,7 +56,6 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
     },
     validationSchema: ContactSchema,
     onSubmit: (values) => {
-      console.log(values);
       submit(values);
     },
   });
@@ -237,13 +238,7 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                 </Box>
               </Grid>
             </Grid>
-            {serverErrors &&
-              serverErrors?.length > 0 &&
-              serverErrors.map((i) => (
-                <Link key={i.name} className="text-sm text-accent-100 underline" href={`#${i.name ?? ""}`}>
-                  <Typography color={"text.primary"}>{`${i.name ?? ""} ${i.value ?? ""}`}</Typography>
-                </Link>
-              ))}
+
             <Box px={1} my={3} display={"flex"}>
               <Button
                 sx={{
@@ -254,7 +249,7 @@ export default function Insert({ insertOpen, setInsertOpen }: Props) {
                 variant="contained"
                 type="submit"
               >
-                Submit
+                Create
               </Button>
             </Box>
           </form>
