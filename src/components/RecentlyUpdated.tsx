@@ -48,11 +48,17 @@ export default function RecentlyUpdated({
                           Owner
                         </Typography>
                         <br />
-                        <Link href={`/user/${item.owner ?? ""}`}>
+                        {item.ownerFullname?.trim() ? (
+                          <Link href={`/user/${item.owner ?? ""}`}>
+                            <Typography color={"text.primary"} component="span" variant="body2">
+                              {item.ownerFullname}
+                            </Typography>
+                          </Link>
+                        ) : (
                           <Typography color={"text.primary"} component="span" variant="body2">
-                            {item.ownerFullname?.trim() ? item.ownerFullname : "None"}
+                            None
                           </Typography>
-                        </Link>
+                        )}
                       </Grid>
                       <Grid xs={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">

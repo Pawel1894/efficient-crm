@@ -67,12 +67,19 @@ export default function IncomingActivities() {
                             </Typography>
                           </Link>
                         ) : null}
+
                         {item.lead ? (
                           <Link href={`/lead/${item.lead.id}`}>
                             <Typography color={"text.primary"} component="span" variant="body2">
                               {`${item.lead.firstName} ${item.lead.lastName}`}{" "}
                             </Typography>
                           </Link>
+                        ) : null}
+
+                        {!item.contact && !item.lead ? (
+                          <Typography color={"text.primary"} component="span" variant="body2">
+                            None
+                          </Typography>
                         ) : null}
                       </Grid>
                       <Grid xs={1}>
