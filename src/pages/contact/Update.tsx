@@ -11,20 +11,21 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { type SetStateAction } from "react";
+import React, { useEffect, type SetStateAction, useMemo } from "react";
 import { useFormik } from "formik";
 import { Close } from "@mui/icons-material";
 import { useOrganization } from "@clerk/nextjs";
 import { api } from "@/utils/api";
 import { ContactSchema } from "@/utils/schema";
 import { toast } from "react-toastify";
+import type { ContactData } from ".";
 
 type Props = {
   setOpen: React.Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
+  data: ContactData;
 };
-
-export default function Insert({ setOpen, isOpen }: Props) {
+export default function Update({ isOpen, setOpen, data }: Props) {
   const desktopBr = useMediaQuery("(min-width:600px)");
   const context = api.useContext();
   const { data: types } = api.dictionary.byType.useQuery("CONTACT_TYPE");
@@ -43,26 +44,32 @@ export default function Insert({ setOpen, isOpen }: Props) {
     },
   });
 
+  const defaultOwner = useMemo(
+    () => membershipList?.find((u) => u.publicUserData.userId === data.owner),
+    [data.id, membershipList]
+  );
+
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      company: "",
-      title: "",
-      email: "",
-      phone: "",
-      location: "",
-      comment: "",
+      firstName: data.firstName,
+      lastName: data.lastName,
+      company: data.company,
+      title: data.title,
+      email: data.email,
+      phone: data.phone,
+      location: data.location,
+      comment: data.comment,
       owner: {
-        identifier: "",
-        userId: "",
+        identifier: data.ownerFullname,
+        userId: data.owner,
       },
-      type: "",
+      type: data.type?.id ?? "",
     },
     validationSchema: ContactSchema,
     onSubmit: (values) => {
-      submit(values);
+      console.log("values", values);
     },
+    enableReinitialize: true,
   });
 
   function onHiding() {
@@ -82,7 +89,7 @@ export default function Insert({ setOpen, isOpen }: Props) {
           justifyContent={"space-between"}
         >
           <Typography variant="h6" component={"span"}>
-            Create new contact
+            Update {data?.firstName} {data?.lastName}
           </Typography>
           <IconButton size="large" onClick={onHiding}>
             <Close />
@@ -212,8 +219,10 @@ export default function Insert({ setOpen, isOpen }: Props) {
                   <Box px={1}>
                     <Autocomplete
                       fullWidth
+                      id="owner-select"
                       disablePortal
-                      getOptionLabel={(option) => option.publicUserData.identifier}
+                      defaultValue={defaultOwner}
+                      getOptionLabel={(option) => option?.publicUserData?.identifier}
                       renderInput={(params) => (
                         <TextField {...params} id="owner" name="owner" label="Owner" />
                       )}
@@ -230,10 +239,9 @@ export default function Insert({ setOpen, isOpen }: Props) {
                 <Grid item xs={12} md={6}>
                   <Box px={1}>
                     <Autocomplete
-                      fullWidth
-                      disablePortal
                       renderInput={(params) => <TextField {...params} id="type" name="type" label="Type" />}
                       options={types ?? []}
+                      defaultValue={data.type}
                       onChange={(e, value) => void formik.setFieldValue("type", value?.id)}
                     />
                   </Box>

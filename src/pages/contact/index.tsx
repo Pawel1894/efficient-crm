@@ -1,11 +1,11 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { Box, Breadcrumbs, Button, IconButton, Stack, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { api } from "@/utils/api";
 import type { GridColDef } from "@mui/x-data-grid";
 import Link from "next/link";
-import { Add, Edit, Visibility } from "@mui/icons-material";
+import { Add, Edit, SecurityUpdate, Visibility } from "@mui/icons-material";
 import Insert from "./Insert";
 import { useSystemStore } from "../_app";
 import Head from "next/head";
@@ -14,46 +14,69 @@ import { getAuth } from "@clerk/nextjs/server";
 import { createTRPCContext } from "@/server/api/trpc";
 import { appRouter } from "@/server/api/root";
 import superjson from "superjson";
-const columns: GridColDef[] = [
-  {
-    field: "action",
-    headerName: "",
-    filterable: false,
-    hideable: false,
-    sortable: false,
-    renderCell: (params) => {
-      return (
-        <Stack direction={"row"} gap={"0.5rem"}>
-          <Link href={`/contact/${params.id}`}>
-            <IconButton size="small" sx={{ color: "primary.main" }} title="View">
-              <Visibility />
-            </IconButton>
-          </Link>
-          <IconButton size="small" sx={{ color: "primary.main" }} title="Edit">
-            <Edit />
-          </IconButton>
-        </Stack>
-      );
-    },
-  },
-  { field: "firstName", headerName: "First Name", flex: 1, minWidth: 170 },
-  { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 170 },
-  { field: "email", headerName: "Email", flex: 1, minWidth: 170 },
-  {
-    field: "type",
-    valueGetter: (params) => {
-      return params.row.type?.value ?? "";
-    },
-    headerName: "Type",
-    flex: 1,
-  },
-  { field: "ownerFullname", headerName: "Owner", flex: 1 },
-];
+import Update from "./Update";
+import { Contact, Dictionary } from "@prisma/client";
+
+export type ContactData = Contact & {
+  type: Dictionary | null;
+};
 
 export default function Page() {
   const [insertOpen, setInsertOpen] = useState(false);
+  const [updateData, setUpdateData] = useState<ContactData>();
+  const [updateOpen, setUpdateOpen] = useState(false);
   const { data: contacts, isSuccess } = api.contact.contacts.useQuery();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
+  console.log("contacts", contacts);
+  const columns: GridColDef[] = useMemo(
+    () => [
+      {
+        field: "action",
+        headerName: "",
+        filterable: false,
+        hideable: false,
+        sortable: false,
+        renderCell: (params) => {
+          const data = params.row as ContactData;
+
+          return (
+            <Stack direction={"row"} gap={"0.5rem"}>
+              <Link href={`/contact/${data.id}`}>
+                <IconButton size="small" sx={{ color: "primary.main" }} title="View">
+                  <Visibility />
+                </IconButton>
+              </Link>
+              <IconButton
+                onClick={() => {
+                  setUpdateData(data);
+                  setUpdateOpen(true);
+                }}
+                size="small"
+                sx={{ color: "primary.main" }}
+                title="Edit"
+              >
+                <Edit />
+              </IconButton>
+            </Stack>
+          );
+        },
+      },
+      { field: "firstName", headerName: "First Name", flex: 1, minWidth: 170 },
+      { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 170 },
+      { field: "email", headerName: "Email", flex: 1, minWidth: 170 },
+      {
+        field: "type",
+        valueGetter: (params) => {
+          const data = params.row as ContactData;
+          return data.type?.value ? data.type?.value : "";
+        },
+        headerName: "Type",
+        flex: 1,
+      },
+      { field: "ownerFullname", headerName: "Owner", flex: 1 },
+    ],
+    []
+  );
 
   useEffect(() => {
     setBreadcrumbs(
@@ -68,7 +91,8 @@ export default function Page() {
       <Head>
         <title>Contacts</title>
       </Head>
-      <Insert insertOpen={insertOpen} setInsertOpen={setInsertOpen} />
+      {updateData ? <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} /> : null}
+      <Insert isOpen={insertOpen} setOpen={setInsertOpen} />
       <Stack gap={"1rem"}>
         <Box>
           <Button variant="outlined" onClick={() => setInsertOpen(true)}>

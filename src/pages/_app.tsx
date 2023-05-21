@@ -56,7 +56,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     >
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        {pathname !== "/" ? (
+        {pathname !== "/" && !pathname.startsWith("/auth") ? (
           <Layout>
             <Component {...pageProps} />
           </Layout>
