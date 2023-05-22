@@ -92,11 +92,13 @@ export default function Layout({ children }: Props) {
   const [open, setOpen] = useState(true);
   const { isLoaded } = useOrganization();
   const { isLoaded: orgsLoad } = useOrganizations();
-  const { isLoaded: userLoad } = useUser();
+  const { isLoaded: userLoad, isSignedIn } = useUser();
 
   const handleDrawerOpen = () => {
     setOpen(true);
   };
+
+  if (!isSignedIn) return children;
 
   if (!isLoaded && !orgsLoad && !userLoad) {
     return <CenterLoad />;

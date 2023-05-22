@@ -45,8 +45,6 @@ export function useSystemStore<T>(selector?: (state: SystemSlice) => T, equals?:
 }
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  const { pathname } = useRouter();
-
   return (
     <ClerkProvider
       {...pageProps}
@@ -56,13 +54,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     >
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        {pathname !== "/" && !pathname.startsWith("/auth") ? (
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        ) : (
+        <Layout>
           <Component {...pageProps} />
-        )}
+        </Layout>
       </ThemeProvider>
       <ToastContainer position="top-center" autoClose={3000} />
     </ClerkProvider>
