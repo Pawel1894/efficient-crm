@@ -50,6 +50,24 @@ export const DealSchema = yup.object({
   lead: yup.string().optional().nullable(),
 });
 
+export const ActivitySchema = yup.object({
+  owner: yup
+    .object({
+      identifier: yup.string().optional().nullable(),
+      userId: yup.string().optional().nullable(),
+    })
+    .optional(),
+  date: yup.date().required("Date is required"),
+  time: yup.date().required("Time is required"),
+  status: yup.string().optional().nullable(),
+  lead: yup.string().optional().nullable(),
+  contact: yup.string().optional().nullable(),
+  description: yup.string().optional().nullable(),
+  title: yup.string().required("Title is required"),
+  location: yup.string().optional().nullable(),
+});
+
 export type DealType = yup.InferType<typeof DealSchema>;
 export type ContactType = yup.InferType<typeof ContactSchema>;
 export type LeadType = yup.InferType<typeof LeadSchema>;
+export type ActivityType = yup.InferType<typeof ActivitySchema>;
