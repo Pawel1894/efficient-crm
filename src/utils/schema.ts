@@ -3,16 +3,16 @@ import * as yup from "yup";
 export const ContactSchema = yup.object({
   firstName: yup.string().required("First name is required").max(50, "max characters is 50"),
   lastName: yup.string().required("Last name is required").max(50, "max characters is 50"),
-  company: yup.string().optional(),
-  title: yup.string().optional(),
+  company: yup.string().optional().nullable(),
+  title: yup.string().optional().nullable(),
   email: yup.string().email("Enter a valid email").required(),
-  phone: yup.string().optional(),
-  location: yup.string().optional(),
-  comment: yup.string().optional(),
+  phone: yup.string().optional().nullable(),
+  location: yup.string().optional().nullable(),
+  comment: yup.string().optional().nullable(),
   owner: yup
     .object({
-      identifier: yup.string(),
-      userId: yup.string(),
+      identifier: yup.string().optional().nullable(),
+      userId: yup.string().optional().nullable(),
     })
     .optional(),
   type: yup.string(),
