@@ -4,7 +4,7 @@ import { getUser } from "@/utils/helper";
 import { z } from "zod";
 import { type OrganizationMembership } from "@clerk/nextjs/api";
 import { TRPCError } from "@trpc/server";
-
+import * as yup from "yup";
 export const contactRouter = createTRPCRouter({
   create: protectedProcedure.input(ContactSchema).mutation(async ({ ctx, input }) => {
     let userDetails: OrganizationMembership | undefined;
@@ -36,6 +36,44 @@ export const contactRouter = createTRPCRouter({
 
     return contact;
   }),
+  update: protectedProcedure
+    .input(
+      yup.object({
+        id: yup.string(),
+        data: ContactSchema,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      let userDetails: OrganizationMembership | undefined;
+
+      if (ctx.user.orgId && ctx.user.id) {
+        userDetails = await getUser(ctx.user.orgId, ctx.user.id);
+      }
+
+      if (!userDetails) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Saving contact failed, please refresh and try again.",
+        });
+      }
+
+      const { owner: _, type: __, ...params } = input.data;
+
+      const contact = await ctx.prisma.contact.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          ...params,
+          owner: input.data.owner?.userId,
+          ownerFullname: input.data.owner?.identifier,
+          dictionaryId: input.data.type,
+          updatedBy: userDetails.publicUserData?.identifier ?? "undefined",
+        },
+      });
+
+      return contact;
+    }),
   recentlyUpdated: protectedProcedure.query(async ({ ctx }) => {
     if (!ctx.user.orgId) {
       throw new TRPCError({

@@ -11,7 +11,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { useEffect, type SetStateAction, useMemo } from "react";
+import React, { type SetStateAction, useMemo } from "react";
 import { useFormik } from "formik";
 import { Close } from "@mui/icons-material";
 import { useOrganization } from "@clerk/nextjs";
@@ -32,12 +32,12 @@ export default function Update({ isOpen, setOpen, data }: Props) {
   const { membershipList } = useOrganization({
     membershipList: {},
   });
-  const { mutate: submit, isLoading: isCreating } = api.contact.create.useMutation({
+  const { mutate: submit, isLoading: isCreating } = api.contact.update.useMutation({
     onError: (err) => {
       toast.error(err.message);
     },
     onSettled: async () => {
-      toast.success("Contact created");
+      toast.success("Contact updated");
       formik.resetForm();
       setOpen(false);
       await context.contact.contacts.invalidate();
@@ -46,28 +46,31 @@ export default function Update({ isOpen, setOpen, data }: Props) {
 
   const defaultOwner = useMemo(
     () => membershipList?.find((u) => u.publicUserData.userId === data.owner),
-    [data.id, membershipList]
+    [data.owner, membershipList]
   );
 
   const formik = useFormik({
     initialValues: {
       firstName: data.firstName,
       lastName: data.lastName,
-      company: data.company,
-      title: data.title,
+      company: data.company ?? "",
+      title: data.title ?? undefined,
       email: data.email,
-      phone: data.phone,
-      location: data.location,
-      comment: data.comment,
+      phone: data.phone ?? undefined,
+      location: data.location ?? undefined,
+      comment: data.comment ?? undefined,
       owner: {
-        identifier: data.ownerFullname,
-        userId: data.owner,
+        identifier: data.ownerFullname ?? undefined,
+        userId: data.owner ?? undefined,
       },
       type: data.type?.id ?? "",
     },
     validationSchema: ContactSchema,
     onSubmit: (values) => {
-      console.log("values", values);
+      submit({
+        id: data.id,
+        data: values,
+      });
     },
     enableReinitialize: true,
   });
@@ -274,7 +277,7 @@ export default function Update({ isOpen, setOpen, data }: Props) {
                   variant="contained"
                   type="submit"
                 >
-                  Create
+                  Update
                 </Button>
               </Box>
             </form>
