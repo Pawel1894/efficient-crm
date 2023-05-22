@@ -98,11 +98,11 @@ export default function Layout({ children }: Props) {
     setOpen(true);
   };
 
-  if (!isSignedIn) return children;
-
   if (!isLoaded && !orgsLoad && !userLoad) {
     return <CenterLoad />;
   }
+
+  if (!isSignedIn) return children;
 
   return (
     <>

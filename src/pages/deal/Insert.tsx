@@ -1,3 +1,7 @@
+import { api } from "@/utils/api";
+import { DealSchema, DealType } from "@/utils/schema";
+import { useOrganization } from "@clerk/nextjs";
+import { Close } from "@mui/icons-material";
 import {
   Autocomplete,
   Box,
@@ -11,55 +15,47 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import React, { type SetStateAction } from "react";
 import { useFormik } from "formik";
-import { Close } from "@mui/icons-material";
-import { useOrganization } from "@clerk/nextjs";
-import { api } from "@/utils/api";
-import { LeadSchema, LeadType } from "@/utils/schema";
+import React, { type SetStateAction } from "react";
 import { toast } from "react-toastify";
-
 type Props = {
   setOpen: React.Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
 };
 
-export default function Insert({ setOpen, isOpen }: Props) {
+export default function Insert({ isOpen, setOpen }: Props) {
   const desktopBr = useMediaQuery("(min-width:600px)");
   const context = api.useContext();
-  const { data: statuses } = api.dictionary.byType.useQuery("LEAD_STATUS");
+  const { data: stages } = api.dictionary.byType.useQuery("DEAL_STAGE");
   const { membershipList } = useOrganization({
     membershipList: {},
   });
-  const { mutate: submit, isLoading: isCreating } = api.lead.create.useMutation({
+  const { data: leads } = api.lead.leads.useQuery();
+  const { mutate: submit, isLoading: isCreating } = api.deal.create.useMutation({
     onError: (err) => {
       toast.error(err.message);
     },
     onSettled: async () => {
-      toast.success("Lead created");
+      toast.success("Contact created");
       formik.resetForm();
       setOpen(false);
-      await context.lead.leads.invalidate();
+      await context.deal.deals.invalidate();
     },
   });
 
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      company: "",
-      title: "",
-      email: "",
-      phone: "",
-      location: "",
-      comment: "",
+      forecast: 0,
+      comment: null,
       owner: {
-        identifier: "",
-        userId: "",
+        identifier: null,
+        userId: null,
       },
-      status: "",
-    } satisfies LeadType,
-    validationSchema: LeadSchema,
+      lead: null,
+      stage: null,
+      value: null,
+    } satisfies DealType,
+    validationSchema: DealSchema,
     onSubmit: (values) => {
       submit(values);
     },
@@ -82,7 +78,7 @@ export default function Insert({ setOpen, isOpen }: Props) {
           justifyContent={"space-between"}
         >
           <Typography variant="h6" component={"span"}>
-            Create new lead
+            Create new deal
           </Typography>
           <IconButton size="large" onClick={onHiding}>
             <Close />
@@ -111,99 +107,28 @@ export default function Insert({ setOpen, isOpen }: Props) {
                     <TextField
                       fullWidth
                       required
-                      id="firstName"
-                      name="firstName"
-                      label="First Name"
-                      value={formik.values.firstName}
+                      id="forecast"
+                      name="forecast"
+                      label="Forecast"
+                      value={formik.values.forecast}
                       onChange={formik.handleChange}
-                      error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-                      helperText={formik.touched.firstName && formik.errors.firstName}
+                      error={formik.touched.forecast && Boolean(formik.errors.forecast)}
+                      helperText={formik.touched.forecast && formik.errors.forecast}
                     />
                   </Box>
                 </Grid>
+
                 <Grid item xs={12} md={6}>
                   <Box px={1}>
                     <TextField
                       fullWidth
-                      required
-                      id="lastName"
-                      name="lastName"
-                      label="Last Name"
-                      value={formik.values.lastName}
+                      id="value"
+                      name="value"
+                      label="Value"
+                      value={formik.values.value}
                       onChange={formik.handleChange}
-                      error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-                      helperText={formik.touched.lastName && formik.errors.lastName}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Box px={1}>
-                    <TextField
-                      fullWidth
-                      required
-                      id="email"
-                      name="email"
-                      label="Email"
-                      value={formik.values.email}
-                      onChange={formik.handleChange}
-                      error={formik.touched.email && Boolean(formik.errors.email)}
-                      helperText={formik.touched.email && formik.errors.email}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Box px={1}>
-                    <TextField
-                      fullWidth
-                      id="company"
-                      name="company"
-                      label="Company"
-                      value={formik.values.company}
-                      onChange={formik.handleChange}
-                      error={formik.touched.company && Boolean(formik.errors.company)}
-                      helperText={formik.touched.company && formik.errors.company}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Box px={1}>
-                    <TextField
-                      fullWidth
-                      id="title"
-                      name="title"
-                      label="Title"
-                      value={formik.values.title}
-                      onChange={formik.handleChange}
-                      error={formik.touched.title && Boolean(formik.errors.title)}
-                      helperText={formik.touched.title && formik.errors.title}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Box px={1}>
-                    <TextField
-                      fullWidth
-                      id="phone"
-                      name="phone"
-                      label="Phone"
-                      value={formik.values.phone}
-                      onChange={formik.handleChange}
-                      error={formik.touched.phone && Boolean(formik.errors.phone)}
-                      helperText={formik.touched.phone && formik.errors.phone}
-                    />
-                  </Box>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <Box px={1}>
-                    <TextField
-                      fullWidth
-                      id="location"
-                      name="location"
-                      label="Location"
-                      value={formik.values.location}
-                      onChange={formik.handleChange}
-                      error={formik.touched.location && Boolean(formik.errors.location)}
-                      helperText={formik.touched.location && formik.errors.location}
+                      error={formik.touched.value && Boolean(formik.errors.value)}
+                      helperText={formik.touched.value && formik.errors.value}
                     />
                   </Box>
                 </Grid>
@@ -227,19 +152,34 @@ export default function Insert({ setOpen, isOpen }: Props) {
                     />
                   </Box>
                 </Grid>
+
                 <Grid item xs={12} md={6}>
                   <Box px={1}>
                     <Autocomplete
                       fullWidth
                       disablePortal
                       renderInput={(params) => (
-                        <TextField {...params} id="status" name="status" label="Status" />
+                        <TextField {...params} id="stage" name="stage" label="Stage" />
                       )}
-                      options={statuses ?? []}
-                      onChange={(e, value) => void formik.setFieldValue("status", value?.id)}
+                      options={stages ?? []}
+                      onChange={(e, value) => void formik.setFieldValue("stage", value?.id)}
                     />
                   </Box>
                 </Grid>
+
+                <Grid item xs={12} md={6}>
+                  <Box px={1}>
+                    <Autocomplete
+                      fullWidth
+                      disablePortal
+                      getOptionLabel={(option) => option.firstName + " " + option.lastName}
+                      renderInput={(params) => <TextField {...params} id="lead" name="lead" label="Lead" />}
+                      options={leads ?? []}
+                      onChange={(e, value) => void formik.setFieldValue("lead", value?.id)}
+                    />
+                  </Box>
+                </Grid>
+
                 <Grid item xs={12} md={6}>
                   <Box px={1}>
                     <TextField

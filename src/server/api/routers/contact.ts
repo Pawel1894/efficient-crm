@@ -29,6 +29,7 @@ export const contactRouter = createTRPCRouter({
         ownerFullname: input.owner?.identifier,
         dictionaryId: input.type,
         updatedBy: userDetails.publicUserData?.identifier ?? "undefined",
+        createdBy: userDetails.publicUserData?.identifier ?? "undefined",
         team: ctx.user.orgId,
         teamName: userDetails.organization.name,
       },
@@ -68,6 +69,7 @@ export const contactRouter = createTRPCRouter({
           owner: input.data.owner?.userId,
           ownerFullname: input.data.owner?.identifier,
           dictionaryId: input.data.type,
+          teamName: userDetails.organization.name,
           updatedBy: userDetails.publicUserData?.identifier ?? "undefined",
         },
       });

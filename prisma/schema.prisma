@@ -42,23 +42,22 @@ model Lead {
 }
 
 model Deal {
-    id               String      @id @default(cuid())
-    forecast         Float       @db.Float
-    value            Float?      @db.Float
-    owner            String
-    ownerFullname    String?
-    stage            Dictionary? @relation(fields: [dictionaryId], references: [id])
-    comment          String?     @db.LongText
-    closeProbability Float       @db.Float
-    lead             Lead?       @relation(fields: [leadId], references: [id])
-    createdBy        String
-    updatedBy        String
-    createdAt        DateTime    @default(now())
-    updatedAt        DateTime    @updatedAt
-    team             String
-    teamName         String
-    leadId           String?
-    dictionaryId     String?
+    id            String      @id @default(cuid())
+    forecast      Float       @db.Float
+    value         Float?      @db.Float
+    owner         String?
+    ownerFullname String?
+    stage         Dictionary? @relation(fields: [dictionaryId], references: [id])
+    comment       String?     @db.LongText
+    lead          Lead?       @relation(fields: [leadId], references: [id])
+    createdBy     String?
+    updatedBy     String
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt
+    team          String
+    teamName      String
+    leadId        String?
+    dictionaryId  String?
 
     @@index([leadId])
     @@index([dictionaryId])

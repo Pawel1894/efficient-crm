@@ -16,7 +16,7 @@ import { useFormik } from "formik";
 import { Close } from "@mui/icons-material";
 import { useOrganization } from "@clerk/nextjs";
 import { api } from "@/utils/api";
-import { ContactSchema } from "@/utils/schema";
+import { ContactSchema, ContactType } from "@/utils/schema";
 import { toast } from "react-toastify";
 import type { ContactData } from ".";
 
@@ -64,7 +64,7 @@ export default function Update({ isOpen, setOpen, data }: Props) {
         userId: data.owner,
       },
       type: data.type?.id ?? "",
-    },
+    } satisfies ContactType,
     validationSchema: ContactSchema,
     onSubmit: (values) => {
       submit({

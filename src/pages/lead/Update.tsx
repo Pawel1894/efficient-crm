@@ -16,7 +16,7 @@ import { useFormik } from "formik";
 import { Close } from "@mui/icons-material";
 import { useOrganization } from "@clerk/nextjs";
 import { api } from "@/utils/api";
-import { LeadSchema } from "@/utils/schema";
+import { LeadSchema, LeadType } from "@/utils/schema";
 import { toast } from "react-toastify";
 import type { LeadData } from ".";
 
@@ -64,7 +64,7 @@ export default function Update({ isOpen, setOpen, data }: Props) {
         userId: data.owner,
       },
       status: data.status?.id ?? "",
-    },
+    } satisfies LeadType,
     validationSchema: LeadSchema,
     onSubmit: (values) => {
       submit({

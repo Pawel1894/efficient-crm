@@ -35,3 +35,21 @@ export const LeadSchema = yup.object({
     .optional(),
   status: yup.string(),
 });
+
+export const DealSchema = yup.object({
+  forecast: yup.number().required("Forecast is required"),
+  value: yup.number().optional().nullable(),
+  owner: yup
+    .object({
+      identifier: yup.string().optional().nullable(),
+      userId: yup.string().optional().nullable(),
+    })
+    .optional(),
+  stage: yup.string().optional().nullable(),
+  comment: yup.string().optional().nullable(),
+  lead: yup.string().optional().nullable(),
+});
+
+export type DealType = yup.InferType<typeof DealSchema>;
+export type ContactType = yup.InferType<typeof ContactSchema>;
+export type LeadType = yup.InferType<typeof LeadSchema>;

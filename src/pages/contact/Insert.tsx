@@ -16,7 +16,7 @@ import { useFormik } from "formik";
 import { Close } from "@mui/icons-material";
 import { useOrganization } from "@clerk/nextjs";
 import { api } from "@/utils/api";
-import { ContactSchema } from "@/utils/schema";
+import { ContactSchema, ContactType } from "@/utils/schema";
 import { toast } from "react-toastify";
 
 type Props = {
@@ -58,7 +58,7 @@ export default function Insert({ setOpen, isOpen }: Props) {
         userId: "",
       },
       type: "",
-    },
+    } satisfies ContactType,
     validationSchema: ContactSchema,
     onSubmit: (values) => {
       submit(values);
