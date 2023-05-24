@@ -93,7 +93,7 @@ export default function Layout({ children }: Props) {
   const { isLoaded } = useOrganization();
   const { isLoaded: orgsLoad } = useOrganizations();
   const { isLoaded: userLoad, isSignedIn } = useUser();
-
+  const { pathname } = useRouter();
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -102,7 +102,7 @@ export default function Layout({ children }: Props) {
     return <CenterLoad />;
   }
 
-  if (!isSignedIn) return children;
+  if (!isSignedIn || pathname === "/") return children;
 
   return (
     <>

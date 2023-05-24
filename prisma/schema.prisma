@@ -76,7 +76,6 @@ model Contact {
     owner         String?
     ownerFullname String?
     type          Dictionary? @relation(fields: [dictionaryId], references: [id])
-    activities    Activity[]
     createdBy     String?
     updatedBy     String
     createdAt     DateTime    @default(now())
@@ -92,10 +91,8 @@ model Activity {
     id            String      @id @default(cuid())
     owner         String?
     ownerFullname String?
-    date          DateTime    @db.Date
-    time          DateTime    @db.Time()
+    date          DateTime    @db.DateTime()
     status        Dictionary? @relation(fields: [dictionaryId], references: [id])
-    contact       Contact?    @relation(fields: [contactId], references: [id])
     lead          Lead?       @relation(fields: [leadId], references: [id])
     description   String?
     title         String
@@ -103,7 +100,6 @@ model Activity {
     team          String
     teamName      String
     leadId        String?
-    contactId     String?
     dictionaryId  String?
     createdBy     String?
     updatedBy     String
@@ -111,7 +107,6 @@ model Activity {
     updatedAt     DateTime    @updatedAt
 
     @@index([leadId])
-    @@index([contactId])
     @@index([dictionaryId])
 }
 

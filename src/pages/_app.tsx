@@ -15,7 +15,9 @@ import { dark } from "@clerk/themes";
 import Layout from "@/components/Layout";
 import { ToastContainer } from "react-toastify";
 import "@/styles/react-toastify.css";
-import { useRouter } from "next/router";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -54,9 +56,11 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     >
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </LocalizationProvider>
       </ThemeProvider>
       <ToastContainer position="top-center" autoClose={3000} />
     </ClerkProvider>

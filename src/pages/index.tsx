@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import handleViewport, { type InjectedViewportProps } from "react-in-viewport";
 import { grey } from "@mui/material/colors";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 
 function AboutBlock(props: InjectedViewportProps<HTMLDivElement>) {
   const { inViewport, forwardedRef } = props;

@@ -65,9 +65,7 @@ export default function Glossary() {
           </ListItemAvatar>
           <ListItemText>
             <Box display={"flex"}>
-              <Typography variant="body1">
-                Activity – event that can be made for a client or a lead.
-              </Typography>
+              <Typography variant="body1">Activity – event that can be attached to a lead.</Typography>
             </Box>
           </ListItemText>
         </ListItem>

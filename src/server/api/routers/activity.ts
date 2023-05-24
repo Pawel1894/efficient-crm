@@ -7,7 +7,7 @@ import * as yup from "yup";
 import dayjs from "dayjs";
 
 export const activityRouter = createTRPCRouter({
-  incoming: protectedProcedure.query(async ({ ctx, input }) => {
+  today: protectedProcedure.query(async ({ ctx }) => {
     if (!ctx.user.orgId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
@@ -19,7 +19,7 @@ export const activityRouter = createTRPCRouter({
       team: ctx.user.orgId,
       AND: {
         date: {
-          gt: dayjs().startOf("day").subtract(1, "day").toISOString(),
+          gt: dayjs().startOf("day").toISOString(),
           lt: dayjs().startOf("day").add(2, "day").toISOString(),
         },
       },
@@ -30,12 +30,19 @@ export const activityRouter = createTRPCRouter({
     }
 
     const activities = await ctx.prisma.activity.findMany({
-      where: where,
+      where: {
+        team: ctx.user.orgId,
+        AND: {
+          date: {
+            gt: dayjs().startOf("day").toISOString(),
+            lt: dayjs().startOf("day").add(1, "day").toISOString(),
+          },
+        },
+      },
       orderBy: {
         date: "desc",
       },
       include: {
-        contact: true,
         lead: true,
         status: true,
       },
@@ -75,7 +82,6 @@ export const activityRouter = createTRPCRouter({
       include: {
         status: true,
         lead: true,
-        contact: true,
       },
     });
 
@@ -95,7 +101,7 @@ export const activityRouter = createTRPCRouter({
       });
     }
 
-    const { owner: _, status: __, lead: ___, contact: ____, ...params } = input;
+    const { owner: _, status: __, lead: ___, ...params } = input;
 
     const activity = await ctx.prisma.activity.create({
       data: {
@@ -108,7 +114,6 @@ export const activityRouter = createTRPCRouter({
         team: ctx.user.orgId,
         teamName: userDetails.organization.name,
         leadId: input.lead,
-        contactId: input.contact,
       },
     });
 
@@ -135,7 +140,7 @@ export const activityRouter = createTRPCRouter({
         });
       }
 
-      const { owner: _, status: __, lead: ___, contact: ____, ...params } = input.data;
+      const { owner: _, status: __, lead: ___, ...params } = input.data;
 
       const activity = await ctx.prisma.activity.update({
         where: {
@@ -150,7 +155,6 @@ export const activityRouter = createTRPCRouter({
           team: ctx.user.orgId,
           teamName: userDetails.organization.name,
           leadId: input.data.lead,
-          contactId: input.data.contact,
         },
       });
 

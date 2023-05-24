@@ -75,7 +75,7 @@ export default function RecentlyUpdated({
                         </Typography>
                         <br />
                         <Typography sx={{ display: "inline" }} component="span" variant="body2">
-                          {dayjs(item.updatedAt?.toString()).format("DD/MM/YYYY HH:mm:ss")}
+                          {dayjs(item.updatedAt?.toString()).format("DD/MM/YYYY HH:mm")}
                         </Typography>
                       </Grid>
                       <Grid xs={1}>

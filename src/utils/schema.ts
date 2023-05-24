@@ -58,10 +58,8 @@ export const ActivitySchema = yup.object({
     })
     .optional(),
   date: yup.date().required("Date is required"),
-  time: yup.date().required("Time is required"),
   status: yup.string().optional().nullable(),
   lead: yup.string().optional().nullable(),
-  contact: yup.string().optional().nullable(),
   description: yup.string().optional().nullable(),
   title: yup.string().required("Title is required"),
   location: yup.string().optional().nullable(),

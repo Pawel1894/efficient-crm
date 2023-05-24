@@ -1,10 +1,10 @@
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { api } from "@/utils/api";
-import { Deal, Dictionary, Lead } from "@prisma/client";
+import type { Deal, Dictionary, Lead } from "@prisma/client";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSystemStore } from "../_app";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { Box, Breadcrumbs, Button, IconButton, Link, Stack, Typography } from "@mui/material";
 import { Add, Edit, Visibility } from "@mui/icons-material";
 import Head from "next/head";

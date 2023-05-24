@@ -129,7 +129,8 @@ export const systemRouter = createTRPCRouter({
       // create deals
       await ctx.prisma.deal.create({
         data: {
-          closeProbability: 0.8,
+          comment: "Test comment",
+          value: 0,
           createdBy: ctx.user.id,
           forecast: 80000,
           owner: ctx.user.id,
@@ -147,15 +148,16 @@ export const systemRouter = createTRPCRouter({
 
       await ctx.prisma.activity.create({
         data: {
-          date: dayjs().add(1, "day").toISOString(),
-          time: dayjs().add(1, "day").toISOString(),
+          date: dayjs().toDate(),
           owner: ctx.user.id,
           ownerFullname: input.userName,
+          createdBy: input.userName,
+          updatedBy: input.userName,
           team: input.id,
           teamName: input.name,
-          contact: {
+          lead: {
             connect: {
-              id: contact.id,
+              id: lead.id,
             },
           },
           title: "Send offert",
@@ -165,12 +167,13 @@ export const systemRouter = createTRPCRouter({
 
       await ctx.prisma.activity.create({
         data: {
-          date: dayjs().add(1, "day").toISOString(),
-          time: dayjs().add(1, "day").toISOString(),
+          date: new Date(),
           owner: ctx.user.id,
           ownerFullname: input.userName,
           team: input.id,
           teamName: input.name,
+          createdBy: input.userName,
+          updatedBy: input.userName,
           lead: {
             connect: {
               id: lead.id,

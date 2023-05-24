@@ -1,6 +1,6 @@
 import superjson from "superjson";
 import Glossary from "@/components/Glossary";
-import IncomingActivities from "@/components/IncomingActivities";
+import TodayActivities from "@/components/TodayActivities";
 import { useOrganization } from "@clerk/nextjs";
 import { Box, Breadcrumbs, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -11,7 +11,7 @@ import { api } from "@/utils/api";
 import { useSystemStore } from "../_app";
 import Head from "next/head";
 import { getAuth } from "@clerk/nextjs/server";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { appRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
@@ -57,7 +57,7 @@ export default function Page() {
           </Grid>
           <Grid xs={12} md={6}>
             <Paper>
-              <IncomingActivities />
+              <TodayActivities />
             </Paper>
           </Grid>
           <Grid xs={12} md={6}>
@@ -94,7 +94,7 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest; re
 
   await helpers.lead.recentlyUpdated.prefetch();
   await helpers.contact.recentlyUpdated.prefetch();
-  await helpers.activity.incoming.prefetch();
+  await helpers.activity.today.prefetch();
 
   return {
     props: {

@@ -6,11 +6,11 @@ import dayjs from "dayjs";
 import Link from "next/link";
 import React from "react";
 
-export default function IncomingActivities() {
-  const { data } = api.activity.incoming.useQuery();
+export default function TodayActivities() {
+  const { data } = api.activity.today.useQuery();
   return (
     <Box p={2} height={256}>
-      <Typography>Incoming activities</Typography>
+      <Typography>Today&apos;s activities</Typography>
       <List style={{ height: "85%", overflow: "auto" }}>
         {data && data.length > 0 ? (
           data.map((item) => {
@@ -47,24 +47,14 @@ export default function IncomingActivities() {
                         </Typography>
                         <br />
                         <Typography component="span" variant="body2">
-                          {`${dayjs(item.date?.toString()).format("DD/MM/YYYY")} ${dayjs(
-                            item.time?.toString()
-                          ).format("HH:mm:ss")}`}
+                          {`${dayjs(item.date?.toString()).format("DD/MM/YYYY HH:mm")}`}
                         </Typography>
                       </Grid>
                       <Grid xs={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
-                          {item.contact ? "Contact" : "Lead"}
+                          Lead
                         </Typography>
                         <br />
-
-                        {item.contact ? (
-                          <Link href={`/contact/${item.contact.id}`}>
-                            <Typography color={"text.primary"} component="span" variant="body2">
-                              {`${item.contact.firstName} ${item.contact.lastName}`}{" "}
-                            </Typography>
-                          </Link>
-                        ) : null}
 
                         {item.lead ? (
                           <Link href={`/lead/${item.lead.id}`}>
@@ -72,13 +62,11 @@ export default function IncomingActivities() {
                               {`${item.lead.firstName} ${item.lead.lastName}`}{" "}
                             </Typography>
                           </Link>
-                        ) : null}
-
-                        {!item.contact && !item.lead ? (
+                        ) : (
                           <Typography color={"text.primary"} component="span" variant="body2">
                             None
                           </Typography>
-                        ) : null}
+                        )}
                       </Grid>
                       <Grid xs={1}>
                         {item.id ? (
