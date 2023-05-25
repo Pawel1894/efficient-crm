@@ -41,6 +41,7 @@ export default function Update({ isOpen, setOpen, data }: Props) {
       formik.resetForm();
       setOpen(false);
       await context.contact.contacts.invalidate();
+      await context.contact.get.invalidate();
     },
   });
 

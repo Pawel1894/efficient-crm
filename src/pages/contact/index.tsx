@@ -5,7 +5,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { api } from "@/utils/api";
 import type { GridColDef } from "@mui/x-data-grid";
 import Link from "next/link";
-import { Add, Edit, SecurityUpdate, Visibility } from "@mui/icons-material";
+import { Add, Delete, Edit, Visibility } from "@mui/icons-material";
 import Insert from "./Insert";
 import { useSystemStore } from "../_app";
 import Head from "next/head";
@@ -16,6 +16,7 @@ import { appRouter } from "@/server/api/root";
 import superjson from "superjson";
 import Update from "./Update";
 import { Contact, Dictionary } from "@prisma/client";
+import DeleteDialog from "@/components/DeleteDialog";
 
 export type ContactData = Contact & {
   type: Dictionary | null;
@@ -25,9 +26,24 @@ export default function Page() {
   const [insertOpen, setInsertOpen] = useState(false);
   const [updateData, setUpdateData] = useState<ContactData>();
   const [updateOpen, setUpdateOpen] = useState(false);
-  const { data: contacts, isSuccess } = api.contact.contacts.useQuery();
+  const { data: contacts, isSuccess, refetch } = api.contact.contacts.useQuery();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
-  console.log("contacts", contacts);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const { mutate: deleteContact, isLoading: isDeleting } = api.contact.delete.useMutation({
+    onSettled: async () => {
+      await refetch();
+    },
+  });
+
+  function handleDelete(confirmed: boolean, id?: string) {
+    if (confirmed && id) {
+      deleteContact(id);
+    }
+
+    setDeleteOpen(false);
+    return;
+  }
+
   const columns: GridColDef[] = useMemo(
     () => [
       {
@@ -36,13 +52,14 @@ export default function Page() {
         filterable: false,
         hideable: false,
         sortable: false,
+        minWidth: 125,
         renderCell: (params) => {
           const data = params.row as ContactData;
 
           return (
-            <Stack direction={"row"} gap={"0.5rem"}>
+            <Stack direction={"row"} gap={"0.25rem"}>
               <Link href={`/contact/${data.id}`}>
-                <IconButton size="small" sx={{ color: "primary.main" }} title="View">
+                <IconButton size="small" color="primary" title="View">
                   <Visibility />
                 </IconButton>
               </Link>
@@ -52,10 +69,21 @@ export default function Page() {
                   setUpdateOpen(true);
                 }}
                 size="small"
-                sx={{ color: "primary.main" }}
+                color="primary"
                 title="Edit"
               >
                 <Edit />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  setUpdateData(data);
+                  setDeleteOpen(true);
+                }}
+                size="small"
+                color="warning"
+                title="Delete"
+              >
+                <Delete />
               </IconButton>
             </Stack>
           );
@@ -74,6 +102,10 @@ export default function Page() {
         flex: 1,
       },
       { field: "ownerFullname", headerName: "Owner", flex: 1 },
+      { field: "title", headerName: "Title", flex: 1 },
+      { field: "phone", headerName: "Phone", flex: 1 },
+      { field: "location", headerName: "Location", flex: 1 },
+      { field: "teamName", headerName: "Team Name", flex: 1 },
     ],
     []
   );
@@ -91,6 +123,14 @@ export default function Page() {
       <Head>
         <title>Contacts</title>
       </Head>
+      {updateData?.id ? (
+        <DeleteDialog
+          id={updateData.id}
+          isDeleting={isDeleting}
+          open={deleteOpen}
+          handleClose={handleDelete}
+        />
+      ) : null}
       {updateData ? <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} /> : null}
       <Insert isOpen={insertOpen} setOpen={setInsertOpen} />
       <Stack gap={"1rem"}>

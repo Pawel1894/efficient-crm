@@ -144,4 +144,30 @@ export const contactRouter = createTRPCRouter({
 
     return results;
   }),
+  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    const contact = await ctx.prisma.contact.findFirst({
+      where: {
+        id: input,
+      },
+      include: {
+        type: true,
+      },
+    });
+
+    if (contact === null) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Contact not found",
+      });
+    }
+
+    return contact;
+  }),
+  delete: protectedProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    await ctx.prisma.contact.delete({
+      where: {
+        id: input,
+      },
+    });
+  }),
 });
