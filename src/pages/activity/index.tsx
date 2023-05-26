@@ -2,14 +2,15 @@ import { api } from "@/utils/api";
 import type { Activity, Contact, Dictionary, Lead } from "@prisma/client";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSystemStore } from "../_app";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import Link from "next/link";
-import { Add, Edit, Visibility } from "@mui/icons-material";
+import { Add, Delete, Edit, Visibility } from "@mui/icons-material";
 import { Box, Breadcrumbs, Button, IconButton, Stack, Typography } from "@mui/material";
 import Head from "next/head";
 import dayjs from "dayjs";
 import Insert from "./Insert";
 import Update from "./Update";
+import DeleteDialog from "@/components/DeleteDialog";
 
 export type ActivityData = Activity & {
   status: Dictionary | null;
@@ -18,13 +19,26 @@ export type ActivityData = Activity & {
 };
 
 export default function Page() {
+  const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
   const [insertOpen, setInsertOpen] = useState(false);
   const [updateData, setUpdateData] = useState<ActivityData>();
   const [updateOpen, setUpdateOpen] = useState(false);
-  const { data: activities, isSuccess } = api.activity.activities.useQuery();
-  const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
+  const { data: activities, isSuccess, refetch } = api.activity.activities.useQuery();
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const { mutate: deleteActivity, isLoading: isDeleting } = api.activity.delete.useMutation({
+    onSettled: async () => {
+      await refetch();
+    },
+  });
 
-  console.log(activities);
+  function handleDelete(confirmed: boolean, id?: string) {
+    if (confirmed && id) {
+      deleteActivity(id);
+    }
+
+    setDeleteOpen(false);
+    return;
+  }
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -34,6 +48,7 @@ export default function Page() {
         filterable: false,
         hideable: false,
         sortable: false,
+        minWidth: 125,
         renderCell: (params) => {
           const data = params.row as ActivityData;
 
@@ -54,6 +69,17 @@ export default function Page() {
                 title="Edit"
               >
                 <Edit />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  setUpdateData(data);
+                  setDeleteOpen(true);
+                }}
+                size="small"
+                color="warning"
+                title="Delete"
+              >
+                <Delete />
               </IconButton>
             </Stack>
           );
@@ -115,7 +141,17 @@ export default function Page() {
       <Head>
         <title>Activities</title>
       </Head>
-      {updateData ? <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} /> : null}
+      {updateData ? (
+        <>
+          <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} />{" "}
+          <DeleteDialog
+            id={updateData.id}
+            isDeleting={isDeleting}
+            open={deleteOpen}
+            handleClose={handleDelete}
+          />
+        </>
+      ) : null}
       <Insert isOpen={insertOpen} setOpen={setInsertOpen} />
       <Stack gap={"1rem"}>
         <Box>

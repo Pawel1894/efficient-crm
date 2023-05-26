@@ -5,6 +5,7 @@ import { type OrganizationMembership } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import * as yup from "yup";
 import dayjs from "dayjs";
+import { z } from "zod";
 
 export const activityRouter = createTRPCRouter({
   today: protectedProcedure.query(async ({ ctx }) => {
@@ -160,4 +161,11 @@ export const activityRouter = createTRPCRouter({
 
       return activity;
     }),
+  delete: protectedProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    await ctx.prisma.activity.delete({
+      where: {
+        id: input,
+      },
+    });
+  }),
 });
