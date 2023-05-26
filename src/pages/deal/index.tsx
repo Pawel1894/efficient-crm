@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useSystemStore } from "../_app";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { Box, Breadcrumbs, Button, IconButton, Link, Stack, Typography } from "@mui/material";
-import { Add, Edit, Visibility } from "@mui/icons-material";
+import { Add, Delete, Edit, Visibility } from "@mui/icons-material";
 import Head from "next/head";
 import Insert from "./Insert";
 import superjson from "superjson";
@@ -14,6 +14,7 @@ import { getAuth } from "@clerk/nextjs/server";
 import { appRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
 import Update from "./Update";
+import DeleteDialog from "@/components/DeleteDialog";
 
 export type DealData = Deal & {
   stage: Dictionary | null;
@@ -24,8 +25,23 @@ export default function Page() {
   const [insertOpen, setInsertOpen] = useState(false);
   const [updateData, setUpdateData] = useState<DealData>();
   const [updateOpen, setUpdateOpen] = useState(false);
-  const { data: deals, isSuccess } = api.deal.deals.useQuery();
+  const { data: deals, isSuccess, refetch } = api.deal.deals.useQuery();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const { mutate: deleteDeal, isLoading: isDeleting } = api.deal.delete.useMutation({
+    onSettled: async () => {
+      await refetch();
+    },
+  });
+
+  function handleDelete(confirmed: boolean, id?: string) {
+    if (confirmed && id) {
+      deleteDeal(id);
+    }
+
+    setDeleteOpen(false);
+    return;
+  }
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -35,6 +51,7 @@ export default function Page() {
         filterable: false,
         hideable: false,
         sortable: false,
+        minWidth: 125,
         renderCell: (params) => {
           const data = params.row as DealData;
 
@@ -55,6 +72,17 @@ export default function Page() {
                 title="Edit"
               >
                 <Edit />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  setUpdateData(data);
+                  setDeleteOpen(true);
+                }}
+                size="small"
+                color="warning"
+                title="Delete"
+              >
+                <Delete />
               </IconButton>
             </Stack>
           );
@@ -99,7 +127,17 @@ export default function Page() {
       <Head>
         <title>Deals</title>
       </Head>
-      {updateData ? <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} /> : null}
+      {updateData ? (
+        <>
+          <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} />{" "}
+          <DeleteDialog
+            id={updateData.id}
+            isDeleting={isDeleting}
+            open={deleteOpen}
+            handleClose={handleDelete}
+          />
+        </>
+      ) : null}
       <Insert isOpen={insertOpen} setOpen={setInsertOpen} />
       <Stack gap={"1rem"}>
         <Box>

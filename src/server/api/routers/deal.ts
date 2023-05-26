@@ -4,6 +4,7 @@ import { DealSchema } from "@/utils/schema";
 import { type OrganizationMembership } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import * as yup from "yup";
+import { z } from "zod";
 export const dealRouter = createTRPCRouter({
   deals: protectedProcedure.query(async ({ ctx }) => {
     if (!ctx.user.orgId || !ctx.user.id) {
@@ -113,4 +114,11 @@ export const dealRouter = createTRPCRouter({
 
       return deal;
     }),
+  delete: protectedProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    await ctx.prisma.deal.delete({
+      where: {
+        id: input,
+      },
+    });
+  }),
 });
