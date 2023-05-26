@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 
@@ -6,18 +6,23 @@ type Props = {
   content: string | null | undefined;
   label: string;
   href?: string | null;
+  tooltip?: JSX.Element;
 };
 
-export default function ItemDisplay({ content, label, href }: Props) {
+export default function ItemDisplay({ content, label, href, tooltip }: Props) {
   return (
     <Stack>
-      <Typography variant="overline" component={"span"}>
-        {label}
-      </Typography>
+      <Stack direction={"row"} gap={"0.25rem"}>
+        <Typography variant="overline" component={"span"}>
+          {label}
+        </Typography>
+        <Box>{tooltip}</Box>
+      </Stack>
       {href && content ? (
         <Link href={href}>
           <Typography
             sx={{
+              display: "block",
               textOverflow: "ellipsis",
               overflow: "hidden",
             }}

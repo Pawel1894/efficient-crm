@@ -15,6 +15,7 @@ import ListItemText from "@mui/material/ListItemText";
 import { useState } from "react";
 import {
   Add,
+  Analytics,
   AttachMoney,
   ContactPage,
   Group,
@@ -23,20 +24,20 @@ import {
   ModeStandby,
   Settings,
 } from "@mui/icons-material";
-import { MenuItem } from "@mui/material";
+import { MenuItem, useMediaQuery } from "@mui/material";
 import { UserButton, useOrganization, useOrganizations, useUser } from "@clerk/nextjs";
 import TeamSwitcher from "./TeamSwitcher";
 import CenterLoad from "./CenterLoad";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import Head from "next/head";
 import { useSystemStore } from "@/pages/_app";
 
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
-}>(({ theme, open }) => ({
+  desktopBr: boolean;
+}>(({ theme, open, desktopBr }) => ({
   flexGrow: 1,
   padding: theme.spacing(3),
   transition: theme.transitions.create("margin", {
@@ -44,7 +45,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open &&
-    window.innerWidth > 600 && {
+    desktopBr && {
       marginLeft: `${drawerWidth}px`,
       transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.easeOut,
@@ -55,17 +56,18 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
+  desktopBr: boolean;
 }
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open }) => ({
+})<AppBarProps>(({ theme, open, desktopBr }) => ({
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open &&
-    window.innerWidth > 600 && {
+    desktopBr && {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: `${drawerWidth}px`,
       transition: theme.transitions.create(["margin", "width"], {
@@ -88,6 +90,8 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
+  const desktopBr = useMediaQuery("(min-width:600px)");
+
   const breadcrumbs = useSystemStore((state) => state.breadcrumbs);
   const [open, setOpen] = useState(true);
   const { isLoaded } = useOrganization();
@@ -106,7 +110,7 @@ export default function Layout({ children }: Props) {
 
   return (
     <>
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={open} desktopBr={desktopBr}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -125,7 +129,7 @@ export default function Layout({ children }: Props) {
         </Toolbar>
       </AppBar>
       <DrawerComponent open={open} setOpen={setOpen} />
-      <Main open={open}>
+      <Main open={open} desktopBr={desktopBr}>
         <DrawerHeader />
         {children}
       </Main>
@@ -235,12 +239,6 @@ const commonMenu: Array<MenuItem> = [
     icon: <Home />,
   },
   {
-    id: 1,
-    text: "Contacts",
-    link: "/contact",
-    icon: <ContactPage />,
-  },
-  {
     id: 2,
     text: "Leads",
     link: "/lead",
@@ -257,6 +255,18 @@ const commonMenu: Array<MenuItem> = [
     text: "Activities",
     link: "/activity",
     icon: <LocalActivity />,
+  },
+  {
+    id: 1,
+    text: "Contacts",
+    link: "/contact",
+    icon: <ContactPage />,
+  },
+  {
+    id: 6,
+    text: "Analytics",
+    link: "/analytics",
+    icon: <Analytics />,
   },
   {
     id: 5,

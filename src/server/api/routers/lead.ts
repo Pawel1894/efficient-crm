@@ -149,4 +149,23 @@ export const leadRouter = createTRPCRouter({
       },
     });
   }),
+  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    const contact = await ctx.prisma.lead.findFirst({
+      where: {
+        id: input,
+      },
+      include: {
+        status: true,
+      },
+    });
+
+    if (contact === null) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Contact not found",
+      });
+    }
+
+    return contact;
+  }),
 });

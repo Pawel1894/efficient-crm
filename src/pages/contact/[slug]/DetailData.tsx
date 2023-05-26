@@ -3,7 +3,7 @@ import type { ContactData } from "..";
 import ItemDisplay from "@/components/ItemDisplay";
 import dayjs from "dayjs";
 
-export function DetailsData({ contact }: { contact: ContactData }) {
+export function DetailData({ contact }: { contact: ContactData }) {
   return (
     <Grid py={3} container columnGap={6} rowGap={4}>
       <Grid xs={5} md={3} lg={2}>
@@ -19,17 +19,21 @@ export function DetailsData({ contact }: { contact: ContactData }) {
         <ItemDisplay label="Title" content={contact?.title} />
       </Grid>
       <Grid xs={5} md={3} lg={2}>
-        <ItemDisplay label="Email" content={contact?.email} />
+        <ItemDisplay label="Email" href={`mailto:${contact?.email}`} content={contact?.email} />
       </Grid>
       <Grid xs={5} md={3} lg={2}>
-        <ItemDisplay label="Phone" content={contact?.phone} />
+        <ItemDisplay
+          label="Phone"
+          href={contact?.phone ? `tel:${contact?.phone}` : null}
+          content={contact?.phone}
+        />
       </Grid>
       <Grid xs={5} md={3} lg={2}>
         <ItemDisplay label="Location" content={contact?.location} />
       </Grid>
       <Grid xs={5} md={3} lg={2}>
         <ItemDisplay
-          label="Type"
+          label="Owner"
           href={contact?.owner ? `/user/${contact?.owner}` : null}
           content={contact?.ownerFullname}
         />
