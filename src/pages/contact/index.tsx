@@ -15,7 +15,7 @@ import { createTRPCContext } from "@/server/api/trpc";
 import { appRouter } from "@/server/api/root";
 import superjson from "superjson";
 import Update from "./Update";
-import { Contact, Dictionary } from "@prisma/client";
+import type { Contact, Dictionary } from "@prisma/client";
 import DeleteDialog from "@/components/DeleteDialog";
 
 export type ContactData = Contact & {
@@ -123,15 +123,18 @@ export default function Page() {
       <Head>
         <title>Contacts</title>
       </Head>
-      {updateData?.id ? (
-        <DeleteDialog
-          id={updateData.id}
-          isDeleting={isDeleting}
-          open={deleteOpen}
-          handleClose={handleDelete}
-        />
+
+      {updateData ? (
+        <>
+          <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} />{" "}
+          <DeleteDialog
+            id={updateData.id}
+            isDeleting={isDeleting}
+            open={deleteOpen}
+            handleClose={handleDelete}
+          />
+        </>
       ) : null}
-      {updateData ? <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} /> : null}
       <Insert isOpen={insertOpen} setOpen={setInsertOpen} />
       <Stack gap={"1rem"}>
         <Box>

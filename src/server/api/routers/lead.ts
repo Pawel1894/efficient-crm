@@ -4,6 +4,7 @@ import { LeadSchema } from "@/utils/schema";
 import { type OrganizationMembership } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import * as yup from "yup";
+import { z } from "zod";
 export const leadRouter = createTRPCRouter({
   recentlyUpdated: protectedProcedure.query(async ({ ctx }) => {
     if (!ctx.user.orgId) {
@@ -39,8 +40,6 @@ export const leadRouter = createTRPCRouter({
     return leads;
   }),
   leads: protectedProcedure.query(async ({ ctx }) => {
-    let where;
-
     if (!ctx.user.orgId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
@@ -48,16 +47,16 @@ export const leadRouter = createTRPCRouter({
       });
     }
 
-    if (ctx.user.role !== "admin") {
-      where = {
-        owner: ctx.user.id,
-        AND: {
-          team: ctx.user.orgId,
-        },
+    const where: {
+      team: string;
+      AND?: {
+        owner: string | null;
       };
-    } else {
-      where = {
-        team: ctx.user.orgId,
+    } = { team: ctx.user.orgId };
+
+    if (ctx.user.role !== "admin") {
+      where.AND = {
+        owner: ctx.user.id,
       };
     }
 
@@ -143,4 +142,11 @@ export const leadRouter = createTRPCRouter({
 
       return lead;
     }),
+  delete: protectedProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    await ctx.prisma.lead.delete({
+      where: {
+        id: input,
+      },
+    });
+  }),
 });

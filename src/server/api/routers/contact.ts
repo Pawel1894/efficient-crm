@@ -110,8 +110,6 @@ export const contactRouter = createTRPCRouter({
     return contacts;
   }),
   contacts: protectedProcedure.query(async ({ ctx }) => {
-    let where;
-
     if (!ctx.user.orgId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
@@ -119,16 +117,16 @@ export const contactRouter = createTRPCRouter({
       });
     }
 
-    if (ctx.user.role !== "admin") {
-      where = {
-        owner: ctx.user.id,
-        AND: {
-          team: ctx.user.orgId,
-        },
+    const where: {
+      team: string;
+      AND?: {
+        owner: string | null;
       };
-    } else {
-      where = {
-        team: ctx.user.orgId,
+    } = { team: ctx.user.orgId };
+
+    if (ctx.user.role !== "admin") {
+      where.AND = {
+        owner: ctx.user.id,
       };
     }
 

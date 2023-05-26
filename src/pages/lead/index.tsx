@@ -5,7 +5,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { api } from "@/utils/api";
 import type { GridColDef } from "@mui/x-data-grid";
 import Link from "next/link";
-import { Add, Edit, Visibility } from "@mui/icons-material";
+import { Add, Delete, Edit, Visibility } from "@mui/icons-material";
 import Insert from "./Insert";
 import { useSystemStore } from "../_app";
 import Head from "next/head";
@@ -16,6 +16,7 @@ import { appRouter } from "@/server/api/root";
 import superjson from "superjson";
 import Update from "./Update";
 import type { Dictionary, Lead } from "@prisma/client";
+import DeleteDialog from "@/components/DeleteDialog";
 
 export type LeadData = Lead & {
   status: Dictionary | null;
@@ -25,8 +26,14 @@ export default function Page() {
   const [insertOpen, setInsertOpen] = useState(false);
   const [updateData, setUpdateData] = useState<LeadData>();
   const [updateOpen, setUpdateOpen] = useState(false);
-  const { data: leads, isSuccess } = api.lead.leads.useQuery();
+  const { data: leads, isSuccess, refetch } = api.lead.leads.useQuery();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const { mutate: deleteLead, isLoading: isDeleting } = api.lead.delete.useMutation({
+    onSettled: async () => {
+      await refetch();
+    },
+  });
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -36,11 +43,12 @@ export default function Page() {
         filterable: false,
         hideable: false,
         sortable: false,
+        minWidth: 125,
         renderCell: (params) => {
           const data = params.row as LeadData;
 
           return (
-            <Stack direction={"row"} gap={"0.5rem"}>
+            <Stack direction={"row"} gap={"0.25rem"}>
               <Link href={`/lead/${data.id}`}>
                 <IconButton size="small" sx={{ color: "primary.main" }} title="View">
                   <Visibility />
@@ -56,6 +64,17 @@ export default function Page() {
                 title="Edit"
               >
                 <Edit />
+              </IconButton>
+              <IconButton
+                onClick={() => {
+                  setUpdateData(data);
+                  setDeleteOpen(true);
+                }}
+                size="small"
+                color="warning"
+                title="Delete"
+              >
+                <Delete />
               </IconButton>
             </Stack>
           );
@@ -86,12 +105,31 @@ export default function Page() {
     );
   }, [setBreadcrumbs]);
 
+  function handleDelete(confirmed: boolean, id?: string) {
+    if (confirmed && id) {
+      deleteLead(id);
+    }
+
+    setDeleteOpen(false);
+    return;
+  }
+
   return (
     <>
       <Head>
         <title>Leads</title>
       </Head>
-      {updateData ? <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} /> : null}
+      {updateData ? (
+        <>
+          <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} />{" "}
+          <DeleteDialog
+            id={updateData.id}
+            isDeleting={isDeleting}
+            open={deleteOpen}
+            handleClose={handleDelete}
+          />
+        </>
+      ) : null}
       <Insert isOpen={insertOpen} setOpen={setInsertOpen} />
       <Stack gap={"1rem"}>
         <Box>
