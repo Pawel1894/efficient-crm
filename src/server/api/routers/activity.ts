@@ -1,5 +1,5 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { getUser } from "@/utils/helper";
+import { RequireAtLeastOne, getUser } from "@/utils/helper";
 import { ActivitySchema } from "@/utils/schema";
 import { type OrganizationMembership } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
@@ -52,7 +52,7 @@ export const activityRouter = createTRPCRouter({
 
     return activities;
   }),
-  activities: protectedProcedure.query(async ({ ctx }) => {
+  activities: protectedProcedure.input(z.string().optional()).query(async ({ ctx, input }) => {
     if (!ctx.user.orgId || !ctx.user.id) {
       throw new TRPCError({
         code: "BAD_REQUEST",
@@ -60,14 +60,23 @@ export const activityRouter = createTRPCRouter({
       });
     }
 
-    const where: {
-      team: string;
+    type Where = {
+      leadId?: string;
+      team?: string;
       AND?: {
         owner: string;
       };
-    } = {
-      team: ctx.user.orgId,
     };
+
+    type WhereQuery = RequireAtLeastOne<Where, "leadId" | "team">;
+
+    const where: Partial<WhereQuery> = {};
+
+    if (input) {
+      where.leadId = input;
+    } else {
+      where.team = ctx.user.orgId;
+    }
 
     if (ctx.user.role !== "admin") {
       where.AND = {

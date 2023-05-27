@@ -27,7 +27,7 @@ type Props = {
 };
 
 export default function Update({ data, isOpen, setOpen }: Props) {
-  const desktopBr = useMediaQuery("(min-width:600px)");
+  const desktopbr = useMediaQuery("(min-width:600px)");
   const context = api.useContext();
   const { data: stages } = api.dictionary.byType.useQuery("DEAL_STAGE");
   const { membershipList } = useOrganization({
@@ -100,7 +100,7 @@ export default function Update({ data, isOpen, setOpen }: Props) {
           sx={{
             height: "calc(100vh - 70px)",
           }}
-          mt={desktopBr ? 4 : 2}
+          mt={desktopbr ? 4 : 2}
           mb={4}
           mx={"auto"}
           p={1}
@@ -217,7 +217,7 @@ export default function Update({ data, isOpen, setOpen }: Props) {
                 <Button
                   sx={{
                     marginLeft: "auto",
-                    width: desktopBr ? "max-content" : "100%",
+                    width: desktopbr ? "max-content" : "100%",
                   }}
                   color="primary"
                   variant="contained"

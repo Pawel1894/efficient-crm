@@ -17,6 +17,7 @@ import type { InferGetServerSidePropsType, NextApiRequest, NextApiResponse } fro
 import { appRouter } from "@/server/api/root";
 import { TRPCError } from "@trpc/server";
 import { DetailData } from "./DetailData";
+import type { Contact } from "@prisma/client";
 
 export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
@@ -25,7 +26,7 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
     isError,
     error: fetchError,
   } = api.contact.get.useQuery(router.query.slug as string, {
-    initialData: initData ?? [],
+    initialData: initData ? (JSON.parse(initData) as Contact) : [],
   });
   const { mutate: deleteContact, isLoading: isDeleting } = api.contact.delete.useMutation();
   const [updateData, setUpdateData] = useState<ContactData>();

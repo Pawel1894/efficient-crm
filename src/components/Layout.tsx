@@ -36,8 +36,8 @@ const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
   open?: boolean;
-  desktopBr: boolean;
-}>(({ theme, open, desktopBr }) => ({
+  desktopbr: boolean;
+}>(({ theme, open, desktopbr }) => ({
   flexGrow: 1,
   padding: theme.spacing(3),
   transition: theme.transitions.create("margin", {
@@ -45,7 +45,7 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open &&
-    desktopBr && {
+    desktopbr && {
       marginLeft: `${drawerWidth}px`,
       transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.easeOut,
@@ -56,18 +56,18 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
-  desktopBr: boolean;
+  desktopbr: boolean;
 }
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
-})<AppBarProps>(({ theme, open, desktopBr }) => ({
+})<AppBarProps>(({ theme, open, desktopbr }) => ({
   transition: theme.transitions.create(["margin", "width"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open &&
-    desktopBr && {
+    desktopbr && {
       width: `calc(100% - ${drawerWidth}px)`,
       marginLeft: `${drawerWidth}px`,
       transition: theme.transitions.create(["margin", "width"], {
@@ -90,7 +90,7 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  const desktopBr = useMediaQuery("(min-width:600px)");
+  const desktopbr = useMediaQuery("(min-width:600px)");
 
   const breadcrumbs = useSystemStore((state) => state.breadcrumbs);
   const [open, setOpen] = useState(true);
@@ -110,7 +110,7 @@ export default function Layout({ children }: Props) {
 
   return (
     <>
-      <AppBar position="fixed" open={open} desktopBr={desktopBr}>
+      <AppBar position="fixed" open={open} desktopbr={desktopbr}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -129,7 +129,7 @@ export default function Layout({ children }: Props) {
         </Toolbar>
       </AppBar>
       <DrawerComponent open={open} setOpen={setOpen} />
-      <Main open={open} desktopBr={desktopBr}>
+      <Main open={open} desktopbr={desktopbr}>
         <DrawerHeader />
         {children}
       </Main>

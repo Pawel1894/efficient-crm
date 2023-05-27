@@ -26,7 +26,7 @@ type Props = {
   data: LeadData;
 };
 export default function Update({ isOpen, setOpen, data }: Props) {
-  const desktopBr = useMediaQuery("(min-width:600px)");
+  const desktopbr = useMediaQuery("(min-width:600px)");
   const context = api.useContext();
   const { data: statuses } = api.dictionary.byType.useQuery("LEAD_STATUS");
   const { membershipList } = useOrganization({
@@ -102,7 +102,7 @@ export default function Update({ isOpen, setOpen, data }: Props) {
           sx={{
             height: "calc(100vh - 70px)",
           }}
-          mt={desktopBr ? 4 : 2}
+          mt={desktopbr ? 4 : 2}
           mb={4}
           mx={"auto"}
           p={1}
@@ -273,7 +273,7 @@ export default function Update({ isOpen, setOpen, data }: Props) {
                 <Button
                   sx={{
                     marginLeft: "auto",
-                    width: desktopBr ? "max-content" : "100%",
+                    width: desktopbr ? "max-content" : "100%",
                   }}
                   color="primary"
                   variant="contained"

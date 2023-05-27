@@ -1,5 +1,4 @@
-import { createServerSideHelpers } from "@trpc/react-query/server";
-import { Box, Breadcrumbs, Button, IconButton, Stack, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, IconButton, Skeleton, Stack, Typography } from "@mui/material";
 import React, { useEffect, useMemo, useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { api } from "@/utils/api";
@@ -9,11 +8,6 @@ import { Add, Delete, Edit, Visibility } from "@mui/icons-material";
 import Insert from "./Insert";
 import { useSystemStore } from "../_app";
 import Head from "next/head";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { getAuth } from "@clerk/nextjs/server";
-import { createTRPCContext } from "@/server/api/trpc";
-import { appRouter } from "@/server/api/root";
-import superjson from "superjson";
 import Update from "./Update";
 import type { Dictionary, Lead } from "@prisma/client";
 import DeleteDialog from "@/components/DeleteDialog";
@@ -26,7 +20,15 @@ export default function Page() {
   const [insertOpen, setInsertOpen] = useState(false);
   const [updateData, setUpdateData] = useState<LeadData>();
   const [updateOpen, setUpdateOpen] = useState(false);
-  const { data: leads, isSuccess, refetch } = api.lead.leads.useQuery();
+  const {
+    data: leads,
+    isSuccess,
+    refetch,
+    isRefetching,
+    error,
+  } = api.lead.leads.useQuery(undefined, {
+    refetchOnWindowFocus: false,
+  });
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const { mutate: deleteLead, isLoading: isDeleting } = api.lead.delete.useMutation({
@@ -137,47 +139,20 @@ export default function Page() {
             create lead <Add />
           </Button>
         </Box>
-        {isSuccess ? (
-          <Box
-            sx={{
-              height: "calc(100vh - 200px)",
-            }}
-          >
+        <Box
+          sx={{
+            height: `calc(100vh - 200px)`,
+          }}
+        >
+          {isRefetching ? (
+            <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
+          ) : isSuccess ? (
             <DataGrid rowSelection={false} rows={leads} columns={columns} />
-          </Box>
-        ) : (
-          <div></div>
-        )}
+          ) : (
+            <Typography>{error?.message}</Typography>
+          )}
+        </Box>
       </Stack>
     </>
   );
 }
-
-export const getServerSideProps = async ({ req, res }: { req: NextApiRequest; res: NextApiResponse }) => {
-  const session = getAuth(req);
-  if (!session?.userId) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: createTRPCContext({
-      req: req,
-      res: res,
-    }),
-    transformer: superjson,
-  });
-
-  await helpers.lead.leads.prefetch();
-
-  return {
-    props: {
-      trpcState: helpers.dehydrate(),
-    },
-  };
-};

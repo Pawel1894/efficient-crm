@@ -7,7 +7,7 @@ import { TRPCError } from "@trpc/server";
 import type { InferGetServerSidePropsType, NextApiRequest, NextApiResponse } from "next";
 import React, { useEffect, useState } from "react";
 import superjson from "superjson";
-import { LeadData } from "..";
+import type { LeadData } from "..";
 import { api } from "@/utils/api";
 import { Delete, Edit, KeyboardArrowLeft } from "@mui/icons-material";
 import { Box, Breadcrumbs, Button, Divider, IconButton, Stack, Tab, Tabs, Typography } from "@mui/material";
@@ -18,16 +18,19 @@ import Update from "../Update";
 import DeleteDialog from "@/components/DeleteDialog";
 import DetailData from "./DetailData";
 import { TabPanel } from "@/components/TabPanel";
-import Grid from "@/pages/deal/Grid";
+import DealsGrid from "@/pages/deal/Grid";
+import ActivitiesGrid from "@/pages/activity/Grid";
+import type { Lead } from "@prisma/client";
 
 export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const {
     data: lead,
+    isLoading,
     isError,
     error: fetchError,
   } = api.lead.get.useQuery(router.query.slug as string, {
-    initialData: initData ?? [],
+    initialData: initData ? (JSON.parse(initData) as Lead) : [],
   });
   const { mutate: deleteLead, isLoading: isDeleting } = api.lead.delete.useMutation();
   const [updateData, setUpdateData] = useState<LeadData>();
@@ -125,11 +128,21 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
           </TabPanel>
           <TabPanel index={1} value={currentTab}>
             <Box pt={2}>
-              <Grid heightSubstract={300} leadId={router.query.slug as string} />
+              <DealsGrid
+                shouldFetch={currentTab === 1}
+                heightSubstract={300}
+                leadId={router.query.slug as string}
+              />
             </Box>
           </TabPanel>
           <TabPanel index={2} value={currentTab}>
-            <span>2</span>
+            <Box pt={2}>
+              <ActivitiesGrid
+                shouldFetch={currentTab === 2}
+                heightSubstract={300}
+                leadId={router.query.slug as string}
+              />
+            </Box>
           </TabPanel>
         </>
       )}

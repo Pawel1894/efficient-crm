@@ -25,7 +25,7 @@ type Props = {
 };
 
 export default function Insert({ setOpen, isOpen }: Props) {
-  const desktopBr = useMediaQuery("(min-width:600px)");
+  const desktopbr = useMediaQuery("(min-width:600px)");
   const context = api.useContext();
   const { data: types } = api.dictionary.byType.useQuery("CONTACT_TYPE");
   const { membershipList } = useOrganization({
@@ -92,7 +92,7 @@ export default function Insert({ setOpen, isOpen }: Props) {
           sx={{
             height: "calc(100vh - 70px)",
           }}
-          mt={desktopBr ? 4 : 2}
+          mt={desktopbr ? 4 : 2}
           mb={4}
           mx={"auto"}
           p={1}
@@ -260,7 +260,7 @@ export default function Insert({ setOpen, isOpen }: Props) {
                 <Button
                   sx={{
                     marginLeft: "auto",
-                    width: desktopBr ? "max-content" : "100%",
+                    width: desktopbr ? "max-content" : "100%",
                   }}
                   color="primary"
                   variant="contained"

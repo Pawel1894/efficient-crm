@@ -3,16 +3,17 @@ import Update from "./Update";
 import DeleteDialog from "@/components/DeleteDialog";
 import { Add, Delete, Edit, Visibility } from "@mui/icons-material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import { Box, Button, IconButton, Link, Stack, Typography } from "@mui/material";
+import { Box, Button, IconButton, Link, Skeleton, Stack, Typography } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import { api } from "@/utils/api";
 import type { DealData } from ".";
 type Props = {
   leadId?: string;
   heightSubstract: number;
+  shouldFetch: boolean;
 };
 
-export default function Grid({ leadId, heightSubstract }: Props) {
+export default function Grid({ leadId, heightSubstract, shouldFetch }: Props) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const { mutate: deleteDeal, isLoading: isDeleting } = api.deal.delete.useMutation({
     onSettled: async () => {
@@ -22,7 +23,16 @@ export default function Grid({ leadId, heightSubstract }: Props) {
   const [insertOpen, setInsertOpen] = useState(false);
   const [updateData, setUpdateData] = useState<DealData>();
   const [updateOpen, setUpdateOpen] = useState(false);
-  const { data: deals, isSuccess, refetch } = api.deal.deals.useQuery(leadId);
+  const {
+    data: deals,
+    isSuccess,
+    refetch,
+    isRefetching,
+    error,
+  } = api.deal.deals.useQuery(leadId, {
+    enabled: shouldFetch,
+    refetchOnWindowFocus: false,
+  });
 
   function handleDelete(confirmed: boolean, id?: string) {
     if (confirmed && id) {
@@ -117,24 +127,26 @@ export default function Grid({ leadId, heightSubstract }: Props) {
           />
         </>
       ) : null}
-      <Insert leadId={leadId} isOpen={insertOpen} setOpen={setInsertOpen} />
+      {insertOpen && <Insert leadId={leadId} isOpen={insertOpen} setOpen={setInsertOpen} />}
       <Stack gap={"1rem"}>
         <Box>
           <Button variant="outlined" onClick={() => setInsertOpen(true)}>
             create deal <Add />
           </Button>
         </Box>
-        {isSuccess ? (
-          <Box
-            sx={{
-              height: `calc(100vh - ${heightSubstract}px)`,
-            }}
-          >
+        <Box
+          sx={{
+            height: `calc(100vh - ${heightSubstract}px)`,
+          }}
+        >
+          {isRefetching ? (
+            <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
+          ) : isSuccess ? (
             <DataGrid rowSelection={false} rows={deals} columns={columns} />
-          </Box>
-        ) : (
-          <div></div>
-        )}
+          ) : (
+            <Typography>{error?.message}</Typography>
+          )}
+        </Box>
       </Stack>
     </>
   );

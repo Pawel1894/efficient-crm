@@ -24,16 +24,23 @@ import { DateTimeField } from "@mui/x-date-pickers";
 type Props = {
   setOpen: React.Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
+  leadId?: string;
 };
 
-export default function Insert({ setOpen, isOpen }: Props) {
-  const desktopBr = useMediaQuery("(min-width:600px)");
+export default function Insert({ setOpen, isOpen, leadId }: Props) {
+  const desktopbr = useMediaQuery("(min-width:600px)");
   const context = api.useContext();
   const { data: statuses } = api.dictionary.byType.useQuery("ACTIVITY_STATUS");
   const { membershipList } = useOrganization({
     membershipList: {},
   });
   const { data: leads } = api.lead.leads.useQuery();
+  const { data: lead } = api.lead.get.useQuery(leadId, {
+    onSuccess: (data) => {
+      formik.setFieldValue("lead", data?.id);
+    },
+    enabled: !!leadId,
+  });
 
   const { mutate: submit, isLoading: isCreating } = api.activity.create.useMutation({
     onError: (err) => {
@@ -93,7 +100,7 @@ export default function Insert({ setOpen, isOpen }: Props) {
           sx={{
             height: "calc(100vh - 70px)",
           }}
-          mt={desktopBr ? 4 : 2}
+          mt={desktopbr ? 4 : 2}
           mb={4}
           mx={"auto"}
           p={1}
@@ -177,6 +184,8 @@ export default function Insert({ setOpen, isOpen }: Props) {
                       disablePortal
                       renderInput={(params) => <TextField {...params} id="lead" name="lead" label="Lead" />}
                       options={leads ?? []}
+                      defaultValue={lead}
+                      disabled={!!lead}
                       onChange={(e, value) => void formik.setFieldValue("lead", value?.id)}
                     />
                   </Box>
@@ -217,7 +226,7 @@ export default function Insert({ setOpen, isOpen }: Props) {
                 <Button
                   sx={{
                     marginLeft: "auto",
-                    width: desktopBr ? "max-content" : "100%",
+                    width: desktopbr ? "max-content" : "100%",
                   }}
                   color="primary"
                   variant="contained"

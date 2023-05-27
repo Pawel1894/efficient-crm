@@ -32,36 +32,7 @@ export default function Page() {
       <Head>
         <title>Deals</title>
       </Head>
-      <Grid heightSubstract={200} />
+      <Grid shouldFetch={true} heightSubstract={200} />
     </>
   );
 }
-
-export const getServerSideProps = async ({ req, res }: { req: NextApiRequest; res: NextApiResponse }) => {
-  const session = getAuth(req);
-  if (!session?.userId) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: createTRPCContext({
-      req: req,
-      res: res,
-    }),
-    transformer: superjson,
-  });
-
-  await helpers.deal.deals.prefetch();
-
-  return {
-    props: {
-      trpcState: helpers.dehydrate(),
-    },
-  };
-};
