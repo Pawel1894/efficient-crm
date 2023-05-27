@@ -6,7 +6,7 @@ import { TRPCError } from "@trpc/server";
 import * as yup from "yup";
 import { z } from "zod";
 export const dealRouter = createTRPCRouter({
-  deals: protectedProcedure.query(async ({ ctx }) => {
+  deals: protectedProcedure.input(z.string().optional()).query(async ({ ctx, input }) => {
     if (!ctx.user.orgId || !ctx.user.id) {
       throw new TRPCError({
         code: "BAD_REQUEST",
@@ -17,15 +17,15 @@ export const dealRouter = createTRPCRouter({
     const where: {
       team: string;
       AND?: {
-        owner: string;
+        leadId: string;
       };
     } = {
       team: ctx.user.orgId,
     };
 
-    if (ctx.user.role !== "admin") {
+    if (input) {
       where.AND = {
-        owner: ctx.user.id,
+        leadId: input,
       };
     }
 

@@ -10,7 +10,7 @@ import superjson from "superjson";
 import { LeadData } from "..";
 import { api } from "@/utils/api";
 import { Delete, Edit, KeyboardArrowLeft } from "@mui/icons-material";
-import { Breadcrumbs, Button, Divider, IconButton, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Button, Divider, IconButton, Stack, Tab, Tabs, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import Head from "next/head";
@@ -18,6 +18,7 @@ import Update from "../Update";
 import DeleteDialog from "@/components/DeleteDialog";
 import DetailData from "./DetailData";
 import { TabPanel } from "@/components/TabPanel";
+import Grid from "@/pages/deal/Grid";
 
 export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
@@ -123,7 +124,9 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
             <DetailData lead={lead} />
           </TabPanel>
           <TabPanel index={1} value={currentTab}>
-            <span>1</span>
+            <Box pt={2}>
+              <Grid heightSubstract={300} leadId={router.query.slug as string} />
+            </Box>
           </TabPanel>
           <TabPanel index={2} value={currentTab}>
             <span>2</span>

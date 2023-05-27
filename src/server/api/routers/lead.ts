@@ -149,8 +149,15 @@ export const leadRouter = createTRPCRouter({
       },
     });
   }),
-  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
-    const contact = await ctx.prisma.lead.findFirst({
+  get: protectedProcedure.input(z.string().optional()).query(async ({ ctx, input }) => {
+    if (!input) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Lead id is required",
+      });
+    }
+
+    const lead = await ctx.prisma.lead.findFirst({
       where: {
         id: input,
       },
@@ -159,13 +166,13 @@ export const leadRouter = createTRPCRouter({
       },
     });
 
-    if (contact === null) {
+    if (lead === null) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Contact not found",
+        message: "lead not found",
       });
     }
 
-    return contact;
+    return lead;
   }),
 });

@@ -21,9 +21,10 @@ import { toast } from "react-toastify";
 type Props = {
   setOpen: React.Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
+  leadId?: string;
 };
 
-export default function Insert({ isOpen, setOpen }: Props) {
+export default function Insert({ isOpen, setOpen, leadId }: Props) {
   const desktopBr = useMediaQuery("(min-width:600px)");
   const context = api.useContext();
   const { data: stages } = api.dictionary.byType.useQuery("DEAL_STAGE");
@@ -31,6 +32,13 @@ export default function Insert({ isOpen, setOpen }: Props) {
     membershipList: {},
   });
   const { data: leads } = api.lead.leads.useQuery();
+  const { data: lead } = api.lead.get.useQuery(leadId, {
+    onSuccess: (data) => {
+      formik.setFieldValue("lead", data?.id);
+    },
+    enabled: !!leadId,
+  });
+
   const { mutate: submit, isLoading: isCreating } = api.deal.create.useMutation({
     onError: (err) => {
       toast.error(err.message);
@@ -175,6 +183,8 @@ export default function Insert({ isOpen, setOpen }: Props) {
                       getOptionLabel={(option) => option.firstName + " " + option.lastName}
                       renderInput={(params) => <TextField {...params} id="lead" name="lead" label="Lead" />}
                       options={leads ?? []}
+                      defaultValue={lead}
+                      disabled={!!lead}
                       onChange={(e, value) => void formik.setFieldValue("lead", value?.id)}
                     />
                   </Box>
