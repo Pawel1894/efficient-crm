@@ -4,7 +4,7 @@ import React from "react";
 
 type Props = {
   data: Dictionary[];
-  onClickHandler: (itemId: string) => void;
+  onClickHandler: (item: Dictionary) => void;
   itemRef: React.RefObject<HTMLButtonElement>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
@@ -31,7 +31,7 @@ export default function DictionaryPopover({ itemRef, data, onClickHandler, setOp
       >
         {data.map((item) => (
           <ListItem key={item.id} disablePadding>
-            <ListItemButton onClick={() => onClickHandler(item.id)}>
+            <ListItemButton onClick={() => onClickHandler(item)}>
               <ListItemText primary={item.label} />
             </ListItemButton>
           </ListItem>

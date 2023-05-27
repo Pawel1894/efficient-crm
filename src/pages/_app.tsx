@@ -17,6 +17,7 @@ import { ToastContainer } from "react-toastify";
 import "@/styles/react-toastify.css";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const darkTheme = createTheme({
   palette: {
@@ -60,6 +61,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           <Layout>
             <Component {...pageProps} />
           </Layout>
+          <ReactQueryDevtools initialIsOpen={false} />
         </LocalizationProvider>
       </ThemeProvider>
       <ToastContainer position="top-center" autoClose={3000} />

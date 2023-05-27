@@ -178,17 +178,23 @@ export const leadRouter = createTRPCRouter({
   assignStatus: protectedProcedure
     .input(
       z.object({
-        status: z.string(),
-        lead: z.string(),
+        status: z.object({
+          id: z.string(),
+          label: z.string(),
+          orgId: z.string(),
+          type: z.string(),
+          value: z.string(),
+        }),
+        leadId: z.string(),
       })
     )
     .mutation(({ ctx, input }) => {
       return ctx.prisma.lead.update({
         where: {
-          id: input.lead,
+          id: input.leadId,
         },
         data: {
-          dictionaryId: input.status,
+          dictionaryId: input.status.id,
         },
       });
     }),
