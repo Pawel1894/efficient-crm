@@ -32,6 +32,8 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useSystemStore } from "@/pages/_app";
 
+import { grey } from "@mui/material/colors";
+
 const drawerWidth = 240;
 
 const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })<{
@@ -189,7 +191,7 @@ function Navigation() {
                   <ListItem disablePadding>
                     <ListItemButton
                       sx={{
-                        backgroundColor: router.pathname.startsWith(item.basePath) ? "primary.dark" : "",
+                        backgroundColor: router.pathname.startsWith(item.basePath) ? grey["800"] : "",
                       }}
                     >
                       <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
@@ -207,7 +209,7 @@ function Navigation() {
                 <ListItem key={"settings"} disablePadding>
                   <ListItemButton
                     sx={{
-                      backgroundColor: router.pathname.startsWith("/admin/settings") ? "primary.dark" : "",
+                      backgroundColor: router.pathname.startsWith("/admin/settings") ? grey["800"] : "",
                     }}
                   >
                     <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
