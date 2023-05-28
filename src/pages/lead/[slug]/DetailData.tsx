@@ -1,4 +1,4 @@
-import { Grid, IconButton, Paper } from "@mui/material";
+import { Grid, IconButton } from "@mui/material";
 import type { LeadData } from "..";
 import ItemDisplay from "@/components/ItemDisplay";
 import dayjs from "dayjs";
@@ -19,6 +19,25 @@ export default function DetailData({ lead }: { lead: LeadData }) {
   const context = api.useContext();
   const queryClient = useQueryClient();
   const { data: statuses } = api.dictionary.byType.useQuery("LEAD_STATUS");
+  const { mutate: updateOwner } = api.lead.assignOwner.useMutation({
+    onMutate: ({ leadId, owner }) => {
+      const currentData = context.lead.get.getData(leadId);
+      const key = [["lead", "get"], { input: leadId, type: "query" }];
+
+      queryClient.setQueryData(key, () => {
+        return { ...currentData, owner: owner.id, ownerFullname: owner.fullname };
+      });
+
+      return { currentData, key: key };
+    },
+    onError: (err, input, context) => {
+      if (context?.currentData) queryClient.setQueryData(context?.key, context?.currentData);
+      toast.error(err.message);
+    },
+    onSettled: async () => {
+      await context.lead.get.invalidate(lead.id);
+    },
+  });
   const { mutate: updateStatus } = api.lead.assignStatus.useMutation({
     onMutate: ({ leadId, status }) => {
       const currentData = context.lead.get.getData(leadId);
@@ -49,7 +68,12 @@ export default function DetailData({ lead }: { lead: LeadData }) {
   }
 
   function onOwnerClickHandler(owner: { id: string; fullname: string }) {
-    console.log(owner);
+    updateOwner({
+      leadId: lead.id,
+      owner,
+    });
+
+    setOwnerOpen(false);
   }
 
   return (

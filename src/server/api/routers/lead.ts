@@ -198,4 +198,25 @@ export const leadRouter = createTRPCRouter({
         },
       });
     }),
+  assignOwner: protectedProcedure
+    .input(
+      z.object({
+        owner: z.object({
+          id: z.string(),
+          fullname: z.string(),
+        }),
+        leadId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.lead.update({
+        where: {
+          id: input.leadId,
+        },
+        data: {
+          owner: input.owner.id,
+          ownerFullname: input.owner.fullname,
+        },
+      });
+    }),
 });
