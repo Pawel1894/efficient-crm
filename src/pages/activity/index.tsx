@@ -9,7 +9,6 @@ import Grid from "./Grid";
 export type ActivityData = Activity & {
   status: Dictionary | null;
   lead: Lead | null;
-  contact: Contact | null;
 };
 
 export default function Page() {

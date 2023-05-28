@@ -26,9 +26,10 @@ type Props = {
   setOpen: React.Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
   data: ActivityData;
+  onSettledHandler: () => Promise<void>;
 };
 
-export default function Update({ isOpen, setOpen, data }: Props) {
+export default function Update({ onSettledHandler, isOpen, setOpen, data }: Props) {
   const desktopbr = useMediaQuery("(min-width:600px)");
   const context = api.useContext();
   const { data: statuses } = api.dictionary.byType.useQuery("ACTIVITY_STATUS");
@@ -44,7 +45,7 @@ export default function Update({ isOpen, setOpen, data }: Props) {
       toast.success("Activity updated");
       formik.resetForm();
       setOpen(false);
-      await context.activity.activities.invalidate();
+      await onSettledHandler();
     },
   });
 

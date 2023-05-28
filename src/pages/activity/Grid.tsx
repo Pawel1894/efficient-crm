@@ -36,7 +36,7 @@ export default function Grid({ heightSubstract, leadId, shouldFetch }: Props) {
   } = api.activity.activities.useQuery(leadId, {
     enabled: shouldFetch,
   });
-
+  const context = api.useContext();
   function handleDelete(confirmed: boolean, id?: string) {
     if (confirmed && id) {
       deleteActivity(id);
@@ -44,6 +44,10 @@ export default function Grid({ heightSubstract, leadId, shouldFetch }: Props) {
 
     setDeleteOpen(false);
     return;
+  }
+
+  async function onUpdateSettled() {
+    await context.activity.activities.invalidate();
   }
 
   const columns: GridColDef[] = useMemo(
@@ -138,7 +142,12 @@ export default function Grid({ heightSubstract, leadId, shouldFetch }: Props) {
     <>
       {updateData ? (
         <>
-          <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} />{" "}
+          <Update
+            onSettledHandler={onUpdateSettled}
+            data={updateData}
+            isOpen={updateOpen}
+            setOpen={setUpdateOpen}
+          />{" "}
           <DeleteDialog
             id={updateData.id}
             isDeleting={isDeleting}

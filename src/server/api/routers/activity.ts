@@ -177,4 +177,24 @@ export const activityRouter = createTRPCRouter({
       },
     });
   }),
+  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    const activity = await ctx.prisma.activity.findFirst({
+      where: {
+        id: input,
+      },
+      include: {
+        lead: true,
+        status: true,
+      },
+    });
+
+    if (activity === null) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Activity not found",
+      });
+    }
+
+    return activity;
+  }),
 });
