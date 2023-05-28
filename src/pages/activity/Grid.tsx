@@ -3,11 +3,12 @@ import Update from "./Update";
 import DeleteDialog from "@/components/DeleteDialog";
 import { Add, Delete, Edit, Visibility } from "@mui/icons-material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
-import { Box, Button, IconButton, Link, Skeleton, Stack, Typography } from "@mui/material";
+import { Box, Button, IconButton, Skeleton, Stack, Typography } from "@mui/material";
 import React, { useMemo, useState } from "react";
 import { api } from "@/utils/api";
 import type { ActivityData } from ".";
 import dayjs from "dayjs";
+import Link from "next/link";
 
 type Props = {
   leadId?: string;

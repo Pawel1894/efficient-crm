@@ -24,7 +24,7 @@ import {
   ModeStandby,
   Settings,
 } from "@mui/icons-material";
-import { MenuItem, useMediaQuery } from "@mui/material";
+import { MenuItem, Paper, useMediaQuery } from "@mui/material";
 import { UserButton, useOrganization, useOrganizations, useUser } from "@clerk/nextjs";
 import TeamSwitcher from "./TeamSwitcher";
 import CenterLoad from "./CenterLoad";
@@ -121,7 +121,7 @@ export default function Layout({ children }: Props) {
           >
             <MenuIcon />
           </IconButton>
-          {breadcrumbs}
+          {desktopbr && breadcrumbs}
           <Box ml={"auto"} display="flex" alignItems={"center"} gap="1rem">
             <TeamSwitcher />
             <UserButton />
@@ -131,6 +131,12 @@ export default function Layout({ children }: Props) {
       <DrawerComponent open={open} setOpen={setOpen} />
       <Main open={open} desktopbr={desktopbr}>
         <DrawerHeader />
+        {!desktopbr && (
+          <Box pb={3}>
+            <Paper sx={{ padding: "0.5rem", overflow: "hidden" }}>{breadcrumbs}</Paper>
+          </Box>
+        )}
+
         {children}
       </Main>
     </>
