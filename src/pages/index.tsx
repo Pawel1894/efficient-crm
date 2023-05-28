@@ -41,7 +41,11 @@ function AboutBlock(props: InjectedViewportProps<HTMLDivElement>) {
           {`I\'m happy to see you there! This crm service was implemented for portfolio and practice
               purpose. It is fullstack app made with T3-stack and mui library. If you want to see more of
               my projects check out `}
-          <Link href="https://github.com/Pawel1894">my github</Link>
+          <Link href="https://github.com/Pawel1894">
+            <Typography color={"primary.main"} component={"span"}>
+              my github
+            </Typography>
+          </Link>
         </Typography>
       </Box>
     </Fade>
