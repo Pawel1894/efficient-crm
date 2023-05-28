@@ -13,6 +13,10 @@ type Props = {
   shouldFetch: boolean;
 };
 
+export function formatToThousands(x: number) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 export default function Grid({ leadId, heightSubstract, shouldFetch }: Props) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const { mutate: deleteDeal, isLoading: isDeleting } = api.deal.delete.useMutation({
@@ -88,8 +92,30 @@ export default function Grid({ leadId, heightSubstract, shouldFetch }: Props) {
           );
         },
       },
-      { field: "forecast", headerName: "Forecast", flex: 1, minWidth: 170 },
-      { field: "value", headerName: "Value", flex: 1, minWidth: 170 },
+      {
+        field: "forecast",
+        headerName: "Forecast",
+        valueGetter: (params) => {
+          const data = params.row as DealData;
+          if (data.forecast) return "$ " + formatToThousands(data.forecast);
+
+          return "$ 0";
+        },
+        flex: 1,
+        minWidth: 170,
+      },
+      {
+        field: "value",
+        headerName: "Value",
+        valueGetter: (params) => {
+          const data = params.row as DealData;
+          if (data.value) return "$ " + formatToThousands(data.value);
+
+          return "$ 0";
+        },
+        flex: 1,
+        minWidth: 170,
+      },
       {
         field: "status",
         valueGetter: (params) => {
