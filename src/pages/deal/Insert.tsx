@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import React, { type SetStateAction } from "react";
+import { NumericFormat } from "react-number-format";
 import { toast } from "react-toastify";
 type Props = {
   setOpen: React.Dispatch<SetStateAction<boolean>>;
@@ -53,7 +54,7 @@ export default function Insert({ isOpen, setOpen, leadId }: Props) {
 
   const formik = useFormik({
     initialValues: {
-      forecast: 0,
+      forecast: null,
       comment: null,
       owner: {
         identifier: null,
@@ -65,6 +66,7 @@ export default function Insert({ isOpen, setOpen, leadId }: Props) {
     } satisfies DealType,
     validationSchema: DealSchema,
     onSubmit: (values) => {
+      console.log("valuesvaluesvaluesvaluesvalues", values);
       submit(values);
     },
   });
@@ -112,31 +114,37 @@ export default function Insert({ isOpen, setOpen, leadId }: Props) {
               <Grid justifyContent={"center"} container rowGap={2}>
                 <Grid item xs={12} md={6}>
                   <Box px={1}>
-                    <TextField
+                    <NumericFormat
                       fullWidth
                       required
                       id="forecast"
                       name="forecast"
                       label="Forecast"
                       value={formik.values.forecast}
-                      onChange={formik.handleChange}
+                      onValueChange={(values) => void formik.setFieldValue("forecast", values?.floatValue)}
                       error={formik.touched.forecast && Boolean(formik.errors.forecast)}
                       helperText={formik.touched.forecast && formik.errors.forecast}
+                      customInput={TextField}
+                      thousandSeparator
+                      prefix={"$ "}
                     />
                   </Box>
                 </Grid>
 
                 <Grid item xs={12} md={6}>
                   <Box px={1}>
-                    <TextField
+                    <NumericFormat
                       fullWidth
                       id="value"
                       name="value"
                       label="Value"
                       value={formik.values.value}
-                      onChange={formik.handleChange}
+                      onValueChange={(values) => void formik.setFieldValue("value", values?.floatValue)}
                       error={formik.touched.value && Boolean(formik.errors.value)}
                       helperText={formik.touched.value && formik.errors.value}
+                      customInput={TextField}
+                      thousandSeparator
+                      prefix={"$ "}
                     />
                   </Box>
                 </Grid>

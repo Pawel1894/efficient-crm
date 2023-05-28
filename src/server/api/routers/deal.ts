@@ -121,4 +121,15 @@ export const dealRouter = createTRPCRouter({
       },
     });
   }),
+  get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    return await ctx.prisma.deal.findFirst({
+      where: {
+        id: input,
+      },
+      include: {
+        lead: true,
+        stage: true,
+      },
+    });
+  }),
 });

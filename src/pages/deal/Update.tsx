@@ -19,6 +19,7 @@ import { api } from "@/utils/api";
 import { ContactSchema, ContactType, DealSchema, DealType } from "@/utils/schema";
 import { toast } from "react-toastify";
 import { DealData } from ".";
+import { NumericFormat } from "react-number-format";
 
 type Props = {
   setOpen: React.Dispatch<SetStateAction<boolean>>;
@@ -116,31 +117,37 @@ export default function Update({ data, isOpen, setOpen }: Props) {
               <Grid justifyContent={"center"} container rowGap={2}>
                 <Grid item xs={12} md={6}>
                   <Box px={1}>
-                    <TextField
+                    <NumericFormat
                       fullWidth
                       required
                       id="forecast"
                       name="forecast"
                       label="Forecast"
                       value={formik.values.forecast}
-                      onChange={formik.handleChange}
+                      onValueChange={(values) => void formik.setFieldValue("forecast", values?.floatValue)}
                       error={formik.touched.forecast && Boolean(formik.errors.forecast)}
                       helperText={formik.touched.forecast && formik.errors.forecast}
+                      customInput={TextField}
+                      thousandSeparator
+                      prefix={"$ "}
                     />
                   </Box>
                 </Grid>
 
                 <Grid item xs={12} md={6}>
                   <Box px={1}>
-                    <TextField
+                    <NumericFormat
                       fullWidth
                       id="value"
                       name="value"
                       label="Value"
-                      defaultValue={data.value}
-                      onChange={formik.handleChange}
+                      value={formik.values.value}
+                      onValueChange={(values) => void formik.setFieldValue("value", values?.floatValue)}
                       error={formik.touched.value && Boolean(formik.errors.value)}
                       helperText={formik.touched.value && formik.errors.value}
+                      customInput={TextField}
+                      thousandSeparator
+                      prefix={"$ "}
                     />
                   </Box>
                 </Grid>
