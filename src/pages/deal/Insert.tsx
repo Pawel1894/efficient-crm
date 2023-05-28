@@ -54,7 +54,7 @@ export default function Insert({ isOpen, setOpen, leadId }: Props) {
 
   const formik = useFormik({
     initialValues: {
-      forecast: null,
+      forecast: 0,
       comment: null,
       owner: {
         identifier: null,

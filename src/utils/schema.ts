@@ -37,7 +37,7 @@ export const LeadSchema = yup.object({
 });
 
 export const DealSchema = yup.object({
-  forecast: yup.number().required("Forecast is required").nullable(),
+  forecast: yup.number().required("Forecast is required"),
   value: yup.number().optional().nullable(),
   owner: yup
     .object({

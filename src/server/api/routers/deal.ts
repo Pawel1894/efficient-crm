@@ -141,4 +141,48 @@ export const dealRouter = createTRPCRouter({
 
     return deal;
   }),
+  assignStage: protectedProcedure
+    .input(
+      z.object({
+        stage: z.object({
+          id: z.string(),
+          label: z.string(),
+          orgId: z.string(),
+          type: z.string(),
+          value: z.string(),
+        }),
+        dealId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.deal.update({
+        where: {
+          id: input.dealId,
+        },
+        data: {
+          dictionaryId: input.stage.id,
+        },
+      });
+    }),
+  assignOwner: protectedProcedure
+    .input(
+      z.object({
+        owner: z.object({
+          id: z.string(),
+          fullname: z.string(),
+        }),
+        dealId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.deal.update({
+        where: {
+          id: input.dealId,
+        },
+        data: {
+          owner: input.owner.id,
+          ownerFullname: input.owner.fullname,
+        },
+      });
+    }),
 });
