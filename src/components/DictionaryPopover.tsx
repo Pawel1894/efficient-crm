@@ -1,5 +1,5 @@
-import { Box, List, ListItem, ListItemButton, ListItemText, Popover } from "@mui/material";
-import { Dictionary } from "@prisma/client";
+import { List, ListItem, ListItemButton, ListItemText, Popover } from "@mui/material";
+import type { Dictionary } from "@prisma/client";
 import React from "react";
 
 type Props = {

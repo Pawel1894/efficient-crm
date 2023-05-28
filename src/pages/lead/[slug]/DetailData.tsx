@@ -8,12 +8,14 @@ import DictionaryPopover from "@/components/DictionaryPopover";
 import { api } from "@/utils/api";
 import { Dictionary } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { getQueryKey } from "@trpc/react-query";
 import { toast } from "react-toastify";
+import UsersPopover from "@/components/UsersPopover";
 
 export default function DetailData({ lead }: { lead: LeadData }) {
   const [open, setOpen] = useState<boolean>(false);
+  const [ownerOpen, setOwnerOpen] = useState<boolean>(false);
   const statusRef = useRef<HTMLButtonElement>(null);
+  const ownerRef = useRef<HTMLButtonElement>(null);
   const context = api.useContext();
   const queryClient = useQueryClient();
   const { data: statuses } = api.dictionary.byType.useQuery("LEAD_STATUS");
@@ -46,6 +48,10 @@ export default function DetailData({ lead }: { lead: LeadData }) {
     setOpen(false);
   }
 
+  function onOwnerClickHandler(owner: { id: string; fullname: string }) {
+    console.log(owner);
+  }
+
   return (
     <>
       {statuses ? (
@@ -57,6 +63,14 @@ export default function DetailData({ lead }: { lead: LeadData }) {
           itemRef={statusRef}
         />
       ) : null}
+
+      <UsersPopover
+        onClickHandler={onOwnerClickHandler}
+        setOpen={setOwnerOpen}
+        open={ownerOpen}
+        itemRef={ownerRef}
+      />
+
       <Grid py={3} container columnGap={6} rowGap={4}>
         <Grid xs={5} md={3} lg={2} item>
           <ItemDisplay label="First name" content={lead?.firstName} />
@@ -100,6 +114,16 @@ export default function DetailData({ lead }: { lead: LeadData }) {
             label="Owner"
             href={lead?.owner ? `/user/${lead?.owner}` : null}
             content={lead?.ownerFullname}
+            tooltip={
+              <IconButton
+                onClick={() => setOwnerOpen((prev) => !prev)}
+                ref={ownerRef}
+                color="primary"
+                size="small"
+              >
+                <Edit sx={{ width: "1rem", height: "1rem" }} />
+              </IconButton>
+            }
           />
         </Grid>
         <Grid xs={5} md={3} lg={2} item>
