@@ -3,7 +3,7 @@ import { appRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
 import { api } from "@/utils/api";
 import { getAuth } from "@clerk/nextjs/server";
-import { Breadcrumbs, Typography, useMediaQuery } from "@mui/material";
+import { Breadcrumbs, Button, Divider, IconButton, Stack, Typography, useMediaQuery } from "@mui/material";
 import { Deal } from "@prisma/client";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { TRPCError } from "@trpc/server";
@@ -14,6 +14,10 @@ import React, { useEffect, useState } from "react";
 import superjson from "superjson";
 import { DealData } from "..";
 import Head from "next/head";
+import Update from "../Update";
+import DeleteDialog from "@/components/DeleteDialog";
+import { Delete, Edit, KeyboardArrowLeft } from "@mui/icons-material";
+import DetailData from "./DetailData";
 
 export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
@@ -58,6 +62,54 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
       <Head>
         <title>Deal</title>
       </Head>
+      {updateData ? (
+        <>
+          <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} />{" "}
+          <DeleteDialog
+            id={updateData?.id}
+            isDeleting={isDeleting}
+            open={deleteOpen}
+            handleClose={handleDelete}
+          />{" "}
+        </>
+      ) : null}
+
+      {isError || error ? (
+        <span>{error ? error : fetchError?.message}</span>
+      ) : (
+        <>
+          <Stack pb={3} direction={"row"} gap={2}>
+            <IconButton onClick={() => router.back()}>
+              <KeyboardArrowLeft />
+            </IconButton>
+            <Button
+              onClick={() => {
+                setUpdateData(deal);
+                setDeleteOpen(true);
+              }}
+              color="warning"
+              variant="outlined"
+              title="Delete"
+              endIcon={<Delete />}
+            >
+              Delete
+            </Button>
+            <Button
+              onClick={() => {
+                setUpdateData(deal);
+                setUpdateOpen(true);
+              }}
+              variant="outlined"
+              title="Edit"
+              endIcon={<Edit />}
+            >
+              Update
+            </Button>
+          </Stack>
+          <Divider />
+          <DetailData deal={deal} />
+        </>
+      )}
     </>
   );
 }

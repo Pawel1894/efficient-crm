@@ -8,15 +8,12 @@ import React, { useMemo, useState } from "react";
 import { api } from "@/utils/api";
 import type { DealData } from ".";
 import Link from "next/link";
+import { formatToThousands } from "@/helper";
 type Props = {
   leadId?: string;
   heightSubstract: number;
   shouldFetch: boolean;
 };
-
-export function formatToThousands(x: number) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
 
 export default function Grid({ leadId, heightSubstract, shouldFetch }: Props) {
   const [deleteOpen, setDeleteOpen] = useState(false);

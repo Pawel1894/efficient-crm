@@ -122,7 +122,7 @@ export const dealRouter = createTRPCRouter({
     });
   }),
   get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
-    return await ctx.prisma.deal.findFirst({
+    const deal = await ctx.prisma.deal.findFirst({
       where: {
         id: input,
       },
@@ -131,5 +131,14 @@ export const dealRouter = createTRPCRouter({
         stage: true,
       },
     });
+
+    if (deal === null) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Deal not found",
+      });
+    }
+
+    return deal;
   }),
 });

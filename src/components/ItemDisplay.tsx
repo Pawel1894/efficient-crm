@@ -19,14 +19,15 @@ export default function ItemDisplay({ content, label, href, tooltip }: Props) {
         <Box>{tooltip}</Box>
       </Stack>
       {href && content ? (
-        <Link href={href}>
+        <Link style={{ textDecoration: "unset" }} href={href}>
           <Typography
             sx={{
               display: "block",
               textOverflow: "ellipsis",
               overflow: "hidden",
+              textDecoration: "underline",
             }}
-            color="text.primary"
+            color="primary.main"
             variant="h6"
             component={"span"}
           >
