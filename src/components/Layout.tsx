@@ -181,7 +181,11 @@ function Navigation() {
               return (
                 <Link key={item.id} style={{ textDecoration: "unset" }} href={item.link}>
                   <ListItem disablePadding>
-                    <ListItemButton>
+                    <ListItemButton
+                      sx={{
+                        backgroundColor: router.pathname.startsWith(item.basePath) ? "primary.dark" : "",
+                      }}
+                    >
                       <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
                         {item.icon}
                       </ListItemIcon>
@@ -195,7 +199,11 @@ function Navigation() {
             {membership?.role === "admin" ? (
               <Link style={{ textDecoration: "unset" }} href={"/admin/settings"}>
                 <ListItem key={"settings"} disablePadding>
-                  <ListItemButton>
+                  <ListItemButton
+                    sx={{
+                      backgroundColor: router.pathname.startsWith("/admin/settings") ? "primary.dark" : "",
+                    }}
+                  >
                     <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
                       <Settings />
                     </ListItemIcon>
@@ -229,6 +237,7 @@ type MenuItem = {
   text: string;
   link: string;
   icon: JSX.Element;
+  basePath: string;
 };
 
 const commonMenu: Array<MenuItem> = [
@@ -237,41 +246,48 @@ const commonMenu: Array<MenuItem> = [
     text: "Home",
     link: "/home",
     icon: <Home />,
+    basePath: "/home",
   },
   {
     id: 2,
     text: "Leads",
     link: "/lead",
     icon: <ModeStandby />,
+    basePath: "/lead",
   },
   {
     id: 3,
     text: "Deals",
     link: "/deal",
     icon: <AttachMoney />,
+    basePath: "/deal",
   },
   {
     id: 4,
     text: "Activities",
     link: "/activity",
     icon: <LocalActivity />,
+    basePath: "/activity",
   },
   {
     id: 1,
     text: "Contacts",
     link: "/contact",
     icon: <ContactPage />,
+    basePath: "/contact",
   },
   {
     id: 6,
     text: "Analytics",
     link: "/analytics",
     icon: <Analytics />,
+    basePath: "/analytics",
   },
   {
     id: 5,
     text: "Team",
     link: "/team",
     icon: <Group />,
+    basePath: "/team",
   },
 ];
