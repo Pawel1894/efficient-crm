@@ -16,7 +16,7 @@ import { useFormik } from "formik";
 import { Close } from "@mui/icons-material";
 import { useOrganization } from "@clerk/nextjs";
 import { api } from "@/utils/api";
-import { LeadSchema, LeadType } from "@/utils/schema";
+import { LeadSchema, type LeadType } from "@/utils/schema";
 import { toast } from "react-toastify";
 import type { LeadData } from ".";
 
@@ -24,8 +24,9 @@ type Props = {
   setOpen: React.Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
   data: LeadData;
+  onSettledHandler: () => Promise<void>;
 };
-export default function Update({ isOpen, setOpen, data }: Props) {
+export default function Update({ isOpen, setOpen, data, onSettledHandler }: Props) {
   const desktopbr = useMediaQuery("(min-width:600px)");
   const context = api.useContext();
   const { data: statuses } = api.dictionary.byType.useQuery("LEAD_STATUS");
@@ -40,7 +41,8 @@ export default function Update({ isOpen, setOpen, data }: Props) {
       toast.success("Lead updated");
       formik.resetForm();
       setOpen(false);
-      await context.lead.leads.invalidate();
+      // await context.lead.leads.invalidate();
+      await onSettledHandler();
     },
   });
 

@@ -25,9 +25,10 @@ type Props = {
   setOpen: React.Dispatch<SetStateAction<boolean>>;
   isOpen: boolean;
   data: DealData;
+  onSettledHandler: () => Promise<void>;
 };
 
-export default function Update({ data, isOpen, setOpen }: Props) {
+export default function Update({ data, isOpen, setOpen, onSettledHandler }: Props) {
   const desktopbr = useMediaQuery("(min-width:600px)");
   const context = api.useContext();
   const { data: stages } = api.dictionary.byType.useQuery("DEAL_STAGE");
@@ -43,7 +44,7 @@ export default function Update({ data, isOpen, setOpen }: Props) {
       toast.success("Deal updated");
       formik.resetForm();
       setOpen(false);
-      await context.deal.deals.invalidate();
+      await onSettledHandler();
     },
   });
 

@@ -38,7 +38,7 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
-
+  const context = api.useContext();
   useEffect(() => {
     setBreadcrumbs(
       <Breadcrumbs aria-label="breadcrumb">
@@ -51,6 +51,10 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
       </Breadcrumbs>
     );
   }, [setBreadcrumbs, lead]);
+
+  async function onUpdateSettled() {
+    await context.lead.get.invalidate(lead.id);
+  }
 
   async function handleDelete(confirmed: boolean, id?: string) {
     if (confirmed && id) {
@@ -75,7 +79,12 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
       </Head>
       {updateData ? (
         <>
-          <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} />{" "}
+          <Update
+            onSettledHandler={onUpdateSettled}
+            data={updateData}
+            isOpen={updateOpen}
+            setOpen={setUpdateOpen}
+          />{" "}
           <DeleteDialog
             id={updateData?.id}
             isDeleting={isDeleting}

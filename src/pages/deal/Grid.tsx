@@ -35,7 +35,7 @@ export default function Grid({ leadId, heightSubstract, shouldFetch }: Props) {
     enabled: shouldFetch,
     refetchOnWindowFocus: false,
   });
-
+  const context = api.useContext();
   function handleDelete(confirmed: boolean, id?: string) {
     if (confirmed && id) {
       deleteDeal(id);
@@ -138,11 +138,20 @@ export default function Grid({ leadId, heightSubstract, shouldFetch }: Props) {
     []
   );
 
+  async function onUpdateSettled() {
+    await context.deal.deals.invalidate();
+  }
+
   return (
     <>
       {updateData ? (
         <>
-          <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} />{" "}
+          <Update
+            onSettledHandler={onUpdateSettled}
+            data={updateData}
+            isOpen={updateOpen}
+            setOpen={setUpdateOpen}
+          />{" "}
           <DeleteDialog
             id={updateData.id}
             isDeleting={isDeleting}

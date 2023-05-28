@@ -33,7 +33,7 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
   const [updateData, setUpdateData] = useState<DealData>();
   const [updateOpen, setUpdateOpen] = useState(false);
   const { mutate: deleteDeal, isLoading: isDeleting } = api.deal.delete.useMutation();
-
+  const context = api.useContext();
   useEffect(() => {
     setBreadcrumbs(
       <Breadcrumbs aria-label="breadcrumb">
@@ -57,6 +57,10 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
     return;
   }
 
+  async function onUpdateSettled() {
+    await context.deal.get.invalidate(deal.id);
+  }
+
   return (
     <>
       <Head>
@@ -64,7 +68,12 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
       </Head>
       {updateData ? (
         <>
-          <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} />{" "}
+          <Update
+            onSettledHandler={onUpdateSettled}
+            data={updateData}
+            isOpen={updateOpen}
+            setOpen={setUpdateOpen}
+          />{" "}
           <DeleteDialog
             id={updateData?.id}
             isDeleting={isDeleting}

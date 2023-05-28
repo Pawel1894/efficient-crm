@@ -36,6 +36,7 @@ export default function Page() {
       await refetch();
     },
   });
+  const context = api.useContext();
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -116,6 +117,10 @@ export default function Page() {
     return;
   }
 
+  async function onUpdateSettled() {
+    await context.lead.leads.invalidate();
+  }
+
   return (
     <>
       <Head>
@@ -123,7 +128,12 @@ export default function Page() {
       </Head>
       {updateData ? (
         <>
-          <Update data={updateData} isOpen={updateOpen} setOpen={setUpdateOpen} />{" "}
+          <Update
+            onSettledHandler={onUpdateSettled}
+            data={updateData}
+            isOpen={updateOpen}
+            setOpen={setUpdateOpen}
+          />{" "}
           <DeleteDialog
             id={updateData.id}
             isDeleting={isDeleting}
