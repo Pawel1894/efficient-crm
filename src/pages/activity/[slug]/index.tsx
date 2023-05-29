@@ -17,6 +17,7 @@ import Update from "../Update";
 import DeleteDialog from "@/components/DeleteDialog";
 import { Delete, Edit, KeyboardArrowLeft } from "@mui/icons-material";
 import DetailData from "./DetailData";
+import AdaptiveHeader from "@/components/AdaptiveHeader";
 export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
@@ -91,29 +92,31 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
             <IconButton onClick={() => router.back()}>
               <KeyboardArrowLeft />
             </IconButton>
-            <Button
-              onClick={() => {
-                setUpdateData(activity);
-                setDeleteOpen(true);
-              }}
-              color="warning"
-              variant="outlined"
-              title="Delete"
-              endIcon={<Delete />}
-            >
-              Delete
-            </Button>
-            <Button
-              onClick={() => {
-                setUpdateData(activity);
-                setUpdateOpen(true);
-              }}
-              variant="outlined"
-              title="Edit"
-              endIcon={<Edit />}
-            >
-              Update
-            </Button>
+            <AdaptiveHeader>
+              <Button
+                onClick={() => {
+                  setUpdateData(activity);
+                  setDeleteOpen(true);
+                }}
+                color="warning"
+                variant="outlined"
+                title="Delete"
+                endIcon={<Delete />}
+              >
+                Delete
+              </Button>
+              <Button
+                onClick={() => {
+                  setUpdateData(activity);
+                  setUpdateOpen(true);
+                }}
+                variant="outlined"
+                title="Edit"
+                endIcon={<Edit />}
+              >
+                Update
+              </Button>
+            </AdaptiveHeader>
           </Stack>
           <Divider />
           <DetailData activity={activity} />

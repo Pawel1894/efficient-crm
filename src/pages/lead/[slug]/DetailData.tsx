@@ -151,6 +151,10 @@ export default function DetailData({ lead }: { lead: LeadData }) {
           />
         </Grid>
         <Grid xs={5} md={3} lg={2} item>
+          <ItemDisplay label="Team" content={lead?.teamName} />
+        </Grid>
+
+        <Grid xs={5} md={3} lg={2} item>
           <ItemDisplay label="Created by" content={lead?.createdBy} />
         </Grid>
         <Grid xs={5} md={3} lg={2} item>
@@ -162,16 +166,14 @@ export default function DetailData({ lead }: { lead: LeadData }) {
             content={dayjs(lead?.createdAt?.toString())?.format("DD/MM/YYYY HH:mm")}
           />
         </Grid>
-        <Grid justifySelf={"start"} xs={5} md={3} lg={2}>
+        <Grid justifySelf={"start"} xs={5} md={3} lg={2} item>
           <ItemDisplay
             label="Updated at"
             content={dayjs(lead?.updatedAt?.toString())?.format("DD/MM/YYYY HH:mm")}
           />
         </Grid>
-        <Grid xs={5} md={3} lg={2} item>
-          <ItemDisplay label="Team" content={lead?.teamName} />
-        </Grid>
         <Grid
+          item
           xs={12}
           md={lead?.comment && lead?.comment?.length > 40 ? 6 : 3}
           lg={lead?.comment && lead?.comment?.length > 40 ? 6 : 2}

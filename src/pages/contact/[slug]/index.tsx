@@ -18,6 +18,7 @@ import { appRouter } from "@/server/api/root";
 import { TRPCError } from "@trpc/server";
 import { DetailData } from "./DetailData";
 import type { Contact } from "@prisma/client";
+import AdaptiveHeader from "@/components/AdaptiveHeader";
 
 export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
@@ -86,29 +87,31 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
             <IconButton onClick={() => router.back()}>
               <KeyboardArrowLeft />
             </IconButton>
-            <Button
-              onClick={() => {
-                setUpdateData(contact);
-                setDeleteOpen(true);
-              }}
-              color="warning"
-              variant="outlined"
-              title="Delete"
-              endIcon={<Delete />}
-            >
-              Delete
-            </Button>
-            <Button
-              onClick={() => {
-                setUpdateData(contact);
-                setUpdateOpen(true);
-              }}
-              variant="outlined"
-              title="Edit"
-              endIcon={<Edit />}
-            >
-              Update
-            </Button>
+            <AdaptiveHeader>
+              <Button
+                onClick={() => {
+                  setUpdateData(contact);
+                  setDeleteOpen(true);
+                }}
+                color="warning"
+                variant="outlined"
+                title="Delete"
+                endIcon={<Delete />}
+              >
+                Delete
+              </Button>
+              <Button
+                onClick={() => {
+                  setUpdateData(contact);
+                  setUpdateOpen(true);
+                }}
+                variant="outlined"
+                title="Edit"
+                endIcon={<Edit />}
+              >
+                Update
+              </Button>
+            </AdaptiveHeader>
           </Stack>
           <Divider />
           <DetailData contact={contact} />

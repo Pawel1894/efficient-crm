@@ -21,6 +21,7 @@ import { TabPanel } from "@/components/TabPanel";
 import DealsGrid from "@/pages/deal/Grid";
 import ActivitiesGrid from "@/pages/activity/Grid";
 import type { Lead } from "@prisma/client";
+import AdaptiveHeader from "@/components/AdaptiveHeader";
 
 export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
@@ -102,29 +103,42 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
             <IconButton onClick={() => router.back()}>
               <KeyboardArrowLeft />
             </IconButton>
-            <Button
-              onClick={() => {
-                setUpdateData(lead);
-                setDeleteOpen(true);
-              }}
-              color="warning"
-              variant="outlined"
-              title="Delete"
-              endIcon={<Delete />}
-            >
-              Delete
-            </Button>
-            <Button
-              onClick={() => {
-                setUpdateData(lead);
-                setUpdateOpen(true);
-              }}
-              variant="outlined"
-              title="Edit"
-              endIcon={<Edit />}
-            >
-              Update
-            </Button>
+            <AdaptiveHeader>
+              <Button
+                onClick={() => {
+                  setUpdateData(lead);
+                  setDeleteOpen(true);
+                }}
+                color="warning"
+                variant="outlined"
+                title="Delete"
+                endIcon={<Delete />}
+              >
+                Delete
+              </Button>
+              <Button
+                onClick={() => {
+                  setUpdateData(lead);
+                  setUpdateOpen(true);
+                }}
+                variant="outlined"
+                title="Edit"
+                endIcon={<Edit />}
+              >
+                Update
+              </Button>
+              <Button
+                onClick={() => {
+                  setUpdateData(lead);
+                  setUpdateOpen(true);
+                }}
+                variant="outlined"
+                title="Edit"
+                endIcon={<Edit />}
+              >
+                Convert to contact
+              </Button>
+            </AdaptiveHeader>
           </Stack>
           <Divider />
           <Tabs value={currentTab} onChange={handleTabChange} aria-label="basic tabs example">

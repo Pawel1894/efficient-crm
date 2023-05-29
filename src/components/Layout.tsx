@@ -92,7 +92,7 @@ type Props = {
 };
 
 export default function Layout({ children }: Props) {
-  const desktopbr = useMediaQuery("(min-width:600px)");
+  const desktopbr = useMediaQuery("(min-width:900px)");
 
   const breadcrumbs = useSystemStore((state) => state.breadcrumbs);
   const [open, setOpen] = useState(true);
