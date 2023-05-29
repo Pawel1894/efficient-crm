@@ -168,4 +168,48 @@ export const contactRouter = createTRPCRouter({
       },
     });
   }),
+  assignType: protectedProcedure
+    .input(
+      z.object({
+        type: z.object({
+          id: z.string(),
+          label: z.string(),
+          orgId: z.string(),
+          type: z.string(),
+          value: z.string(),
+        }),
+        contactId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.contact.update({
+        where: {
+          id: input.contactId,
+        },
+        data: {
+          dictionaryId: input.type.id,
+        },
+      });
+    }),
+  assignOwner: protectedProcedure
+    .input(
+      z.object({
+        owner: z.object({
+          id: z.string(),
+          fullname: z.string(),
+        }),
+        contactId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.contact.update({
+        where: {
+          id: input.contactId,
+        },
+        data: {
+          owner: input.owner.id,
+          ownerFullname: input.owner.fullname,
+        },
+      });
+    }),
 });
