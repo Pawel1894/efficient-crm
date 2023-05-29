@@ -197,4 +197,48 @@ export const activityRouter = createTRPCRouter({
 
     return activity;
   }),
+  assignStatus: protectedProcedure
+    .input(
+      z.object({
+        status: z.object({
+          id: z.string(),
+          label: z.string(),
+          orgId: z.string(),
+          type: z.string(),
+          value: z.string(),
+        }),
+        activityId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.activity.update({
+        where: {
+          id: input.activityId,
+        },
+        data: {
+          dictionaryId: input.status.id,
+        },
+      });
+    }),
+  assignOwner: protectedProcedure
+    .input(
+      z.object({
+        owner: z.object({
+          id: z.string(),
+          fullname: z.string(),
+        }),
+        activityId: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) => {
+      return ctx.prisma.activity.update({
+        where: {
+          id: input.activityId,
+        },
+        data: {
+          owner: input.owner.id,
+          ownerFullname: input.owner.fullname,
+        },
+      });
+    }),
 });

@@ -165,7 +165,7 @@ export default function DetailData({ deal }: Props) {
             content={dayjs(deal?.createdAt?.toString())?.format("DD/MM/YYYY HH:mm")}
           />
         </Grid>
-        <Grid justifySelf={"start"} xs={5} md={3} lg={2}>
+        <Grid item justifySelf={"start"} xs={5} md={3} lg={2}>
           <ItemDisplay
             label="Updated at"
             content={dayjs(deal?.updatedAt?.toString())?.format("DD/MM/YYYY HH:mm")}

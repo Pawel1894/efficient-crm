@@ -11,11 +11,12 @@ import type { InferGetServerSidePropsType, NextApiRequest, NextApiResponse } fro
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import superjson from "superjson";
-import { ActivityData } from "..";
+import type { ActivityData } from "..";
 import Head from "next/head";
 import Update from "../Update";
 import DeleteDialog from "@/components/DeleteDialog";
 import { Delete, Edit, KeyboardArrowLeft } from "@mui/icons-material";
+import DetailData from "./DetailData";
 export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
@@ -115,7 +116,7 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
             </Button>
           </Stack>
           <Divider />
-          {/* <DetailData activity={activity} /> */}
+          <DetailData activity={activity} />
         </>
       )}
     </>

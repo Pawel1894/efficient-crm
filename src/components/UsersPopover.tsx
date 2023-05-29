@@ -1,7 +1,7 @@
 import useDebounce from "@/hooks/useDebounced";
 import { useOrganization } from "@clerk/nextjs";
 import { List, ListItem, ListItemButton, ListItemText, Popover, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 type Props = {
   onClickHandler: (item: { id: string; fullname: string }) => void;
@@ -21,6 +21,11 @@ export default function OwnerPopover({ itemRef, onClickHandler, setOpen, open }:
     const target = event.target as HTMLInputElement;
     const value = target.value;
 
+    if (!value) {
+      setMembers(membershipList);
+      return;
+    }
+
     const newMembers = membershipList?.filter(
       (user) =>
         user.publicUserData.identifier?.includes(value) ||
@@ -31,6 +36,10 @@ export default function OwnerPopover({ itemRef, onClickHandler, setOpen, open }:
 
     setMembers(newMembers);
   }
+
+  useEffect(() => {
+    setMembers(membershipList);
+  }, [membershipList]);
 
   return (
     <Popover
