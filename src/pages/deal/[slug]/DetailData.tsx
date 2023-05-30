@@ -8,7 +8,7 @@ import { api } from "@/utils/api";
 import DictionaryPopover from "@/components/DictionaryPopover";
 import UsersPopover from "@/components/UsersPopover";
 import { Edit } from "@mui/icons-material";
-import { Dictionary } from "@prisma/client";
+import type { Dictionary } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 

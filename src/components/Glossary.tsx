@@ -5,7 +5,7 @@ import { grey } from "@mui/material/colors";
 
 export default function Glossary() {
   return (
-    <Box p={2}>
+    <Box height={"256px"} p={2}>
       <Typography component={"span"}>Glossary</Typography>
       <List sx={{ paddingBottom: 0 }}>
         <ListItem sx={{ paddingLeft: 0 }}>
@@ -18,7 +18,7 @@ export default function Glossary() {
           </ListItemAvatar>
           <ListItemText>
             <Box display={"flex"}>
-              <Typography variant="body1">Lead – potential client.</Typography>
+              <Typography variant="body1">Lead – potential buyer.</Typography>
             </Box>
           </ListItemText>
         </ListItem>

@@ -1,4 +1,3 @@
-import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
 import { Box, Divider, IconButton, List, ListItemText, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import type { Lead } from "@prisma/client";
@@ -49,8 +48,15 @@ export default function RecentlyUpdated({
                         </Typography>
                         <br />
                         {item.ownerFullname?.trim() ? (
-                          <Link href={`/user/${item.owner ?? ""}`}>
-                            <Typography color={"text.primary"} component="span" variant="body2">
+                          <Link style={{ textDecoration: "unset" }} href={`/user/${item.owner ?? ""}`}>
+                            <Typography
+                              sx={{
+                                textDecoration: "underline",
+                              }}
+                              color="primary.main"
+                              component="span"
+                              variant="body2"
+                            >
                               {item.ownerFullname}
                             </Typography>
                           </Link>

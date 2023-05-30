@@ -57,8 +57,15 @@ export default function TodayActivities() {
                         <br />
 
                         {item.lead ? (
-                          <Link href={`/lead/${item.lead.id}`}>
-                            <Typography color={"text.primary"} component="span" variant="body2">
+                          <Link style={{ textDecoration: "unset" }} href={`/lead/${item.lead.id}`}>
+                            <Typography
+                              sx={{
+                                textDecoration: "underline",
+                              }}
+                              color="primary.main"
+                              component="span"
+                              variant="body2"
+                            >
                               {`${item.lead.firstName} ${item.lead.lastName}`}{" "}
                             </Typography>
                           </Link>

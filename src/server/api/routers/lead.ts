@@ -67,6 +67,8 @@ export const leadRouter = createTRPCRouter({
       },
       include: {
         status: true,
+        deals: true,
+        activities: true,
       },
     });
 

@@ -9,11 +9,13 @@ import Insert from "./Insert";
 import { useSystemStore } from "../_app";
 import Head from "next/head";
 import Update from "./Update";
-import type { Dictionary, Lead } from "@prisma/client";
+import type { Activity, Deal, Dictionary, Lead } from "@prisma/client";
 import DeleteDialog from "@/components/DeleteDialog";
 
 export type LeadData = Lead & {
   status: Dictionary | null;
+  activities: Activity[] | null;
+  deals: Deal[] | null;
 };
 
 export default function Page() {
@@ -87,6 +89,7 @@ export default function Page() {
       { field: "lastName", headerName: "Last Name", flex: 1, minWidth: 170 },
       { field: "email", headerName: "Email", flex: 1, minWidth: 170 },
       {
+        minWidth: 90,
         field: "status",
         valueGetter: (params) => {
           const data = params.row as LeadData;
@@ -95,7 +98,37 @@ export default function Page() {
         headerName: "Status",
         flex: 1,
       },
-      { field: "ownerFullname", headerName: "Owner", flex: 1 },
+      { minWidth: 140, field: "ownerFullname", headerName: "Owner", flex: 1 },
+      {
+        minWidth: 90,
+        field: "activities",
+        headerName: "Activities No.",
+        valueGetter: (params) => {
+          const data = params.row as LeadData;
+          return data.activities?.length ?? 0;
+        },
+        flex: 1,
+      },
+      {
+        minWidth: 90,
+        field: "deals",
+        headerName: "Deals No.",
+        valueGetter: (params) => {
+          const data = params.row as LeadData;
+          return data.deals?.length ?? 0;
+        },
+        flex: 1,
+      },
+      {
+        minWidth: 140,
+        field: "location",
+        headerName: "Location",
+        valueGetter: (params) => {
+          const data = params.row as LeadData;
+          return data.location;
+        },
+        flex: 1,
+      },
     ],
     []
   );

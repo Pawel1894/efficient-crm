@@ -47,7 +47,7 @@ export default function Page() {
               <TodayActivities />
             </Paper>
           </Grid>
-          <Grid xs={12} md={6}>
+          <Grid xs={12}>
             <RecentLeads />
           </Grid>
         </Grid>
