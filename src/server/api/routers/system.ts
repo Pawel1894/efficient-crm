@@ -20,7 +20,7 @@ export const systemRouter = createTRPCRouter({
         });
       }
 
-      const dicts = await ctx.prisma.dictionary.createMany({
+      await ctx.prisma.dictionary.createMany({
         data: [
           {
             type: "ACTIVITY_STATUS",
@@ -40,20 +40,6 @@ export const systemRouter = createTRPCRouter({
             value: "closed",
             orgId: input.id,
           },
-
-          {
-            type: "CONTACT_TYPE",
-            label: "client",
-            value: "client",
-            orgId: input.id,
-          },
-          {
-            type: "CONTACT_TYPE",
-            label: "company",
-            value: "company",
-            orgId: input.id,
-          },
-
           {
             type: "DEAL_STAGE",
             label: "open",
@@ -72,7 +58,6 @@ export const systemRouter = createTRPCRouter({
             value: "closed",
             orgId: input.id,
           },
-
           {
             type: "LEAD_STATUS",
             label: "open",
@@ -92,21 +77,6 @@ export const systemRouter = createTRPCRouter({
             orgId: input.id,
           },
         ],
-      });
-
-      // create contact
-      const contact = await ctx.prisma.contact.create({
-        data: {
-          firstName: "John",
-          lastName: "Doe",
-          email: "john@example.com",
-          createdBy: input.userName,
-          updatedBy: input.userName,
-          team: input.id,
-          teamName: input.name,
-          owner: ctx.user.id,
-          ownerFullname: input.userName,
-        },
       });
 
       // create lead

@@ -17,7 +17,6 @@ import {
   Add,
   Analytics,
   AttachMoney,
-  ContactPage,
   Group,
   Home,
   LocalActivity,
@@ -276,13 +275,6 @@ const commonMenu: Array<MenuItem> = [
     link: "/activity",
     icon: <LocalActivity />,
     basePath: "/activity",
-  },
-  {
-    id: 1,
-    text: "Contacts",
-    link: "/contact",
-    icon: <ContactPage />,
-    basePath: "/contact",
   },
   {
     id: 6,
