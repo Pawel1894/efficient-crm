@@ -63,30 +63,6 @@ model Deal {
     @@index([dictionaryId])
 }
 
-model Contact {
-    id            String      @id @default(cuid())
-    firstName     String
-    lastName      String
-    company       String?
-    title         String?
-    email         String
-    phone         String?
-    location      String?
-    comment       String?
-    owner         String?
-    ownerFullname String?
-    type          Dictionary? @relation(fields: [dictionaryId], references: [id])
-    createdBy     String?
-    updatedBy     String
-    createdAt     DateTime    @default(now())
-    updatedAt     DateTime    @updatedAt
-    team          String
-    teamName      String
-    dictionaryId  String?
-
-    @@index([dictionaryId])
-}
-
 model Activity {
     id            String      @id @default(cuid())
     owner         String?
@@ -117,14 +93,12 @@ model Dictionary {
     label    String
     orgId    String
     Activity Activity[]
-    Contact  Contact[]
     Deal     Deal[]
     Lead     Lead[]
 }
 
 enum Type {
     ACTIVITY_STATUS
-    CONTACT_TYPE
     DEAL_STAGE
     LEAD_STATUS
 }

@@ -1,4 +1,4 @@
-import type { Activity, Contact, Dictionary, Lead } from "@prisma/client";
+import type { Activity, Dictionary, Lead } from "@prisma/client";
 import React, { useEffect } from "react";
 import { useSystemStore } from "../_app";
 import { Breadcrumbs, Typography } from "@mui/material";

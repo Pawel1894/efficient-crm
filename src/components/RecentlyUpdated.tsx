@@ -1,7 +1,7 @@
 import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
 import { Box, Divider, IconButton, List, ListItemText, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
-import type { Contact, Lead } from "@prisma/client";
+import type { Lead } from "@prisma/client";
 import React from "react";
 import dayjs from "dayjs";
 import { Visibility } from "@mui/icons-material";
@@ -12,7 +12,7 @@ export default function RecentlyUpdated({
   title,
   pathname,
 }: {
-  data?: Array<Partial<Contact | Lead>>;
+  data?: Array<Partial<Lead>>;
   title: string;
   pathname: string;
 }) {

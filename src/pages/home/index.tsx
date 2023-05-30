@@ -5,7 +5,6 @@ import { useOrganization } from "@clerk/nextjs";
 import { Box, Breadcrumbs, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import React, { useEffect } from "react";
-import RecentContacts from "@/components/RecentContacts";
 import RecentLeads from "@/components/RecentLeads";
 import { api } from "@/utils/api";
 import { useSystemStore } from "../_app";
@@ -49,9 +48,6 @@ export default function Page() {
             </Paper>
           </Grid>
           <Grid xs={12} md={6}>
-            <RecentContacts />
-          </Grid>
-          <Grid xs={12} md={6}>
             <RecentLeads />
           </Grid>
         </Grid>
@@ -81,7 +77,6 @@ export const getServerSideProps = async ({ req, res }: { req: NextApiRequest; re
   });
 
   await helpers.lead.recentlyUpdated.prefetch();
-  await helpers.contact.recentlyUpdated.prefetch();
   await helpers.activity.today.prefetch();
 
   return {

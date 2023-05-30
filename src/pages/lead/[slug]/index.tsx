@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import superjson from "superjson";
 import type { LeadData } from "..";
 import { api } from "@/utils/api";
-import { Delete, Edit, KeyboardArrowLeft } from "@mui/icons-material";
+import { ChangeCircle, Delete, Edit, KeyboardArrowLeft } from "@mui/icons-material";
 import { Box, Breadcrumbs, Button, Divider, IconButton, Stack, Tab, Tabs, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -22,12 +22,12 @@ import DealsGrid from "@/pages/deal/Grid";
 import ActivitiesGrid from "@/pages/activity/Grid";
 import type { Lead } from "@prisma/client";
 import AdaptiveHeader from "@/components/AdaptiveHeader";
+import Confirm from "@/components/Confirm";
 
 export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const {
     data: lead,
-    isLoading,
     isError,
     error: fetchError,
   } = api.lead.get.useQuery(router.query.slug as string, {
@@ -39,6 +39,7 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
+
   const context = api.useContext();
   useEffect(() => {
     setBreadcrumbs(
@@ -126,17 +127,6 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
                 endIcon={<Edit />}
               >
                 Update
-              </Button>
-              <Button
-                onClick={() => {
-                  setUpdateData(lead);
-                  setUpdateOpen(true);
-                }}
-                variant="outlined"
-                title="Edit"
-                endIcon={<Edit />}
-              >
-                Convert to contact
               </Button>
             </AdaptiveHeader>
           </Stack>

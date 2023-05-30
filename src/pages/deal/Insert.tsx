@@ -45,7 +45,7 @@ export default function Insert({ isOpen, setOpen, leadId }: Props) {
       toast.error(err.message);
     },
     onSettled: async () => {
-      toast.success("Contact created");
+      toast.success("Deal created");
       formik.resetForm();
       setOpen(false);
       await context.deal.deals.invalidate();

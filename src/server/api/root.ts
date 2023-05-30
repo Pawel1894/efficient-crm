@@ -1,7 +1,6 @@
 import { createTRPCRouter } from "@/server/api/trpc";
 import { userRouter } from "./routers/user";
 import { systemRouter } from "./routers/system";
-import { contactRouter } from "./routers/contact";
 import { leadRouter } from "./routers/lead";
 import { activityRouter } from "./routers/activity";
 import { dictionaryRouter } from "./routers/dictionary";
@@ -15,7 +14,6 @@ import { dealRouter } from "./routers/deal";
 export const appRouter = createTRPCRouter({
   user: userRouter,
   system: systemRouter,
-  contact: contactRouter,
   lead: leadRouter,
   activity: activityRouter,
   dictionary: dictionaryRouter,

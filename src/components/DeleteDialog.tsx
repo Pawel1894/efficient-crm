@@ -22,7 +22,7 @@ export default function DeleteDialog({ id, isDeleting, handleClose, open }: prop
             <Button color="warning" onClick={() => void handleClose(false)}>
               No
             </Button>
-            <Button onClick={() => void handleClose(true, id)} autoFocus>
+            <Button variant="contained" onClick={() => void handleClose(true, id)} autoFocus>
               Yes
             </Button>
           </DialogActions>

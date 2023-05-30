@@ -16,7 +16,7 @@ import { useFormik } from "formik";
 import { Close } from "@mui/icons-material";
 import { useOrganization } from "@clerk/nextjs";
 import { api } from "@/utils/api";
-import { ContactSchema, ContactType, DealSchema, DealType } from "@/utils/schema";
+import { DealSchema, DealType } from "@/utils/schema";
 import { toast } from "react-toastify";
 import { DealData } from ".";
 import { NumericFormat } from "react-number-format";
