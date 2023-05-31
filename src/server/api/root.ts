@@ -5,6 +5,7 @@ import { leadRouter } from "./routers/lead";
 import { activityRouter } from "./routers/activity";
 import { dictionaryRouter } from "./routers/dictionary";
 import { dealRouter } from "./routers/deal";
+import { analyticsRouter } from "./routers/analytics";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   activity: activityRouter,
   dictionary: dictionaryRouter,
   deal: dealRouter,
+  analytics: analyticsRouter,
 });
 
 // export type definition of API

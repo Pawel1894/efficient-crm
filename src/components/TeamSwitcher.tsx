@@ -11,7 +11,7 @@ export default function TeamSwitcher() {
   const { data: userSettings, isSuccess } = api.user.settings.useQuery(undefined);
   const { mutate: setSettings } = api.user.setSettings.useMutation();
   const { mutate: coldStart } = api.system.coldStart.useMutation();
-
+  const context = api.useContext();
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     handleInit();
@@ -20,6 +20,7 @@ export default function TeamSwitcher() {
   async function handleOrgChange(organization: string) {
     if (setActive) await setActive({ organization });
     setSettings(organization);
+    await context.invalidate();
   }
 
   async function handleInit() {
