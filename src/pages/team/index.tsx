@@ -1,9 +1,10 @@
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { Delete, Visibility } from "@mui/icons-material";
-import { IconButton, Link, Stack } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { Box, IconButton, Link, Skeleton, Stack } from "@mui/material";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import Image from "next/image";
 import { useMemo } from "react";
+import type { OrganizationMembershipResource } from "@clerk/types";
 
 type Member = {
   role: string;
@@ -18,9 +19,17 @@ type Member = {
 };
 
 export default function Page() {
-  const { membershipList, membership } = useOrganization({
+  const { membershipList, membership, organization } = useOrganization({
     membershipList: {},
   });
+  const { user } = useUser();
+
+  const remove = async (member: OrganizationMembershipResource) => {
+    if (member.publicUserData.userId === user?.publicMetadata.userId) return;
+    if (member.publicUserData.userId) {
+      await organization?.removeMember(member.publicUserData.userId);
+    }
+  };
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -31,7 +40,9 @@ export default function Page() {
         hideable: false,
         sortable: false,
         renderCell: (params) => {
-          const data = params.row as Member;
+          const data = params.row as OrganizationMembershipResource;
+
+          if (!data.publicUserData.userId) return "";
 
           return (
             <Stack direction={"row"} gap={"0.5rem"}>
@@ -43,8 +54,7 @@ export default function Page() {
               {membership?.role === "admin" ? (
                 <IconButton
                   onClick={() => {
-                    // setUpdateData(data);
-                    // setDeleteOpen(true);
+                    void remove(data);
                   }}
                   size="small"
                   color="warning"
@@ -109,13 +119,18 @@ export default function Page() {
         flex: 1,
       },
     ],
-    []
+    [membership?.role]
   );
 
-  // publicUserData -> first name
-  // publicUserData -> last name
-
   return (
-    <>{membershipList ? <DataGrid rowSelection={false} rows={membershipList} columns={columns} /> : null}</>
+    <>
+      <Box height={"70vh"} width={"100%"}>
+        {!membershipList ? (
+          <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
+        ) : (
+          <DataGrid rowSelection={false} rows={membershipList} columns={columns} />
+        )}
+      </Box>
+    </>
   );
 }

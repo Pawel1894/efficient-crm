@@ -1,3 +1,4 @@
+import { api } from "@/utils/api";
 import { useOrganizationList } from "@clerk/nextjs";
 import { Button, Popover, Stack, TextField, Typography } from "@mui/material";
 import React, { FormEvent, FormEventHandler, useState } from "react";
@@ -10,6 +11,7 @@ type Props = {
 };
 
 export default function CreateOrganization({ itemRef, onClickHandler, open, setOpen }: Props) {
+  const { mutate: setSettings } = api.user.setSettings.useMutation();
   const { createOrganization, setActive } = useOrganizationList();
   const [organizationName, setOrganizationName] = useState("");
   const [isError, setIsError] = useState(false);
@@ -19,6 +21,7 @@ export default function CreateOrganization({ itemRef, onClickHandler, open, setO
       const organization = await createOrganization({ name: organizationName });
       setOrganizationName("");
       await setActive({ organization });
+      setSettings(organization.id);
       setOpen(false);
       setIsError(false);
     } else if (!organizationName) {
