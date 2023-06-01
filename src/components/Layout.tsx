@@ -12,7 +12,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Add,
   Analytics,
@@ -32,6 +32,7 @@ import Link from "next/link";
 import { useSystemStore } from "@/pages/_app";
 
 import { grey } from "@mui/material/colors";
+import CreateOrganization from "./CreateOrganization";
 
 const drawerWidth = 240;
 
@@ -178,64 +179,76 @@ function DrawerComponent({ open, setOpen }: { open: boolean; setOpen: (open: boo
 function Navigation() {
   const router = useRouter();
   const { organization, membership } = useOrganization();
+  const [orgOpen, setOrgOpen] = useState(false);
+  const orgRef = useRef<HTMLLIElement>(null);
+
+  function newTeamHandler(id: string) {
+    console.log(id);
+  }
 
   return (
-    <nav>
-      {organization ? (
-        <>
-          <List>
-            {commonMenu.map((item) => {
-              return (
-                <Link key={item.id} style={{ textDecoration: "unset" }} href={item.link}>
-                  <ListItem disablePadding>
+    <>
+      <CreateOrganization
+        onClickHandler={newTeamHandler}
+        open={orgOpen}
+        setOpen={setOrgOpen}
+        itemRef={orgRef}
+      />
+      <nav>
+        {organization ? (
+          <>
+            <List>
+              {commonMenu.map((item) => {
+                return (
+                  <Link key={item.id} style={{ textDecoration: "unset" }} href={item.link}>
+                    <ListItem disablePadding>
+                      <ListItemButton
+                        sx={{
+                          backgroundColor: router.pathname.startsWith(item.basePath) ? grey["800"] : "",
+                        }}
+                      >
+                        <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
+                          {item.icon}
+                        </ListItemIcon>
+                        <ListItemText sx={{ color: "#fff" }} primary={item.text} />
+                      </ListItemButton>
+                    </ListItem>
+                  </Link>
+                );
+              })}
+
+              {membership?.role === "admin" ? (
+                <Link style={{ textDecoration: "unset" }} href={"/admin/settings"}>
+                  <ListItem key={"settings"} disablePadding>
                     <ListItemButton
                       sx={{
-                        backgroundColor: router.pathname.startsWith(item.basePath) ? grey["800"] : "",
+                        backgroundColor: router.pathname.startsWith("/admin/settings") ? grey["800"] : "",
                       }}
                     >
                       <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
-                        {item.icon}
+                        <Settings />
                       </ListItemIcon>
-                      <ListItemText sx={{ color: "#fff" }} primary={item.text} />
+                      <ListItemText sx={{ color: "#fff" }} primary="Settings" />
                     </ListItemButton>
                   </ListItem>
                 </Link>
-              );
-            })}
-
-            {membership?.role === "admin" ? (
-              <Link style={{ textDecoration: "unset" }} href={"/admin/settings"}>
-                <ListItem key={"settings"} disablePadding>
-                  <ListItemButton
-                    sx={{
-                      backgroundColor: router.pathname.startsWith("/admin/settings") ? grey["800"] : "",
-                    }}
-                  >
-                    <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
-                      <Settings />
-                    </ListItemIcon>
-                    <ListItemText sx={{ color: "#fff" }} primary="Settings" />
-                  </ListItemButton>
-                </ListItem>
-              </Link>
-            ) : null}
-          </List>
-          <Divider />
-        </>
-      ) : null}
-      <List>
-        <Link style={{ textDecoration: "unset" }} href={"/setting/create-team"}>
-          <ListItem disablePadding>
-            <ListItemButton>
+              ) : null}
+            </List>
+            <Divider />
+          </>
+        ) : null}
+        <List>
+          <ListItem ref={orgRef} disablePadding>
+            <ListItemButton onClick={() => setOrgOpen((prev) => !prev)}>
               <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
                 <Add />
               </ListItemIcon>
               <ListItemText sx={{ color: "#fff" }} primary={"Create new team"} />
             </ListItemButton>
           </ListItem>
-        </Link>
-      </List>
-    </nav>
+        </List>
+      </nav>
+    </>
   );
 }
 
