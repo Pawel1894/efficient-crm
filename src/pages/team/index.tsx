@@ -1,7 +1,8 @@
-import { useOrganization } from "@clerk/nextjs";
+import { useOrganization, useUser } from "@clerk/nextjs";
 import { Delete, Visibility } from "@mui/icons-material";
 import { IconButton, Link, Stack } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import Image from "next/image";
 import { useMemo } from "react";
 
 type Member = {
@@ -17,11 +18,9 @@ type Member = {
 };
 
 export default function Page() {
-  const { membershipList } = useOrganization({
+  const { membershipList, membership } = useOrganization({
     membershipList: {},
   });
-
-  console.log("membershipList", membershipList);
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -31,7 +30,6 @@ export default function Page() {
         filterable: false,
         hideable: false,
         sortable: false,
-        minWidth: 125,
         renderCell: (params) => {
           const data = params.row as Member;
 
@@ -42,17 +40,19 @@ export default function Page() {
                   <Visibility />
                 </IconButton>
               </Link>
-              <IconButton
-                onClick={() => {
-                  // setUpdateData(data);
-                  // setDeleteOpen(true);
-                }}
-                size="small"
-                color="warning"
-                title="Delete"
-              >
-                <Delete />
-              </IconButton>
+              {membership?.role === "admin" ? (
+                <IconButton
+                  onClick={() => {
+                    // setUpdateData(data);
+                    // setDeleteOpen(true);
+                  }}
+                  size="small"
+                  color="warning"
+                  title="Delete"
+                >
+                  <Delete />
+                </IconButton>
+              ) : null}
             </Stack>
           );
         },
@@ -63,7 +63,7 @@ export default function Page() {
         renderCell: (params) => {
           const data = params.row as Member;
           return (
-            <img
+            <Image
               style={{ borderRadius: "100%" }}
               width={35}
               height={35}

@@ -18,5 +18,8 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ["www.gravatar.com", "images.clerk.dev"],
+  },
 };
 export default config;
