@@ -3,7 +3,7 @@ import React from "react";
 
 type props = {
   isDeleting: boolean;
-  id: string;
+  id?: string;
   open: boolean;
   handleClose: (confirm: boolean, id?: string) => Promise<void> | void;
 };

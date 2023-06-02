@@ -18,7 +18,7 @@ export const userRouter = createTRPCRouter({
     });
     return settings;
   }),
-  setSettings: protectedProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+  setSettings: protectedProcedure.input(z.string().nullable()).mutation(async ({ ctx, input }) => {
     if (!ctx.user.id) {
       throw new TRPCError({
         code: "BAD_REQUEST",

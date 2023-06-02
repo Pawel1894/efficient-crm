@@ -5,9 +5,10 @@ import { grey } from "@mui/material/colors";
 
 type Props = {
   children: JSX.Element[];
+  padding?: `${number}rem`;
 };
 
-export default function AdaptiveHeader({ children }: Props) {
+export default function AdaptiveHeader({ children, padding }: Props) {
   const desktopbr = useMediaQuery("(min-width:600px)");
   const [isOpen, setIsOpen] = useState(false);
 
@@ -39,7 +40,7 @@ export default function AdaptiveHeader({ children }: Props) {
             <Stack
               gap={2}
               sx={{
-                padding: "1rem",
+                padding: padding ?? "1rem",
                 flexDirection: {
                   xs: "column",
                   sm: "row",

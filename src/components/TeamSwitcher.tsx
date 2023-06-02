@@ -1,8 +1,8 @@
 import { api } from "@/utils/api";
 import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 import { Box } from "@mui/system";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function TeamSwitcher() {
   const { user, isSignedIn } = useUser();
@@ -11,17 +11,25 @@ export default function TeamSwitcher() {
   const { data: userSettings, isSuccess } = api.user.settings.useQuery(undefined);
   const { mutate: setSettings } = api.user.setSettings.useMutation();
   const { mutate: coldStart } = api.system.coldStart.useMutation();
+  const [currentOrg, setCurrentOrg] = useState<string | null>(null);
   const context = api.useContext();
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     handleInit();
   }, [isLoaded, isSignedIn, isSuccess, isLoadedOrganization]);
 
-  async function handleOrgChange(organization: string) {
-    if (setActive) await setActive({ organization });
-    setSettings(organization);
-    await context.invalidate();
+  async function handleOrgChange(organization: string | null) {
+    if (setActive && organization) {
+      await setActive({ organization });
+      setSettings(organization);
+      await context.invalidate();
+      setCurrentOrg(organization);
+    }
   }
+
+  useEffect(() => {
+    setCurrentOrg(organization ? organization.id : null);
+  }, [organization?.id]);
 
   async function handleInit() {
     if (isLoaded && isSignedIn && isSuccess) {
@@ -57,14 +65,12 @@ export default function TeamSwitcher() {
       }}
     >
       <FormControl fullWidth>
-        <InputLabel id="org-select">Active team</InputLabel>
+        <Typography variant="subtitle2">Active Team</Typography>
         <Select
           sx={{
-            height: "2.5rem",
+            height: "2rem",
           }}
-          labelId="org-select"
-          value={organization?.id}
-          label="Active team"
+          value={currentOrg}
           onChange={(e) => void handleOrgChange(e.target.value)}
         >
           {organizationList.map((org) => {

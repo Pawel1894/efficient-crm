@@ -10,7 +10,7 @@ datasource db {
 
 model UserControl {
     userId        String
-    lastActiveOrg String
+    lastActiveOrg String?
 
     @@unique([userId])
 }
