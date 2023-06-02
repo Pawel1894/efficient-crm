@@ -4,13 +4,12 @@ import { Button, Popover, Stack, TextField, Typography } from "@mui/material";
 import React, { FormEvent, FormEventHandler, useState } from "react";
 
 type Props = {
-  onClickHandler: (id: string) => void;
   itemRef: React.RefObject<HTMLElement>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   open: boolean;
 };
 
-export default function CreateOrganization({ itemRef, onClickHandler, open, setOpen }: Props) {
+export default function CreateOrganization({ itemRef, open, setOpen }: Props) {
   const { mutate: setSettings } = api.user.setSettings.useMutation();
   const { createOrganization, setActive } = useOrganizationList();
   const [organizationName, setOrganizationName] = useState("");

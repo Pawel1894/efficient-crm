@@ -1,20 +1,22 @@
 import AdaptiveHeader from "@/components/AdaptiveHeader";
 import DeleteDialog from "@/components/DeleteDialog";
+import RenameOrganization from "@/components/RenameOrganization";
 import { api } from "@/utils/api";
 import { useOrganization, useOrganizationList } from "@clerk/nextjs";
 import { Delete, Edit } from "@mui/icons-material";
 import { Button, Stack } from "@mui/material";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 export default function Controls() {
+  const renameRef = useRef<HTMLButtonElement>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const { organization } = useOrganization();
   const { setActive, organizationList } = useOrganizationList();
   const { mutate: setSettings } = api.user.setSettings.useMutation();
+  const [renameOpen, setRenameOpen] = useState(false);
 
   async function deleteOrganization(confirm: boolean) {
-    console.log(confirm);
     setIsDeleting(true);
     if (confirm && organization) {
       await organization?.destroy();
@@ -24,8 +26,7 @@ export default function Controls() {
         await setActive({
           organization: id,
         });
-        console.log("id", id);
-        console.log("org", organization.id);
+
         setSettings(id);
       }
     }
@@ -36,6 +37,7 @@ export default function Controls() {
 
   return (
     <>
+      <RenameOrganization itemRef={renameRef} open={renameOpen} setOpen={setRenameOpen} />
       <DeleteDialog isDeleting={isDeleting} open={deleteOpen} handleClose={deleteOrganization} />
       <Stack mb={3} direction={"row"} gap={2}>
         <AdaptiveHeader padding="0rem">
@@ -48,7 +50,13 @@ export default function Controls() {
           >
             Delete
           </Button>
-          <Button variant="outlined" title="Rename" endIcon={<Edit />}>
+          <Button
+            onClick={() => setRenameOpen(true)}
+            ref={renameRef}
+            variant="outlined"
+            title="Rename"
+            endIcon={<Edit />}
+          >
             Rename
           </Button>
         </AdaptiveHeader>

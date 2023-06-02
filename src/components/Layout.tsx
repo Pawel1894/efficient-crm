@@ -182,18 +182,9 @@ function Navigation() {
   const [orgOpen, setOrgOpen] = useState(false);
   const orgRef = useRef<HTMLLIElement>(null);
 
-  function newTeamHandler(id: string) {
-    console.log(id);
-  }
-
   return (
     <>
-      <CreateOrganization
-        onClickHandler={newTeamHandler}
-        open={orgOpen}
-        setOpen={setOrgOpen}
-        itemRef={orgRef}
-      />
+      <CreateOrganization open={orgOpen} setOpen={setOrgOpen} itemRef={orgRef} />
       <nav>
         {organization ? (
           <>
