@@ -1,4 +1,4 @@
-import { useOrganization, useUser } from "@clerk/nextjs";
+import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
 import { Delete, Edit, KeyboardArrowLeft, Visibility } from "@mui/icons-material";
 import {
   Box,
@@ -7,17 +7,24 @@ import {
   Divider,
   IconButton,
   Link,
+  MenuItem,
+  Select,
   Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import Image from "next/image";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { OrganizationMembershipResource } from "@clerk/types";
 import Head from "next/head";
 import { useSystemStore } from "../_app";
 import Controls from "./Controls";
+import PendingInvites from "@/components/PendingInvites";
+import { OrganizationMembershipRole } from "@clerk/nextjs/server";
+import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+import { api } from "@/utils/api";
 
 type Member = {
   role: string;
@@ -32,15 +39,26 @@ type Member = {
 };
 
 export default function Page() {
-  const { membershipList, membership, organization } = useOrganization({
+  const { membership, organization } = useOrganization({
     membershipList: {},
   });
+
+  const { data: membershipList, refetch, isRefetching } = api.system.getMembershipList.useQuery(undefined);
+
   const { user } = useUser();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
   const remove = async (member: OrganizationMembershipResource) => {
     if (member.publicUserData.userId === user?.publicMetadata.userId) return;
     if (member.publicUserData.userId) {
-      await organization?.removeMember(member.publicUserData.userId);
+      try {
+        await organization?.removeMember(member.publicUserData.userId);
+        await refetch();
+      } catch (error) {
+        const err = error as {
+          errors: Array<{ message: string }>;
+        };
+        toast.error(err?.errors[0]?.message);
+      }
     }
   };
 
@@ -51,6 +69,21 @@ export default function Page() {
       </Breadcrumbs>
     );
   }, [setBreadcrumbs]);
+
+  async function updateRole(userId: string, role: OrganizationMembershipRole) {
+    try {
+      await organization?.updateMember({
+        role,
+        userId,
+      });
+      await refetch();
+    } catch (error) {
+      const err = error as {
+        errors: Array<{ message: string }>;
+      };
+      toast.error(err?.errors[0]?.message);
+    }
+  }
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -117,8 +150,31 @@ export default function Page() {
       },
       {
         field: "role",
-
         headerName: "Role",
+        renderCell: (params) => {
+          const data = params.row as Member;
+
+          return membership?.role === "admin" ? (
+            <Select
+              sx={{
+                height: "2rem",
+              }}
+              value={data.role}
+              onChange={(e) =>
+                void updateRole(data.publicUserData.userId, e.target.value as OrganizationMembershipRole)
+              }
+            >
+              <MenuItem key={"role_admin"} value={"admin"}>
+                Admin
+              </MenuItem>
+              <MenuItem key={"role_basic_member"} value={"basic_member"}>
+                Basic Member
+              </MenuItem>
+            </Select>
+          ) : (
+            data.role
+          );
+        },
         flex: 1,
       },
       {
@@ -148,11 +204,11 @@ export default function Page() {
       <Head>
         <title>Team {organization?.name}</title>
       </Head>
-      <Controls />
+      {membership?.role === "admin" && <Controls />}
       <>
         <Typography variant="h5">Members</Typography>
-        <Box my={3} height={"50vh"} width={"100%"}>
-          {!membershipList ? (
+        <Box mt={3} mb={5} minHeight={400} height={"50vh"} width={"100%"}>
+          {isRefetching || !membershipList ? (
             <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
           ) : (
             <DataGrid rowSelection={false} rows={membershipList} columns={columns} />
@@ -161,9 +217,7 @@ export default function Page() {
       </>
       <Divider />
       <>
-        <Typography mt={3} variant="h5">
-          Pending invites
-        </Typography>
+        <PendingInvites />
       </>
     </>
   );

@@ -1,4 +1,5 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
+import { clerkClient } from "@clerk/nextjs";
 import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import { z } from "zod";
@@ -163,4 +164,14 @@ export const systemRouter = createTRPCRouter({
 
       return settings;
     }),
+  getMembershipList: protectedProcedure.query(async ({ ctx }) => {
+    if (!ctx.user.id || !ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "User id not found",
+      });
+    }
+
+    return await clerkClient.organizations.getOrganizationMembershipList({ organizationId: ctx.user.orgId });
+  }),
 });

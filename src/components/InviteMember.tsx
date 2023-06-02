@@ -24,7 +24,7 @@ type Props = {
 };
 
 export default function InviteMember({ itemRef, open, setOpen }: Props) {
-  const { organization } = useOrganization();
+  const { organization, membership } = useOrganization();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState<string>("");
   const [role, setRole] = useState<OrganizationMembershipRole>("basic_member");
@@ -84,7 +84,7 @@ export default function InviteMember({ itemRef, open, setOpen }: Props) {
                   onChange={(e) => setRole(e.currentTarget.value as OrganizationMembershipRole)}
                   name="radio-buttons-group"
                 >
-                  <FormControlLabel value="basic_member" control={<Radio />} label="Member" />
+                  <FormControlLabel value="basic_member" control={<Radio />} label="Basic Member" />
                   <FormControlLabel value="admin" control={<Radio />} label="Admin" />
                 </RadioGroup>
               </FormControl>

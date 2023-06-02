@@ -171,6 +171,7 @@ export default function Grid({ leadId, heightSubstract, shouldFetch }: Props) {
           sx={{
             height: `calc(100vh - ${heightSubstract}px)`,
           }}
+          minHeight={400}
         >
           {isRefetching ? (
             <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
