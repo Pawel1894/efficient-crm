@@ -3,6 +3,7 @@ import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
 import { FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function TeamSwitcher() {
   const { user, isSignedIn } = useUser();
@@ -20,7 +21,15 @@ export default function TeamSwitcher() {
 
   async function handleOrgChange(organization: string | null) {
     if (setActive && organization) {
-      await setActive({ organization });
+      try {
+        await setActive({ organization });
+      } catch (error) {
+        const err = error as {
+          errors: Array<{ message: string }>;
+        };
+        toast.error(err?.errors[0]?.message);
+      }
+
       setSettings(organization);
       await context.invalidate();
       setCurrentOrg(organization);
@@ -33,27 +42,33 @@ export default function TeamSwitcher() {
 
   async function handleInit() {
     if (isLoaded && isSignedIn && isSuccess) {
-      if (organizationList.length === 0 && !userSettings?.lastActiveOrg) {
-        const orgName = user?.firstName ? `${user.firstName}'s team` : "first team";
-        const organization = await createOrganization({ name: orgName });
-        await setActive({ organization });
-        setSettings(organization.id);
-        coldStart({
-          id: organization.id,
-          name: organization.name,
-          userName: `${user.firstName ?? ""} ${user.lastName ?? ""}`,
-        });
-      } else {
-        const lastOrg = organizationList.find((org) => org.organization.id === userSettings?.lastActiveOrg);
-
-        if (lastOrg) {
-          await setActive({ organization: lastOrg.organization.id });
-        } else if (organizationList.length > 0 && organizationList[0]) {
-          await setActive({
-            organization: organizationList[0].organization.id,
+      try {
+        if (organizationList.length === 0 && !userSettings?.lastActiveOrg) {
+          const orgName = user?.firstName ? `${user.firstName}'s team` : "first team";
+          const organization = await createOrganization({ name: orgName });
+          setSettings(organization.id);
+          coldStart({
+            id: organization.id,
+            name: organization.name,
+            userName: `${user.firstName ?? ""} ${user.lastName ?? ""}`,
           });
-          setSettings(organizationList[0].organization.id);
+        } else {
+          const lastOrg = organizationList.find((org) => org.organization.id === userSettings?.lastActiveOrg);
+
+          if (lastOrg) {
+            await setActive({ organization: lastOrg.organization.id });
+          } else if (organizationList.length > 0 && organizationList[0]) {
+            await setActive({
+              organization: organizationList[0].organization.id,
+            });
+            setSettings(organizationList[0].organization.id);
+          }
         }
+      } catch (error) {
+        const err = error as {
+          errors: Array<{ message: string }>;
+        };
+        toast.error(err?.errors[0]?.message);
       }
     }
   }

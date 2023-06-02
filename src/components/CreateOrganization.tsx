@@ -1,7 +1,8 @@
 import { api } from "@/utils/api";
 import { useOrganizationList } from "@clerk/nextjs";
-import { Button, Popover, Stack, TextField, Typography } from "@mui/material";
+import { Button, CircularProgress, Popover, Stack, TextField, Typography, Box } from "@mui/material";
 import React, { FormEvent, FormEventHandler, useState } from "react";
+import { toast } from "react-toastify";
 
 type Props = {
   itemRef: React.RefObject<HTMLElement>;
@@ -13,18 +14,25 @@ export default function CreateOrganization({ itemRef, open, setOpen }: Props) {
   const { mutate: setSettings } = api.user.setSettings.useMutation();
   const { createOrganization, setActive } = useOrganizationList();
   const [organizationName, setOrganizationName] = useState("");
-  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  async function onSubmit() {
+  async function onSubmit(e: FormEvent) {
+    e.preventDefault();
     if (createOrganization && organizationName) {
-      const organization = await createOrganization({ name: organizationName });
-      setOrganizationName("");
-      await setActive({ organization });
-      setSettings(organization.id);
-      setOpen(false);
-      setIsError(false);
-    } else if (!organizationName) {
-      setIsError(true);
+      try {
+        setIsLoading(true);
+        const organization = await createOrganization({ name: organizationName });
+        setOrganizationName("");
+        await setActive({ organization });
+        setSettings(organization.id);
+        setOpen(false);
+        setIsLoading(false);
+      } catch (error) {
+        const err = error as {
+          errors: Array<{ message: string }>;
+        };
+        toast.error(err?.errors[0]?.message);
+      }
     }
   }
 
@@ -33,7 +41,6 @@ export default function CreateOrganization({ itemRef, open, setOpen }: Props) {
       open={open}
       anchorEl={itemRef.current}
       onClose={() => {
-        setIsError(false);
         setOpen(false);
       }}
       anchorOrigin={{
@@ -41,23 +48,29 @@ export default function CreateOrganization({ itemRef, open, setOpen }: Props) {
         horizontal: "left",
       }}
     >
-      <Stack p={2}>
-        <TextField
-          onFocus={() => setIsError(false)}
-          type="text"
-          placeholder="Team name.."
-          name="organizationName"
-          value={organizationName}
-          onChange={(e) => setOrganizationName(e.currentTarget.value)}
-        />
-        {isError && (
-          <Typography sx={{ mt: "0.5rem" }} component={"span"} variant="subtitle2" color={"error.main"}>
-            Name cannot be empty!
-          </Typography>
+      <Stack width={300} height={140}>
+        {isLoading ? (
+          <Stack mx={"auto"} mt={6}>
+            <CircularProgress />
+          </Stack>
+        ) : (
+          <form onSubmit={(e) => void onSubmit(e)}>
+            <Stack p={2}>
+              <TextField
+                required
+                type="text"
+                placeholder="Team name.."
+                name="organizationName"
+                value={organizationName}
+                onChange={(e) => setOrganizationName(e.currentTarget.value)}
+              />
+
+              <Button type="submit" variant="outlined" sx={{ marginTop: "1rem" }}>
+                Create organization
+              </Button>
+            </Stack>
+          </form>
         )}
-        <Button variant="outlined" sx={{ marginTop: "1rem" }} onClick={() => void onSubmit()}>
-          Create organization
-        </Button>
       </Stack>
     </Popover>
   );

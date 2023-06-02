@@ -1,6 +1,7 @@
 import { useOrganization } from "@clerk/nextjs";
 import { Box, Button, CircularProgress, Popover, Stack, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
+import { toast } from "react-toastify";
 
 type Props = {
   itemRef: React.RefObject<HTMLElement>;
@@ -10,18 +11,24 @@ type Props = {
 
 export default function RenameOrganization({ itemRef, open, setOpen }: Props) {
   const { organization } = useOrganization();
-  const [isError, setIsError] = useState(false);
+
   const [organizationName, setOrganizationName] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
 
-  async function renameOrg() {
-    if (!organizationName) {
-      setIsError(true);
-      return;
-    }
+  async function renameOrg(e: FormEvent) {
+    e.preventDefault();
 
     setIsLoading(true);
-    if (organization) await organization.update({ name: organizationName });
+    if (organization) {
+      try {
+        await organization.update({ name: organizationName });
+      } catch (error) {
+        const err = error as {
+          errors: Array<{ message: string }>;
+        };
+        toast.error(err?.errors[0]?.message);
+      }
+    }
     setIsLoading(false);
     setOpen(false);
   }
@@ -31,7 +38,6 @@ export default function RenameOrganization({ itemRef, open, setOpen }: Props) {
       open={open}
       anchorEl={itemRef.current}
       onClose={() => {
-        setIsError(false);
         setOpen(false);
       }}
       anchorOrigin={{
@@ -39,30 +45,27 @@ export default function RenameOrganization({ itemRef, open, setOpen }: Props) {
         horizontal: "left",
       }}
     >
-      <Stack width={300} height={150} p={2}>
+      <Stack width={300} minHeight={150} p={2}>
         {isLoading ? (
           <Box mx={"auto"} mt={4}>
             <CircularProgress />
           </Box>
         ) : (
-          <>
-            <TextField
-              onFocus={() => setIsError(false)}
-              type="text"
-              placeholder="Team name.."
-              name="organizationName"
-              value={organizationName}
-              onChange={(e) => setOrganizationName(e.currentTarget.value)}
-            />
-            {isError && (
-              <Typography sx={{ mt: "0.5rem" }} component={"span"} variant="subtitle2" color={"error.main"}>
-                Name cannot be empty!
-              </Typography>
-            )}
-            <Button variant="outlined" sx={{ marginTop: "1rem" }} onClick={() => void renameOrg()}>
-              Create organization
-            </Button>
-          </>
+          <form onSubmit={(e) => void renameOrg(e)}>
+            <Stack>
+              <TextField
+                required
+                type="text"
+                placeholder="Team name.."
+                name="organizationName"
+                value={organizationName}
+                onChange={(e) => setOrganizationName(e.currentTarget.value)}
+              />
+              <Button variant="outlined" sx={{ marginTop: "1rem" }} type="submit">
+                Create organization
+              </Button>
+            </Stack>
+          </form>
         )}
       </Stack>
     </Popover>
