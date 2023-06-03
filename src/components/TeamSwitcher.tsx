@@ -52,6 +52,7 @@ export default function TeamSwitcher() {
             name: organization.name,
             userName: `${user.firstName ?? ""} ${user.lastName ?? ""}`,
           });
+          await setActive({ organization: organization.id });
         } else {
           const lastOrg = organizationList.find((org) => org.organization.id === userSettings?.lastActiveOrg);
 
