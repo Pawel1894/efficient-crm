@@ -1,0 +1,56 @@
+import { Box, Container, Typography } from "@mui/material";
+import Head from "next/head";
+import React from "react";
+import { useRouter } from "next/router";
+import CenterLoad from "@/components/CenterLoad";
+import { SignIn, useUser } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
+
+export default function Page() {
+  const { isSignedIn, isLoaded } = useUser();
+  const router = useRouter();
+
+  if (!isLoaded) {
+    return <CenterLoad />;
+  }
+
+  if (isSignedIn) {
+    void router.push("/home");
+    return <CenterLoad />;
+  }
+
+  return (
+    <>
+      <Head>
+        <title>Efficient CRM Sign in</title>
+        <meta name="description" content="Login page for efficient crm" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:site" content="@efficientcrm" />
+        <meta name="twitter:creator" content="@PohlPawe" />
+        <meta property="og:title" content="Login page for efficient crm" />
+        <meta property="og:description" content="Login page for efficient crm" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <main>
+        <Container>
+          <Box mt={"4rem"} display="flex" alignItems={"center"} flexDirection={"column"}>
+            <Box mb={"4rem"}>
+              <Typography
+                sx={{
+                  display: "block",
+                }}
+                textAlign={"center"}
+                variant="h2"
+                component={"h1"}
+                color={"secondary"}
+              >
+                Efficient CRM
+              </Typography>
+            </Box>
+            <SignIn appearance={{ baseTheme: dark }} afterSignUpUrl={"/home"} afterSignInUrl="/home" />
+          </Box>
+        </Container>
+      </main>
+    </>
+  );
+}
