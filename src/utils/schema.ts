@@ -47,6 +47,13 @@ export const ActivitySchema = yup.object({
   location: yup.string().optional().nullable(),
 });
 
+export const DictionarySchema = yup.object({
+  label: yup.string().required("Label is required"),
+  value: yup.string().required("Value is required"),
+  type: yup.string().required("Type is required"),
+});
+
+export type DictionaryType = yup.InferType<typeof DictionarySchema>;
 export type DealType = yup.InferType<typeof DealSchema>;
 export type LeadType = yup.InferType<typeof LeadSchema>;
 export type ActivityType = yup.InferType<typeof ActivitySchema>;

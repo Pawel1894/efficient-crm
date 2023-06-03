@@ -1,7 +1,8 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-
+import * as yup from "yup";
+import { DictionarySchema } from "@/utils/schema";
 const TypeSchema = z.union([z.literal("ACTIVITY_STATUS"), z.literal("DEAL_STAGE"), z.literal("LEAD_STATUS")]);
 export const dictionaryRouter = createTRPCRouter({
   byType: protectedProcedure.input(TypeSchema).query(async ({ ctx, input }) => {
@@ -82,6 +83,87 @@ export const dictionaryRouter = createTRPCRouter({
           orgId: input,
         },
       ],
+    });
+  }),
+  delete: protectedProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    await ctx.prisma.dictionary.delete({
+      where: {
+        id: input,
+      },
+    });
+  }),
+  update: protectedProcedure
+    .input(
+      yup.object({
+        id: yup.string(),
+        data: DictionarySchema,
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const type = TypeSchema.safeParse(input.data.type);
+
+      if (!type.success) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid type ",
+        });
+      }
+
+      const dictionary = await ctx.prisma.dictionary.update({
+        where: {
+          id: input.id,
+        },
+        data: {
+          ...input.data,
+          type: type.data,
+        },
+      });
+
+      return dictionary;
+    }),
+  create: protectedProcedure.input(DictionarySchema).mutation(async ({ ctx, input }) => {
+    const type = TypeSchema.safeParse(input.type);
+
+    if (!ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "No current team",
+      });
+    }
+
+    if (!type.success) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Invalid type ",
+      });
+    }
+
+    const dictionary = await ctx.prisma.dictionary.create({
+      data: {
+        ...input,
+        type: type.data,
+        orgId: ctx.user.orgId,
+      },
+    });
+
+    return dictionary;
+  }),
+
+  dictionaries: protectedProcedure.query(async ({ ctx }) => {
+    if (!ctx.user.orgId) {
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "Org id not found",
+      });
+    }
+
+    return ctx.prisma.dictionary.findMany({
+      where: {
+        orgId: ctx.user.orgId,
+      },
+      orderBy: {
+        label: "desc",
+      },
     });
   }),
 });
