@@ -10,6 +10,7 @@ import Head from "next/head";
 import type { Activity, Deal, Dictionary, Lead } from "@prisma/client";
 import DeleteDialog from "@/components/DeleteDialog";
 import Insert from "./Insert";
+import Update from "./Update";
 
 export default function Page() {
   const [insertOpen, setInsertOpen] = useState(false);
@@ -107,12 +108,12 @@ export default function Page() {
       </Head>
       {updateData ? (
         <>
-          {/* <Update
+          <Update
             onSettledHandler={onUpdateSettled}
             data={updateData}
             isOpen={updateOpen}
             setOpen={setUpdateOpen}
-          />{" "} */}
+          />
           <DeleteDialog
             id={updateData.id}
             isDeleting={isDeleting}

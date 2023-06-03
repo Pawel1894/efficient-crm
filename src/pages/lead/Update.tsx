@@ -41,7 +41,7 @@ export default function Update({ isOpen, setOpen, data, onSettledHandler }: Prop
       toast.success("Lead updated");
       formik.resetForm();
       setOpen(false);
-      // await context.lead.leads.invalidate();
+      await context.lead.leads.invalidate();
       await onSettledHandler();
     },
   });
