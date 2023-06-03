@@ -1,12 +1,5 @@
 import { useSystemStore } from "@/pages/_app";
-import { appRouter } from "@/server/api/root";
-import { createTRPCContext } from "@/server/api/trpc";
-import { getAuth } from "@clerk/nextjs/server";
-import { createServerSideHelpers } from "@trpc/react-query/server";
-import { TRPCError } from "@trpc/server";
-import type { InferGetServerSidePropsType, NextApiRequest, NextApiResponse } from "next";
 import React, { useEffect, useState } from "react";
-import superjson from "superjson";
 import type { LeadData } from "..";
 import { api } from "@/utils/api";
 import { Delete, Edit, KeyboardArrowLeft } from "@mui/icons-material";
@@ -20,18 +13,17 @@ import DetailData from "./DetailData";
 import { TabPanel } from "@/components/TabPanel";
 import DealsGrid from "@/pages/deal/Grid";
 import ActivitiesGrid from "@/pages/activity/Grid";
-import type { Lead } from "@prisma/client";
 import AdaptiveHeader from "@/components/AdaptiveHeader";
+import SkeletonTemplate from "@/pages/team/[slug]/Skeleton";
 
-export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Page() {
   const router = useRouter();
   const {
     data: lead,
     isError,
     error: fetchError,
-  } = api.lead.get.useQuery(router.query.slug as string, {
-    initialData: initData ? (JSON.parse(initData) as Lead) : [],
-  });
+    isLoading,
+  } = api.lead.get.useQuery(router.query.slug as string);
   const { mutate: deleteLead, isLoading: isDeleting } = api.lead.delete.useMutation();
   const [updateData, setUpdateData] = useState<LeadData>();
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -54,7 +46,7 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
   }, [setBreadcrumbs, lead]);
 
   async function onUpdateSettled() {
-    await context.lead.get.invalidate(lead.id);
+    if (lead) await context.lead.get.invalidate(lead.id);
   }
 
   async function handleDelete(confirmed: boolean, id?: string) {
@@ -95,8 +87,8 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
         </>
       ) : null}
 
-      {isError || error ? (
-        <span>{error ? error : fetchError?.message}</span>
+      {isError ? (
+        <span>{fetchError?.message}</span>
       ) : (
         <>
           <Stack pb={3} direction={"row"} gap={2} alignItems={"center"}>
@@ -136,7 +128,8 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
             <Tab label="Activities" />
           </Tabs>
           <TabPanel index={0} value={currentTab}>
-            <DetailData lead={lead} />
+            {isLoading && <SkeletonTemplate />}
+            {lead ? <DetailData lead={lead} /> : null}
           </TabPanel>
           <TabPanel index={1} value={currentTab}>
             <Box pt={2}>
@@ -161,55 +154,3 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
     </>
   );
 }
-
-export const getServerSideProps = async ({
-  params,
-  req,
-  res,
-}: {
-  params: { slug: string };
-  req: NextApiRequest;
-  res: NextApiResponse;
-}) => {
-  const session = getAuth(req);
-  if (!session?.userId) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: createTRPCContext({
-      req: req,
-      res: res,
-    }),
-    transformer: superjson,
-  });
-
-  try {
-    const lead = await helpers.lead.get.fetch(params.slug);
-
-    return {
-      props: {
-        initData: JSON.stringify(lead),
-        error: null,
-      },
-    };
-  } catch (error) {
-    let message = "Unknown Error!, please contact admin";
-    if (error instanceof TRPCError) {
-      message = error.message;
-    }
-
-    return {
-      props: {
-        initData: null,
-        error: message,
-      },
-    };
-  }
-};

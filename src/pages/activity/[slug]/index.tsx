@@ -1,16 +1,8 @@
 import { useSystemStore } from "@/pages/_app";
-import { appRouter } from "@/server/api/root";
-import { createTRPCContext } from "@/server/api/trpc";
 import { api } from "@/utils/api";
-import { getAuth } from "@clerk/nextjs/server";
 import { Breadcrumbs, Button, Divider, IconButton, Stack, Typography } from "@mui/material";
-import { type Activity } from "@prisma/client";
-import { createServerSideHelpers } from "@trpc/react-query/server";
-import { TRPCError } from "@trpc/server";
-import type { InferGetServerSidePropsType, NextApiRequest, NextApiResponse } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import superjson from "superjson";
 import type { ActivityData } from "..";
 import Head from "next/head";
 import Update from "../Update";
@@ -19,16 +11,16 @@ import { Delete, Edit, KeyboardArrowLeft } from "@mui/icons-material";
 import DetailData from "./DetailData";
 import AdaptiveHeader from "@/components/AdaptiveHeader";
 import Link from "next/link";
-export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+import SkeletonTemplate from "@/pages/team/[slug]/Skeleton";
+export default function Page() {
   const router = useRouter();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
   const {
     data: activity,
     isError,
     error: fetchError,
-  } = api.activity.get.useQuery(router.query.slug as string, {
-    initialData: initData ? (JSON.parse(initData) as Activity) : [],
-  });
+    isLoading,
+  } = api.activity.get.useQuery(router.query.slug as string);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [updateData, setUpdateData] = useState<ActivityData>();
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -59,7 +51,7 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
   }
 
   async function onUpdateSettled() {
-    await context.activity.get.invalidate(activity.id);
+    if (activity) await context.activity.get.invalidate(activity.id);
   }
 
   return (
@@ -85,8 +77,8 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
         </>
       ) : null}
 
-      {isError || error ? (
-        <span>{error ? error : fetchError?.message}</span>
+      {isError ? (
+        <span>{fetchError?.message}</span>
       ) : (
         <>
           <Stack pb={3} direction={"row"} gap={2} alignItems={"center"}>
@@ -120,61 +112,10 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
             </AdaptiveHeader>
           </Stack>
           <Divider />
-          <DetailData activity={activity} />
+          {isLoading && <SkeletonTemplate />}
+          {activity ? <DetailData activity={activity} /> : null}
         </>
       )}
     </>
   );
 }
-
-export const getServerSideProps = async ({
-  params,
-  req,
-  res,
-}: {
-  params: { slug: string };
-  req: NextApiRequest;
-  res: NextApiResponse;
-}) => {
-  const session = getAuth(req);
-  if (!session?.userId) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: createTRPCContext({
-      req: req,
-      res: res,
-    }),
-    transformer: superjson,
-  });
-
-  try {
-    const activity = await helpers.activity.get.fetch(params.slug);
-
-    return {
-      props: {
-        initData: JSON.stringify(activity),
-        error: null,
-      },
-    };
-  } catch (error) {
-    let message = "Unknown Error!, please contact admin";
-    if (error instanceof TRPCError) {
-      message = error.message;
-    }
-
-    return {
-      props: {
-        initData: null,
-        error: message,
-      },
-    };
-  }
-};
