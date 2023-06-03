@@ -20,6 +20,7 @@ export default function Controls() {
   const { mutate: removeTeamData } = api.user.removeTeamData.useMutation();
   const [renameOpen, setRenameOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
+  const context = api.useContext();
 
   async function deleteOrganization(confirm: boolean) {
     setIsDeleting(true);
@@ -29,13 +30,14 @@ export default function Controls() {
         if (setActive && organizationList.length) {
           const foundOrg = organizationList.find((i) => i.organization.id !== organization.id);
           const id = foundOrg ? foundOrg.organization.id : null;
+          setSettings(id);
+
           await setActive({
             organization: id,
           });
-
-          removeTeamData(organization.id);
-          setSettings(id);
         }
+        removeTeamData(organization.id);
+        await context.system.getMembershipList.invalidate();
       } catch (error) {
         const err = error as {
           errors: Array<{ message: string }>;
