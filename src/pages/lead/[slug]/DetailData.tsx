@@ -6,7 +6,7 @@ import { Edit } from "@mui/icons-material";
 import { useRef, useState } from "react";
 import DictionaryPopover from "@/components/DictionaryPopover";
 import { api } from "@/utils/api";
-import { Dictionary } from "@prisma/client";
+import { type Dictionary } from "@prisma/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import UsersPopover from "@/components/UsersPopover";

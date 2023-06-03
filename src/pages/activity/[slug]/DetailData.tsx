@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { ActivityData } from "..";
+import { type ActivityData } from "..";
 import { api } from "@/utils/api";
 import { useQueryClient } from "@tanstack/react-query";
 import DictionaryPopover from "@/components/DictionaryPopover";
@@ -8,7 +8,7 @@ import { Grid, IconButton } from "@mui/material";
 import ItemDisplay from "@/components/ItemDisplay";
 import { Edit } from "@mui/icons-material";
 import dayjs from "dayjs";
-import { Dictionary } from "@prisma/client";
+import { type Dictionary } from "@prisma/client";
 import { toast } from "react-toastify";
 
 type Props = {

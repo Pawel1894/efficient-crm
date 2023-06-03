@@ -1,6 +1,6 @@
 import { useOrganization } from "@clerk/nextjs";
-import { Box, Button, CircularProgress, Popover, Stack, TextField, Typography } from "@mui/material";
-import React, { FormEvent, useState } from "react";
+import { Box, Button, CircularProgress, Popover, Stack, TextField } from "@mui/material";
+import React, { type FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 
 type Props = {

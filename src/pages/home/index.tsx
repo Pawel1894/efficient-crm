@@ -6,7 +6,6 @@ import { Box, Breadcrumbs, Paper, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import React, { useEffect } from "react";
 import RecentLeads from "@/components/RecentLeads";
-import { api } from "@/utils/api";
 import { useSystemStore } from "../_app";
 import Head from "next/head";
 import { getAuth } from "@clerk/nextjs/server";

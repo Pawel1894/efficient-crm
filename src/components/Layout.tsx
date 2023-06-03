@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
+import MuiAppBar, { type AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Divider from "@mui/material/Divider";
@@ -23,7 +23,7 @@ import {
   ModeStandby,
   Settings,
 } from "@mui/icons-material";
-import { MenuItem, Paper, useMediaQuery } from "@mui/material";
+import { Paper, useMediaQuery } from "@mui/material";
 import { UserButton, useOrganization, useOrganizations, useUser } from "@clerk/nextjs";
 import TeamSwitcher from "./TeamSwitcher";
 import CenterLoad from "./CenterLoad";

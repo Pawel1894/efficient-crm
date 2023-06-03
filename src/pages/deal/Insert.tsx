@@ -1,5 +1,5 @@
 import { api } from "@/utils/api";
-import { DealSchema, DealType } from "@/utils/schema";
+import { DealSchema, type DealType } from "@/utils/schema";
 import { useOrganization } from "@clerk/nextjs";
 import { Close } from "@mui/icons-material";
 import {
@@ -35,7 +35,7 @@ export default function Insert({ isOpen, setOpen, leadId }: Props) {
   const { data: leads } = api.lead.leads.useQuery();
   const { data: lead } = api.lead.get.useQuery(leadId, {
     onSuccess: (data) => {
-      formik.setFieldValue("lead", data?.id);
+      void formik.setFieldValue("lead", data?.id);
     },
     enabled: !!leadId,
   });

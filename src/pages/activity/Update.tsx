@@ -31,7 +31,6 @@ type Props = {
 
 export default function Update({ onSettledHandler, isOpen, setOpen, data }: Props) {
   const desktopbr = useMediaQuery("(min-width:600px)");
-  const context = api.useContext();
   const { data: statuses } = api.dictionary.byType.useQuery("ACTIVITY_STATUS");
   const { membershipList } = useOrganization({
     membershipList: {},

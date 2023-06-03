@@ -1,5 +1,5 @@
 import { useOrganization } from "@clerk/nextjs";
-import { OrganizationMembershipRole } from "@clerk/nextjs/server";
+import type { OrganizationMembershipRole } from "@clerk/nextjs/server";
 import {
   Box,
   Button,
@@ -12,9 +12,8 @@ import {
   RadioGroup,
   Stack,
   TextField,
-  Typography,
 } from "@mui/material";
-import React, { FormEvent, useState } from "react";
+import React, { type FormEvent, useState } from "react";
 import { toast } from "react-toastify";
 
 type Props = {
@@ -24,7 +23,7 @@ type Props = {
 };
 
 export default function InviteMember({ itemRef, open, setOpen }: Props) {
-  const { organization, membership } = useOrganization();
+  const { organization } = useOrganization();
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState<string>("");
   const [role, setRole] = useState<OrganizationMembershipRole>("basic_member");

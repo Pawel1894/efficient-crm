@@ -16,9 +16,9 @@ import { useFormik } from "formik";
 import { Close } from "@mui/icons-material";
 import { useOrganization } from "@clerk/nextjs";
 import { api } from "@/utils/api";
-import { DealSchema, DealType } from "@/utils/schema";
+import { DealSchema, type DealType } from "@/utils/schema";
 import { toast } from "react-toastify";
-import { DealData } from ".";
+import { type DealData } from ".";
 import { NumericFormat } from "react-number-format";
 
 type Props = {
@@ -30,7 +30,6 @@ type Props = {
 
 export default function Update({ data, isOpen, setOpen, onSettledHandler }: Props) {
   const desktopbr = useMediaQuery("(min-width:600px)");
-  const context = api.useContext();
   const { data: stages } = api.dictionary.byType.useQuery("DEAL_STAGE");
   const { membershipList } = useOrganization({
     membershipList: {},

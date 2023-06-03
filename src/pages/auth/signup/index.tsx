@@ -1,11 +1,9 @@
 import { Box, Container, Typography } from "@mui/material";
 import Head from "next/head";
 import React from "react";
-import { grey } from "@mui/material/colors";
 import { useRouter } from "next/router";
 import CenterLoad from "@/components/CenterLoad";
 import { SignUp, useUser } from "@clerk/nextjs";
-import { SignIn } from "@clerk/clerk-react";
 import { dark } from "@clerk/themes";
 
 export default function Page() {

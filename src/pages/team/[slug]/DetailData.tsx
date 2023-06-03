@@ -3,7 +3,7 @@ import { api } from "@/utils/api";
 import { useOrganization } from "@clerk/nextjs";
 import type { OrganizationMembershipResource } from "@clerk/types";
 import type { OrganizationMembershipRole, User } from "@clerk/nextjs/server";
-import { Grid, Stack, MenuItem, Select, Typography, CircularProgress } from "@mui/material";
+import { Grid, Stack, MenuItem, Select, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { updateRole } from "@/helper";
 import SkeletonTemplate from "./Skeleton";

@@ -1,6 +1,6 @@
 import { api } from "@/utils/api";
 import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
-import { FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material";
+import { FormControl, MenuItem, Select, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";

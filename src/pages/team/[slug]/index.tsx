@@ -6,7 +6,7 @@ import DetailData from "./DetailData";
 import { useEffect, useMemo, useState } from "react";
 import { useSystemStore } from "@/pages/_app";
 import Link from "next/link";
-import { useOrganization, useUser } from "@clerk/nextjs";
+import { useOrganization } from "@clerk/nextjs";
 import { Delete, KeyboardArrowLeft } from "@mui/icons-material";
 import AdaptiveHeader from "@/components/AdaptiveHeader";
 import { removeMember } from "@/helper";

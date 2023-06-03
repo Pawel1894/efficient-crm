@@ -1,9 +1,8 @@
-import { useOrganization, useOrganizationList, useUser } from "@clerk/nextjs";
-import { Delete, Edit, KeyboardArrowLeft, Visibility } from "@mui/icons-material";
+import { useOrganization, useUser } from "@clerk/nextjs";
+import { Delete, Visibility } from "@mui/icons-material";
 import {
   Box,
   Breadcrumbs,
-  Button,
   Divider,
   IconButton,
   MenuItem,
@@ -14,14 +13,13 @@ import {
 } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import type { OrganizationMembershipResource } from "@clerk/types";
 import Head from "next/head";
 import { useSystemStore } from "../_app";
 import Controls from "./Controls";
 import PendingInvites from "@/components/PendingInvites";
-import { OrganizationMembershipRole } from "@clerk/nextjs/server";
-import { toast } from "react-toastify";
+import { type OrganizationMembershipRole } from "@clerk/nextjs/server";
 import { api } from "@/utils/api";
 import Link from "next/link";
 import { removeMember, updateRole } from "@/helper";

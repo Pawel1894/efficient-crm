@@ -1,6 +1,6 @@
 import useDebounce from "@/hooks/useDebounced";
 import { useOrganization } from "@clerk/nextjs";
-import { List, ListItem, ListItemButton, ListItemText, Popover, TextField, Typography } from "@mui/material";
+import { List, ListItem, ListItemButton, ListItemText, Popover, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 type Props = {

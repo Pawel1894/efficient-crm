@@ -1,7 +1,6 @@
 import { Box, Container, Typography } from "@mui/material";
 import Head from "next/head";
 import React from "react";
-import { grey } from "@mui/material/colors";
 import { useRouter } from "next/router";
 import CenterLoad from "@/components/CenterLoad";
 import { useUser } from "@clerk/nextjs";

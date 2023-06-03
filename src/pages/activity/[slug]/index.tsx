@@ -4,7 +4,7 @@ import { createTRPCContext } from "@/server/api/trpc";
 import { api } from "@/utils/api";
 import { getAuth } from "@clerk/nextjs/server";
 import { Breadcrumbs, Button, Divider, IconButton, Stack, Typography } from "@mui/material";
-import { Activity } from "@prisma/client";
+import { type Activity } from "@prisma/client";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { TRPCError } from "@trpc/server";
 import type { InferGetServerSidePropsType, NextApiRequest, NextApiResponse } from "next";

@@ -1,7 +1,7 @@
 import type { OrganizationInvitationResource } from "@clerk/types";
 import { useOrganization } from "@clerk/nextjs";
-import { Box, IconButton, List, ListItem, ListItemText, Skeleton, Typography } from "@mui/material";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { Box, IconButton, Skeleton, Typography } from "@mui/material";
+import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import React, { useMemo } from "react";
 import { Cancel } from "@mui/icons-material";
 import dayjs from "dayjs";
@@ -62,7 +62,7 @@ export default function PendingInvites() {
         flex: 1,
       },
     ],
-    []
+    [membership?.role]
   );
 
   return (
