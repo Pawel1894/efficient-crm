@@ -52,4 +52,35 @@ export const userRouter = createTRPCRouter({
 
     return user;
   }),
+  removeTeamData: protectedProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    if (!ctx.user.id) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "User id not found",
+      });
+    }
+    await ctx.prisma.activity.deleteMany({
+      where: {
+        team: input,
+      },
+    });
+
+    await ctx.prisma.deal.deleteMany({
+      where: {
+        team: input,
+      },
+    });
+
+    await ctx.prisma.lead.deleteMany({
+      where: {
+        team: input,
+      },
+    });
+
+    await ctx.prisma.dictionary.deleteMany({
+      where: {
+        orgId: input,
+      },
+    });
+  }),
 });

@@ -17,6 +17,7 @@ export default function Controls() {
   const { organization } = useOrganization();
   const { setActive, organizationList } = useOrganizationList();
   const { mutate: setSettings } = api.user.setSettings.useMutation();
+  const { mutate: removeTeamData } = api.user.removeTeamData.useMutation();
   const [renameOpen, setRenameOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
 
@@ -32,6 +33,7 @@ export default function Controls() {
             organization: id,
           });
 
+          removeTeamData(organization.id);
           setSettings(id);
         }
       } catch (error) {
