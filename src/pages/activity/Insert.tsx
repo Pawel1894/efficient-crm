@@ -37,7 +37,7 @@ export default function Insert({ setOpen, isOpen, leadId }: Props) {
   const { data: leads } = api.lead.leads.useQuery();
   const { data: lead } = api.lead.get.useQuery(leadId, {
     onSuccess: (data) => {
-      formik.setFieldValue("lead", data?.id);
+      void formik.setFieldValue("lead", data?.id);
     },
     enabled: !!leadId,
   });
