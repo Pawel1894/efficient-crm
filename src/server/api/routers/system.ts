@@ -199,9 +199,9 @@ export const systemRouter = createTRPCRouter({
       await ctx.prisma.deal.create({
         data: {
           comment: "Very iteresting comment",
-          value: 17000,
+          value: 90000,
           createdBy: ctx.user.id,
-          forecast: 12000,
+          forecast: 92000,
           owner: ctx.user.id,
           ownerFullname: input.userName,
           updatedBy: ctx.user.id,
@@ -223,9 +223,9 @@ export const systemRouter = createTRPCRouter({
       await ctx.prisma.deal.create({
         data: {
           comment: "Very iteresting comment",
-          value: 11000,
+          value: 81000,
           createdBy: ctx.user.id,
-          forecast: 14000,
+          forecast: 84000,
           owner: ctx.user.id,
           ownerFullname: input.userName,
           updatedBy: ctx.user.id,

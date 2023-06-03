@@ -65,7 +65,7 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
   return (
     <>
       <Head>
-        <title>Deal</title>
+        <title>Activity</title>
       </Head>
 
       {updateData ? (

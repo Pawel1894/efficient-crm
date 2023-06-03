@@ -31,15 +31,7 @@ export const activityRouter = createTRPCRouter({
     }
 
     const activities = await ctx.prisma.activity.findMany({
-      where: {
-        team: ctx.user.orgId,
-        AND: {
-          date: {
-            gt: dayjs().startOf("day").toISOString(),
-            lt: dayjs().startOf("day").add(1, "day").toISOString(),
-          },
-        },
-      },
+      where: where,
       orderBy: {
         date: "desc",
       },

@@ -1,6 +1,6 @@
 import { api } from "@/utils/api";
-import { Box, Stack, Typography } from "@mui/material";
-import React from "react";
+import { Box, Breadcrumbs, Stack, Typography } from "@mui/material";
+import React, { useEffect } from "react";
 import {
   BarChart,
   Bar,
@@ -16,10 +16,12 @@ import {
 } from "recharts";
 import { grey } from "@mui/material/colors";
 import Head from "next/head";
-export default function index() {
+import { useSystemStore } from "../_app";
+export default function Page() {
   const { data: valuesPerStage } = api.analytics.valuesByStage.useQuery();
   const { data: statusesGroup } = api.analytics.groupedByStatus.useQuery();
   const { data: valuePerMonth } = api.analytics.valuesThisYear.useQuery();
+  const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
 
   function CustomTooltip({ payload, label, active }: TooltipProps<string, string | number>) {
     if (active && payload) {
@@ -34,6 +36,14 @@ export default function index() {
 
     return null;
   }
+
+  useEffect(() => {
+    setBreadcrumbs(
+      <Breadcrumbs aria-label="breadcrumb">
+        <Typography color="text.primary">Analytics</Typography>
+      </Breadcrumbs>
+    );
+  }, [setBreadcrumbs]);
 
   function ComplexTooltip({ payload, label, active }: TooltipProps<string, string | number>) {
     if (active && payload) {

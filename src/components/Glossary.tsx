@@ -32,7 +32,7 @@ export default function Glossary() {
           </ListItemAvatar>
           <ListItemText>
             <Box display={"flex"}>
-              <Typography variant="body1">Deal – forecast offer made to a lead.</Typography>
+              <Typography variant="body1">Deal – offert made to a lead.</Typography>
             </Box>
           </ListItemText>
         </ListItem>

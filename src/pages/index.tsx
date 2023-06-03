@@ -199,12 +199,7 @@ const Home: NextPage = () => {
                 },
               }}
             >
-              <Image
-                width={450}
-                height={450}
-                src="/tech-company-animate.svg"
-                alt="person working on macbook"
-              />
+              <Image width={450} height={450} src="/landingpage.gif" alt="person working on macbook" />
             </Box>
           </Box>
         </Container>

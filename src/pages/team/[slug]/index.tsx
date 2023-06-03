@@ -22,10 +22,13 @@ export default function Page() {
     isSuccess,
   } = api.user.get.useQuery(router.query.slug as string);
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
-  const { organization, membershipList } = useOrganization({
+  const {
+    organization,
+    membershipList,
+    membership: currentUser,
+  } = useOrganization({
     membershipList: {},
   });
-  const { user: currentUser } = useUser();
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
@@ -73,27 +76,29 @@ export default function Page() {
             <IconButton onClick={() => router.back()}>
               <KeyboardArrowLeft />
             </IconButton>
-            <AdaptiveHeader>
-              <Button
-                onClick={() => {
-                  setIsDeleting(true);
-                  void removeMember(
-                    currentUser?.id,
-                    organization,
-                    async () => {
-                      await router.push("/team");
-                    },
-                    membership
-                  ).finally(() => setIsDeleting(false));
-                }}
-                color="warning"
-                variant="outlined"
-                title="Delete"
-                endIcon={<Delete />}
-              >
-                Delete
-              </Button>
-            </AdaptiveHeader>
+            {currentUser?.role === "admin" && (
+              <AdaptiveHeader>
+                <Button
+                  onClick={() => {
+                    setIsDeleting(true);
+                    void removeMember(
+                      currentUser?.publicUserData.userId,
+                      organization,
+                      async () => {
+                        await router.push("/team");
+                      },
+                      membership
+                    ).finally(() => setIsDeleting(false));
+                  }}
+                  color="warning"
+                  variant="outlined"
+                  title="Delete"
+                  endIcon={<Delete />}
+                >
+                  Delete
+                </Button>
+              </AdaptiveHeader>
+            )}
           </Stack>
           <DetailData membership={membership} user={user} />
         </>

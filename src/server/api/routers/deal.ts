@@ -17,7 +17,11 @@ export const dealRouter = createTRPCRouter({
     const where: {
       team: string;
       AND?: {
-        leadId: string;
+        leadId?: string;
+        owner?: string;
+        AND?: {
+          owner?: string;
+        };
       };
     } = {
       team: ctx.user.orgId,
@@ -27,6 +31,18 @@ export const dealRouter = createTRPCRouter({
       where.AND = {
         leadId: input,
       };
+    }
+
+    if (ctx.user.role !== "admin") {
+      if (where.AND) {
+        where.AND.AND = {
+          owner: ctx.user.id,
+        };
+      } else {
+        where.AND = {
+          owner: ctx.user.id,
+        };
+      }
     }
 
     const results = await ctx.prisma.deal.findMany({
