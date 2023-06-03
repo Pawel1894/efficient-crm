@@ -188,6 +188,13 @@ export const activityRouter = createTRPCRouter({
       },
     });
 
+    if (ctx.user.role !== "admin" && activity?.owner !== ctx.user.id) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not allowed to view this activity",
+      });
+    }
+
     if (activity === null) {
       throw new TRPCError({
         code: "NOT_FOUND",

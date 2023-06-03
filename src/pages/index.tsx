@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import handleViewport, { type InjectedViewportProps } from "react-in-viewport";
 import { grey } from "@mui/material/colors";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
 
 function AboutBlock(props: InjectedViewportProps<HTMLDivElement>) {
   const { inViewport, forwardedRef } = props;
@@ -38,10 +37,10 @@ function AboutBlock(props: InjectedViewportProps<HTMLDivElement>) {
           What is Efficient CRM?
         </Typography>
         <Typography color={grey[400]} component={"p"} textAlign={"justify"} maxWidth={"60ch"}>
-          {`I\'m happy to see you there! This crm service was implemented for portfolio and practice
+          {`I\'m happy to see you here! This crm service was implemented for portfolio and practice
               purpose. It is fullstack app made with T3-stack and mui library. If you want to see more of
               my projects check out `}
-          <Link href="https://github.com/Pawel1894">
+          <Link style={{ textDecoration: "unset" }} href="https://github.com/Pawel1894">
             <Typography color={"primary.main"} component={"span"}>
               my github
             </Typography>
@@ -168,10 +167,17 @@ const Home: NextPage = () => {
                 <Link href={"/auth"}>
                   <Button
                     sx={{
-                      width: "max-content",
+                      width: {
+                        xs: "100%",
+                        md: "max-content",
+                      },
                       marginInline: {
                         xs: "auto",
                         md: "unset",
+                      },
+                      marginTop: {
+                        xs: "5rem",
+                        md: "0",
                       },
                       fontSize: {
                         xs: "1rem",
@@ -193,7 +199,12 @@ const Home: NextPage = () => {
                 },
               }}
             >
-              <Image width={450} height={450} src="/landingpage.png" alt="person working on macbook" />
+              <Image
+                width={450}
+                height={450}
+                src="/tech-company-animate.svg"
+                alt="person working on macbook"
+              />
             </Box>
           </Box>
         </Container>

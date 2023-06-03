@@ -132,6 +132,13 @@ export const dealRouter = createTRPCRouter({
       },
     });
 
+    if (ctx.user.role !== "admin" && deal?.owner !== ctx.user.id) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not allowed to view this deal",
+      });
+    }
+
     if (deal === null) {
       throw new TRPCError({
         code: "NOT_FOUND",

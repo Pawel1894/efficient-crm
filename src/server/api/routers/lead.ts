@@ -168,6 +168,13 @@ export const leadRouter = createTRPCRouter({
       },
     });
 
+    if (ctx.user.role !== "admin" && lead?.owner !== ctx.user.id) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "You are not allowed to view this lead",
+      });
+    }
+
     if (lead === null) {
       throw new TRPCError({
         code: "NOT_FOUND",
