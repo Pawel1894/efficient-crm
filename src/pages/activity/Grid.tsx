@@ -32,6 +32,7 @@ export default function Grid({ heightSubstract, leadId, shouldFetch }: Props) {
     isSuccess,
     refetch,
     isRefetching,
+    isInitialLoading,
     error,
   } = api.activity.activities.useQuery(leadId, {
     enabled: shouldFetch,
@@ -169,7 +170,7 @@ export default function Grid({ heightSubstract, leadId, shouldFetch }: Props) {
           }}
           minHeight={400}
         >
-          {isRefetching ? (
+          {isRefetching || isInitialLoading ? (
             <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
           ) : isSuccess ? (
             <DataGrid rowSelection={false} rows={activities} columns={columns} />

@@ -41,7 +41,12 @@ export default function Page() {
     membershipList: {},
   });
 
-  const { data: membershipList, refetch, isRefetching } = api.system.getMembershipList.useQuery(undefined);
+  const {
+    data: membershipList,
+    refetch,
+    isRefetching,
+    isInitialLoading,
+  } = api.system.getMembershipList.useQuery(undefined);
 
   const { user } = useUser();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
@@ -191,7 +196,7 @@ export default function Page() {
       <>
         <Typography variant="h5">Members</Typography>
         <Box mt={3} mb={5} minHeight={400} height={"50vh"} width={"100%"}>
-          {isRefetching || !membershipList ? (
+          {isRefetching || isInitialLoading || !membershipList ? (
             <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
           ) : (
             <DataGrid rowSelection={false} rows={membershipList} columns={columns} />

@@ -22,6 +22,7 @@ export default function Page() {
     isSuccess,
     refetch,
     isRefetching,
+    isInitialLoading,
     error,
   } = api.dictionary.dictionaries.useQuery(undefined, {
     refetchOnWindowFocus: false,
@@ -139,7 +140,7 @@ export default function Page() {
           }}
           minHeight={400}
         >
-          {isRefetching ? (
+          {isRefetching || isInitialLoading ? (
             <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
           ) : isSuccess ? (
             <DataGrid
