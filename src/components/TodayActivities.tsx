@@ -11,7 +11,7 @@ export default function TodayActivities() {
   return (
     <Box p={2} height={256}>
       <Typography>Today&apos;s activities</Typography>
-      <List style={{ height: "85%", overflow: "auto" }}>
+      <List style={{ height: "85%", overflowY: "auto", overflowX: "hidden" }}>
         {data && data.length > 0 ? (
           data.map((item) => {
             return (
@@ -23,7 +23,7 @@ export default function TodayActivities() {
                 primary={
                   <>
                     <Grid alignItems={"center"} container columns={13}>
-                      <Grid xs={3}>
+                      <Grid xs={6} md={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
                           Title
                         </Typography>
@@ -32,7 +32,7 @@ export default function TodayActivities() {
                           {`${item.title ?? ""}`}
                         </Typography>
                       </Grid>
-                      <Grid xs={3}>
+                      <Grid xs={6} md={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
                           Status
                         </Typography>
@@ -41,7 +41,7 @@ export default function TodayActivities() {
                           {`${item.status?.label ?? "None"}`}
                         </Typography>
                       </Grid>
-                      <Grid xs={3}>
+                      <Grid xs={6} md={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
                           Date
                         </Typography>
@@ -50,7 +50,7 @@ export default function TodayActivities() {
                           {`${dayjs(item.date?.toString()).format("DD/MM/YYYY HH:mm")}`}
                         </Typography>
                       </Grid>
-                      <Grid xs={3}>
+                      <Grid xs={5} md={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
                           Lead
                         </Typography>

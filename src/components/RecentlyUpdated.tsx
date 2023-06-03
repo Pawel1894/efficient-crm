@@ -33,7 +33,7 @@ export default function RecentlyUpdated({
                 primary={
                   <>
                     <Grid alignItems={"center"} container columns={13}>
-                      <Grid xs={3}>
+                      <Grid xs={6} md={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
                           Name
                         </Typography>
@@ -42,7 +42,7 @@ export default function RecentlyUpdated({
                           {`${item.firstName ?? ""} ${item.lastName ?? ""}`}
                         </Typography>
                       </Grid>
-                      <Grid xs={3}>
+                      <Grid xs={6} md={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
                           Owner
                         </Typography>
@@ -66,7 +66,7 @@ export default function RecentlyUpdated({
                           </Typography>
                         )}
                       </Grid>
-                      <Grid xs={3}>
+                      <Grid xs={6} md={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
                           Updated by
                         </Typography>
@@ -75,7 +75,7 @@ export default function RecentlyUpdated({
                           {item.updatedBy?.trim() ? item.updatedBy : "None"}
                         </Typography>
                       </Grid>
-                      <Grid xs={3}>
+                      <Grid xs={6} md={3}>
                         <Typography color={"primary.dark"} component="span" variant="caption">
                           Updated at
                         </Typography>
