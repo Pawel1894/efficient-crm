@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { grey } from "@mui/material/colors";
 
 type Props = {
-  children: JSX.Element[];
+  children: JSX.Element[] | JSX.Element;
   padding?: `${number}rem`;
 };
 

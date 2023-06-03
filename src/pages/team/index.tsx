@@ -6,7 +6,6 @@ import {
   Button,
   Divider,
   IconButton,
-  Link,
   MenuItem,
   Select,
   Skeleton,
@@ -23,8 +22,9 @@ import Controls from "./Controls";
 import PendingInvites from "@/components/PendingInvites";
 import { OrganizationMembershipRole } from "@clerk/nextjs/server";
 import { toast } from "react-toastify";
-import { useRouter } from "next/router";
 import { api } from "@/utils/api";
+import Link from "next/link";
+import { removeMember } from "@/helper";
 
 type Member = {
   role: string;
@@ -47,20 +47,6 @@ export default function Page() {
 
   const { user } = useUser();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
-  const remove = async (member: OrganizationMembershipResource) => {
-    if (member.publicUserData.userId === user?.publicMetadata.userId) return;
-    if (member.publicUserData.userId) {
-      try {
-        await organization?.removeMember(member.publicUserData.userId);
-        await refetch();
-      } catch (error) {
-        const err = error as {
-          errors: Array<{ message: string }>;
-        };
-        toast.error(err?.errors[0]?.message);
-      }
-    }
-  };
 
   useEffect(() => {
     setBreadcrumbs(
@@ -100,7 +86,7 @@ export default function Page() {
 
           return (
             <Stack direction={"row"} gap={"0.5rem"}>
-              <Link href={`/user/${data.publicUserData.userId}`}>
+              <Link href={`/team/${data.publicUserData.userId}`}>
                 <IconButton size="small" sx={{ color: "primary.main" }} title="View">
                   <Visibility />
                 </IconButton>
@@ -108,7 +94,14 @@ export default function Page() {
               {membership?.role === "admin" ? (
                 <IconButton
                   onClick={() => {
-                    void remove(data);
+                    void removeMember(
+                      user?.id,
+                      organization,
+                      async () => {
+                        await refetch();
+                      },
+                      data
+                    );
                   }}
                   size="small"
                   color="warning"

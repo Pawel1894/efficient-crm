@@ -88,7 +88,7 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
         <span>{error ? error : fetchError?.message}</span>
       ) : (
         <>
-          <Stack pb={3} direction={"row"} gap={2}>
+          <Stack pb={3} direction={"row"} gap={2} alignItems={"center"}>
             <IconButton onClick={() => router.back()}>
               <KeyboardArrowLeft />
             </IconButton>

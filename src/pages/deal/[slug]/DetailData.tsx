@@ -109,7 +109,7 @@ export default function DetailData({ deal }: Props) {
         </Grid>
         <Grid xs={5} md={3} lg={2} item>
           <ItemDisplay
-            href={deal.owner ? `/user/${deal.owner}` : null}
+            href={deal.owner ? `/team/${deal.owner}` : null}
             label="Owner"
             content={deal.ownerFullname}
             tooltip={

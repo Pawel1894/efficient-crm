@@ -48,7 +48,7 @@ export default function RecentlyUpdated({
                         </Typography>
                         <br />
                         {item.ownerFullname?.trim() ? (
-                          <Link style={{ textDecoration: "unset" }} href={`/user/${item.owner ?? ""}`}>
+                          <Link style={{ textDecoration: "unset" }} href={`/team/${item.owner ?? ""}`}>
                             <Typography
                               sx={{
                                 textDecoration: "underline",

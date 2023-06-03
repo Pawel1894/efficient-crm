@@ -136,7 +136,7 @@ export default function DetailData({ lead }: { lead: LeadData }) {
         <Grid xs={5} md={3} lg={2} item>
           <ItemDisplay
             label="Owner"
-            href={lead?.owner ? `/user/${lead?.owner}` : null}
+            href={lead?.owner ? `/team/${lead?.owner}` : null}
             content={lead?.ownerFullname}
             tooltip={
               <IconButton

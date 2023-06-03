@@ -22,7 +22,6 @@ import DealsGrid from "@/pages/deal/Grid";
 import ActivitiesGrid from "@/pages/activity/Grid";
 import type { Lead } from "@prisma/client";
 import AdaptiveHeader from "@/components/AdaptiveHeader";
-import Confirm from "@/components/Confirm";
 
 export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
@@ -100,7 +99,7 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
         <span>{error ? error : fetchError?.message}</span>
       ) : (
         <>
-          <Stack pb={3} direction={"row"} gap={2}>
+          <Stack pb={3} direction={"row"} gap={2} alignItems={"center"}>
             <IconButton onClick={() => router.back()}>
               <KeyboardArrowLeft />
             </IconButton>

@@ -3,7 +3,7 @@ import { appRouter } from "@/server/api/root";
 import { createTRPCContext } from "@/server/api/trpc";
 import { api } from "@/utils/api";
 import { getAuth } from "@clerk/nextjs/server";
-import { Breadcrumbs, Button, Divider, IconButton, Link, Stack, Typography } from "@mui/material";
+import { Breadcrumbs, Button, Divider, IconButton, Stack, Typography } from "@mui/material";
 import { Activity } from "@prisma/client";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { TRPCError } from "@trpc/server";
@@ -18,6 +18,7 @@ import DeleteDialog from "@/components/DeleteDialog";
 import { Delete, Edit, KeyboardArrowLeft } from "@mui/icons-material";
 import DetailData from "./DetailData";
 import AdaptiveHeader from "@/components/AdaptiveHeader";
+import Link from "next/link";
 export default function Page({ error, initData }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const router = useRouter();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
@@ -88,7 +89,7 @@ export default function Page({ error, initData }: InferGetServerSidePropsType<ty
         <span>{error ? error : fetchError?.message}</span>
       ) : (
         <>
-          <Stack pb={3} direction={"row"} gap={2}>
+          <Stack pb={3} direction={"row"} gap={2} alignItems={"center"}>
             <IconButton onClick={() => router.back()}>
               <KeyboardArrowLeft />
             </IconButton>

@@ -103,7 +103,7 @@ export default function DetailData({ activity }: Props) {
       <Grid py={3} container columnGap={6} rowGap={4}>
         <Grid xs={5} md={3} lg={2} item>
           <ItemDisplay
-            href={activity.owner ? `/user/${activity.owner}` : null}
+            href={activity.owner ? `/team/${activity.owner}` : null}
             label="Owner"
             content={activity.ownerFullname}
             tooltip={

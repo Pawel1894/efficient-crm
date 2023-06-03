@@ -13,9 +13,9 @@ import type { Activity, Deal, Dictionary, Lead } from "@prisma/client";
 import DeleteDialog from "@/components/DeleteDialog";
 
 export type LeadData = Lead & {
-  status: Dictionary | null;
-  activities: Activity[] | null;
-  deals: Deal[] | null;
+  status?: Dictionary | null;
+  activities?: Activity[] | null;
+  deals?: Deal[] | null;
 };
 
 export default function Page() {
