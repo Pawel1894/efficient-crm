@@ -74,7 +74,18 @@ export default function PendingInvites() {
         {!invitationList ? (
           <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
         ) : (
-          <DataGrid rowSelection={false} rows={invitationList} columns={columns} />
+          <DataGrid
+            initialState={{
+              columns: {
+                columnVisibilityModel: {
+                  action: membership?.role !== "admin" ? false : true,
+                },
+              },
+            }}
+            rowSelection={false}
+            rows={invitationList}
+            columns={columns}
+          />
         )}
       </Box>
     </>

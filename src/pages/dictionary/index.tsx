@@ -7,12 +7,14 @@ import Link from "next/link";
 import { Add, Delete, Edit, Visibility } from "@mui/icons-material";
 import { useSystemStore } from "../_app";
 import Head from "next/head";
-import type { Activity, Deal, Dictionary, Lead } from "@prisma/client";
+import type { Dictionary } from "@prisma/client";
 import DeleteDialog from "@/components/DeleteDialog";
 import Insert from "./Insert";
 import Update from "./Update";
+import { useOrganization } from "@clerk/nextjs";
 
 export default function Page() {
+  const { membership } = useOrganization();
   const [insertOpen, setInsertOpen] = useState(false);
   const [updateData, setUpdateData] = useState<Dictionary>();
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -42,6 +44,7 @@ export default function Page() {
         filterable: false,
         hideable: false,
         sortable: false,
+        minWidth: 0,
         renderCell: (params) => {
           const data = params.row as Dictionary;
 
@@ -124,11 +127,13 @@ export default function Page() {
       ) : null}
       <Insert isOpen={insertOpen} setOpen={setInsertOpen} />
       <Stack gap={"1rem"}>
-        <Box>
-          <Button variant="outlined" onClick={() => setInsertOpen(true)}>
-            create dictionary <Add />
-          </Button>
-        </Box>
+        {membership?.role === "admin" && (
+          <Box>
+            <Button variant="outlined" onClick={() => setInsertOpen(true)}>
+              create dictionary <Add />
+            </Button>
+          </Box>
+        )}
         <Box
           sx={{
             height: `calc(100vh - 200px)`,
@@ -138,7 +143,18 @@ export default function Page() {
           {isRefetching ? (
             <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
           ) : isSuccess ? (
-            <DataGrid rowSelection={false} rows={dictionaries} columns={columns} />
+            <DataGrid
+              initialState={{
+                columns: {
+                  columnVisibilityModel: {
+                    action: membership?.role !== "admin" ? false : true,
+                  },
+                },
+              }}
+              rowSelection={false}
+              rows={dictionaries}
+              columns={columns}
+            />
           ) : (
             <Typography>{error?.message}</Typography>
           )}
