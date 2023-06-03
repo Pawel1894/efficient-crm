@@ -24,7 +24,7 @@ import { OrganizationMembershipRole } from "@clerk/nextjs/server";
 import { toast } from "react-toastify";
 import { api } from "@/utils/api";
 import Link from "next/link";
-import { removeMember } from "@/helper";
+import { removeMember, updateRole } from "@/helper";
 
 type Member = {
   role: string;
@@ -55,21 +55,6 @@ export default function Page() {
       </Breadcrumbs>
     );
   }, [setBreadcrumbs]);
-
-  async function updateRole(userId: string, role: OrganizationMembershipRole) {
-    try {
-      await organization?.updateMember({
-        role,
-        userId,
-      });
-      await refetch();
-    } catch (error) {
-      const err = error as {
-        errors: Array<{ message: string }>;
-      };
-      toast.error(err?.errors[0]?.message);
-    }
-  }
 
   const columns: GridColDef[] = useMemo(
     () => [
@@ -154,7 +139,14 @@ export default function Page() {
               }}
               value={data.role}
               onChange={(e) =>
-                void updateRole(data.publicUserData.userId, e.target.value as OrganizationMembershipRole)
+                void updateRole(
+                  data.publicUserData.userId,
+                  organization,
+                  async () => {
+                    await refetch();
+                  },
+                  e.target.value as OrganizationMembershipRole
+                )
               }
             >
               <MenuItem key={"role_admin"} value={"admin"}>

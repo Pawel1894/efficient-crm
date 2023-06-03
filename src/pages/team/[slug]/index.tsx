@@ -1,17 +1,16 @@
 import { api } from "@/utils/api";
-import { Box, Breadcrumbs, Button, CircularProgress, IconButton, Stack, Typography } from "@mui/material";
+import { Breadcrumbs, Button, IconButton, Skeleton, Stack, Typography } from "@mui/material";
 import Head from "next/head";
-import { OrganizationMembershipResource } from "@clerk/types";
 import { useRouter } from "next/router";
 import DetailData from "./DetailData";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSystemStore } from "@/pages/_app";
 import Link from "next/link";
 import { useOrganization, useUser } from "@clerk/nextjs";
 import { Delete, KeyboardArrowLeft } from "@mui/icons-material";
 import AdaptiveHeader from "@/components/AdaptiveHeader";
-import { toast } from "react-toastify";
 import { removeMember } from "@/helper";
+import SkeletonTemplate from "./Skeleton";
 
 export default function Page() {
   const router = useRouter();
@@ -27,6 +26,7 @@ export default function Page() {
     membershipList: {},
   });
   const { user: currentUser } = useUser();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     setBreadcrumbs(
@@ -56,9 +56,18 @@ export default function Page() {
 
       {isError && <Typography>{error.message}</Typography>}
 
-      {isLoading && <CircularProgress />}
+      {isLoading ||
+        (isDeleting && (
+          <>
+            <Stack pb={3} direction={"row"} gap={2} alignItems={"center"}>
+              <Skeleton variant="rectangular" width={80} height={30} />
+              <Skeleton variant="rectangular" width={80} height={30} />
+            </Stack>
+            <SkeletonTemplate />
+          </>
+        ))}
 
-      {isSuccess && (
+      {isSuccess && !isDeleting && (
         <>
           <Stack pb={3} direction={"row"} gap={2} alignItems={"center"}>
             <IconButton onClick={() => router.back()}>
@@ -67,6 +76,7 @@ export default function Page() {
             <AdaptiveHeader>
               <Button
                 onClick={() => {
+                  setIsDeleting(true);
                   void removeMember(
                     currentUser?.id,
                     organization,
@@ -74,7 +84,7 @@ export default function Page() {
                       await router.push("/team");
                     },
                     membership
-                  );
+                  ).finally(() => setIsDeleting(false));
                 }}
                 color="warning"
                 variant="outlined"

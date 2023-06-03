@@ -3,10 +3,10 @@ import { api } from "@/utils/api";
 import { useOrganization } from "@clerk/nextjs";
 import type { OrganizationMembershipResource } from "@clerk/types";
 import type { OrganizationMembershipRole, User } from "@clerk/nextjs/server";
-import { Box, Grid, Stack, MenuItem, Select, Typography } from "@mui/material";
-import Image from "next/image";
-import React, { useMemo } from "react";
-import { toast } from "react-toastify";
+import { Grid, Stack, MenuItem, Select, Typography, CircularProgress } from "@mui/material";
+import React, { useState } from "react";
+import { updateRole } from "@/helper";
+import SkeletonTemplate from "./Skeleton";
 
 type Props = {
   user: User;
@@ -19,20 +19,10 @@ export default function DetailData({ user, membership }: Props) {
     membershipList: {},
   });
   const context = api.useContext();
+  const [isLoading, setIsLoading] = useState(false);
 
-  async function updateRole(userId: string, role: OrganizationMembershipRole) {
-    try {
-      await organization?.updateMember({
-        role,
-        userId,
-      });
-      await context.user.get.invalidate(user.id);
-    } catch (error) {
-      const err = error as {
-        errors: Array<{ message: string }>;
-      };
-      toast.error(err?.errors[0]?.message);
-    }
+  if (isLoading) {
+    return <SkeletonTemplate />;
   }
 
   return membership ? (
@@ -70,7 +60,17 @@ export default function DetailData({ user, membership }: Props) {
                 height: "2rem",
               }}
               value={membership.role}
-              onChange={(e) => void updateRole(user.id, e.target.value as OrganizationMembershipRole)}
+              onChange={(e) => {
+                setIsLoading(true);
+                void updateRole(
+                  user.id,
+                  organization,
+                  async () => {
+                    await context.user.get.invalidate(user.id);
+                  },
+                  e.target.value as OrganizationMembershipRole
+                ).finally(() => setIsLoading(false));
+              }}
             >
               <MenuItem key={"role_admin"} value={"admin"}>
                 Admin

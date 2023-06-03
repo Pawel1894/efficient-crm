@@ -1,5 +1,5 @@
-import { OrganizationResource, OrganizationMembershipResource } from "@clerk/types";
-import { User } from "@clerk/nextjs/api";
+import type { OrganizationResource, OrganizationMembershipResource } from "@clerk/types";
+import type { OrganizationMembershipRole } from "@clerk/nextjs/server";
 import { toast } from "react-toastify";
 
 export function formatToThousands(x: number) {
@@ -25,5 +25,26 @@ export async function removeMember(
       };
       toast.error(err?.errors[0]?.message);
     }
+  }
+}
+
+export async function updateRole(
+  userId: string | null | undefined,
+  organization: OrganizationResource | undefined | null,
+  callback: () => Promise<void>,
+  role: OrganizationMembershipRole
+) {
+  if (!userId) return;
+  try {
+    await organization?.updateMember({
+      role,
+      userId,
+    });
+    await callback();
+  } catch (error) {
+    const err = error as {
+      errors: Array<{ message: string }>;
+    };
+    toast.error(err?.errors[0]?.message);
   }
 }
