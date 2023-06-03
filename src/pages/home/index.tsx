@@ -1,4 +1,3 @@
-import superjson from "superjson";
 import Glossary from "@/components/Glossary";
 import TodayActivities from "@/components/TodayActivities";
 import { useOrganization } from "@clerk/nextjs";
@@ -8,11 +7,6 @@ import React, { useEffect } from "react";
 import RecentLeads from "@/components/RecentLeads";
 import { useSystemStore } from "../_app";
 import Head from "next/head";
-import { getAuth } from "@clerk/nextjs/server";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { createServerSideHelpers } from "@trpc/react-query/server";
-import { appRouter } from "@/server/api/root";
-import { createTRPCContext } from "@/server/api/trpc";
 
 export default function Page() {
   const { organization } = useOrganization();
@@ -54,33 +48,3 @@ export default function Page() {
     </>
   );
 }
-
-export const getServerSideProps = async ({ req, res }: { req: NextApiRequest; res: NextApiResponse }) => {
-  const session = getAuth(req);
-  if (!session?.userId) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: createTRPCContext({
-      req: req,
-      res: res,
-    }),
-    transformer: superjson,
-  });
-
-  await helpers.lead.recentlyUpdated.prefetch();
-  await helpers.activity.today.prefetch();
-
-  return {
-    props: {
-      trpcState: helpers.dehydrate(),
-    },
-  };
-};
