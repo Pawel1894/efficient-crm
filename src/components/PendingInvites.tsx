@@ -73,7 +73,7 @@ export default function PendingInvites() {
       <Box my={3} height={"50vh"} minHeight={400} width={"100%"}>
         {!invitationList ? (
           <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
-        ) : (
+        ) : invitationList.length > 0 ? (
           <DataGrid
             initialState={{
               columns: {
@@ -86,6 +86,8 @@ export default function PendingInvites() {
             rows={invitationList}
             columns={columns}
           />
+        ) : (
+          <Typography>No invites</Typography>
         )}
       </Box>
     </>
