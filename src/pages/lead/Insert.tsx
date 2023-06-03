@@ -16,7 +16,7 @@ import { useFormik } from "formik";
 import { Close } from "@mui/icons-material";
 import { useOrganization } from "@clerk/nextjs";
 import { api } from "@/utils/api";
-import { LeadSchema, LeadType } from "@/utils/schema";
+import { LeadSchema, type LeadType } from "@/utils/schema";
 import { toast } from "react-toastify";
 
 type Props = {

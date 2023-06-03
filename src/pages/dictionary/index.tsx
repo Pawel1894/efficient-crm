@@ -9,6 +9,7 @@ import { useSystemStore } from "../_app";
 import Head from "next/head";
 import type { Activity, Deal, Dictionary, Lead } from "@prisma/client";
 import DeleteDialog from "@/components/DeleteDialog";
+import Insert from "./Insert";
 
 export default function Page() {
   const [insertOpen, setInsertOpen] = useState(false);
@@ -120,7 +121,7 @@ export default function Page() {
           />
         </>
       ) : null}
-      {/* <Insert isOpen={insertOpen} setOpen={setInsertOpen} /> */}
+      <Insert isOpen={insertOpen} setOpen={setInsertOpen} />
       <Stack gap={"1rem"}>
         <Box>
           <Button variant="outlined" onClick={() => setInsertOpen(true)}>
