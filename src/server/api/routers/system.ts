@@ -375,7 +375,7 @@ export const systemRouter = createTRPCRouter({
     if (!ctx.user.id || !ctx.user.orgId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "User id not found",
+        message: "No team selected",
       });
     }
 

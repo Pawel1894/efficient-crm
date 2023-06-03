@@ -9,7 +9,7 @@ export const dictionaryRouter = createTRPCRouter({
     if (!ctx.user.orgId) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Org id not found",
+        message: "No team selected",
       });
     }
 
@@ -141,7 +141,7 @@ export const dictionaryRouter = createTRPCRouter({
     if (!ctx.user.orgId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "No current team",
+        message: "No team selected",
       });
     }
 
@@ -174,7 +174,7 @@ export const dictionaryRouter = createTRPCRouter({
     if (!ctx.user.orgId) {
       throw new TRPCError({
         code: "NOT_FOUND",
-        message: "Org id not found",
+        message: "No team selected",
       });
     }
 

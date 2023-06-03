@@ -20,7 +20,11 @@ export default function Page() {
     isError,
     error: fetchError,
     isLoading,
-  } = api.activity.get.useQuery(router.query.slug as string);
+    isRefetching,
+  } = api.activity.get.useQuery(router.query.slug as string, {
+    retry: 1,
+    retryDelay: 0,
+  });
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [updateData, setUpdateData] = useState<ActivityData>();
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -112,8 +116,8 @@ export default function Page() {
             </AdaptiveHeader>
           </Stack>
           <Divider />
-          {isLoading && <SkeletonTemplate />}
-          {activity ? <DetailData activity={activity} /> : null}
+          {(isLoading || isRefetching) && <SkeletonTemplate />}
+          {activity && !isRefetching ? <DetailData activity={activity} /> : null}
         </>
       )}
     </>

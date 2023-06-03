@@ -12,7 +12,7 @@ export const dealRouter = createTRPCRouter({
     if (!ctx.user.orgId || !ctx.user.id) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Cannot fetch deals",
+        message: "No team selected",
       });
     }
 
@@ -67,10 +67,17 @@ export const dealRouter = createTRPCRouter({
       userDetails = await getUser(ctx.user.orgId, ctx.user.id);
     }
 
-    if (!userDetails || !ctx.user.orgId) {
+    if (!userDetails) {
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "Saving deal failed, please refresh and try again.",
+      });
+    }
+
+    if (!ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "No team selected",
       });
     }
 
@@ -142,9 +149,19 @@ export const dealRouter = createTRPCRouter({
     });
   }),
   get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    if (!ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "No team selected",
+      });
+    }
+
     const deal = await ctx.prisma.deal.findFirst({
       where: {
         id: input,
+        AND: {
+          team: ctx.user.orgId,
+        },
       },
       include: {
         lead: true,

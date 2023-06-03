@@ -10,7 +10,7 @@ export const leadRouter = createTRPCRouter({
     if (!ctx.user.orgId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Cannot fetch leads",
+        message: "No team selected",
       });
     }
 
@@ -43,7 +43,7 @@ export const leadRouter = createTRPCRouter({
     if (!ctx.user.orgId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Cannot fetch leads",
+        message: "No team selected",
       });
     }
 
@@ -84,7 +84,7 @@ export const leadRouter = createTRPCRouter({
     if (!userDetails || !ctx.user.orgId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Saving lead failed, please refresh and try again.",
+        message: "No team selected",
       });
     }
 
@@ -159,9 +159,19 @@ export const leadRouter = createTRPCRouter({
       });
     }
 
+    if (!ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "No team selected",
+      });
+    }
+
     const lead = await ctx.prisma.lead.findFirst({
       where: {
         id: input,
+        AND: {
+          team: ctx.user.orgId,
+        },
       },
       include: {
         status: true,

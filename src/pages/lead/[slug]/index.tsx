@@ -23,7 +23,11 @@ export default function Page() {
     isError,
     error: fetchError,
     isLoading,
-  } = api.lead.get.useQuery(router.query.slug as string);
+    isRefetching,
+  } = api.lead.get.useQuery(router.query.slug as string, {
+    retry: 1,
+    retryDelay: 0,
+  });
   const { mutate: deleteLead, isLoading: isDeleting } = api.lead.delete.useMutation();
   const [updateData, setUpdateData] = useState<LeadData>();
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -128,8 +132,8 @@ export default function Page() {
             <Tab label="Activities" />
           </Tabs>
           <TabPanel index={0} value={currentTab}>
-            {isLoading && <SkeletonTemplate />}
-            {lead ? <DetailData lead={lead} /> : null}
+            {(isLoading || isRefetching) && <SkeletonTemplate />}
+            {lead && !isRefetching ? <DetailData lead={lead} /> : null}
           </TabPanel>
           <TabPanel index={1} value={currentTab}>
             <Box pt={2}>

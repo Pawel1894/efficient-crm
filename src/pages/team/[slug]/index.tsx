@@ -20,7 +20,11 @@ export default function Page() {
     error,
     isLoading,
     isSuccess,
-  } = api.user.get.useQuery(router.query.slug as string);
+    isRefetching,
+  } = api.user.get.useQuery(router.query.slug as string, {
+    retry: 1,
+    retryDelay: 0,
+  });
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
   const {
     organization,
@@ -59,18 +63,17 @@ export default function Page() {
 
       {isError && <Typography>{error.message}</Typography>}
 
-      {isLoading ||
-        (isDeleting && (
-          <>
-            <Stack pb={3} direction={"row"} gap={2} alignItems={"center"}>
-              <Skeleton variant="rectangular" width={80} height={30} />
-              <Skeleton variant="rectangular" width={80} height={30} />
-            </Stack>
-            <SkeletonTemplate />
-          </>
-        ))}
+      {(isLoading || isRefetching || isDeleting) && (
+        <>
+          <Stack pb={3} direction={"row"} gap={2} alignItems={"center"}>
+            <Skeleton variant="rectangular" width={80} height={30} />
+            <Skeleton variant="rectangular" width={80} height={30} />
+          </Stack>
+          <SkeletonTemplate />
+        </>
+      )}
 
-      {isSuccess && !isDeleting && (
+      {isSuccess && !isDeleting && !isRefetching && (
         <>
           <Stack pb={3} direction={"row"} gap={2} alignItems={"center"}>
             <IconButton onClick={() => router.back()}>

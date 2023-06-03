@@ -12,7 +12,7 @@ export const activityRouter = createTRPCRouter({
     if (!ctx.user.orgId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Cannot fetch activities",
+        message: "No team selected",
       });
     }
 
@@ -48,7 +48,7 @@ export const activityRouter = createTRPCRouter({
     if (!ctx.user.orgId || !ctx.user.id) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Cannot fetch activities",
+        message: "No team selected",
       });
     }
 
@@ -96,10 +96,17 @@ export const activityRouter = createTRPCRouter({
       userDetails = await getUser(ctx.user.orgId, ctx.user.id);
     }
 
-    if (!userDetails || !ctx.user.orgId) {
+    if (!userDetails) {
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "Saving activity failed, please refresh and try again.",
+      });
+    }
+
+    if (!ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "No team selected",
       });
     }
 
@@ -135,10 +142,16 @@ export const activityRouter = createTRPCRouter({
         userDetails = await getUser(ctx.user.orgId, ctx.user.id);
       }
 
-      if (!userDetails || !ctx.user.orgId) {
+      if (!userDetails) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Saving activity failed, please refresh and try again.",
+        });
+      }
+      if (!ctx.user.orgId) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No team selected",
         });
       }
 
@@ -170,9 +183,19 @@ export const activityRouter = createTRPCRouter({
     });
   }),
   get: protectedProcedure.input(z.string()).query(async ({ ctx, input }) => {
+    if (!ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "No team selected",
+      });
+    }
+
     const activity = await ctx.prisma.activity.findFirst({
       where: {
         id: input,
+        AND: {
+          team: ctx.user.orgId,
+        },
       },
       include: {
         lead: true,

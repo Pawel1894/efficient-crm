@@ -6,7 +6,7 @@ export const analyticsRouter = createTRPCRouter({
     if (!ctx.user.orgId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Cannot find team",
+        message: "No team selected",
       });
     }
 
@@ -41,7 +41,7 @@ export const analyticsRouter = createTRPCRouter({
     if (!ctx.user.orgId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Cannot find team",
+        message: "No team selected",
       });
     }
 
@@ -77,7 +77,7 @@ export const analyticsRouter = createTRPCRouter({
     if (!ctx.user.orgId) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Cannot find team",
+        message: "No team selected",
       });
     }
 

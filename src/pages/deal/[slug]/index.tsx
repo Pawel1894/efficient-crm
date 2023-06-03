@@ -20,7 +20,11 @@ export default function Page() {
     isError,
     error: fetchError,
     isLoading,
-  } = api.deal.get.useQuery(router.query.slug as string);
+    isRefetching,
+  } = api.deal.get.useQuery(router.query.slug as string, {
+    retry: 1,
+    retryDelay: 0,
+  });
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [updateData, setUpdateData] = useState<DealData>();
@@ -111,8 +115,8 @@ export default function Page() {
             </AdaptiveHeader>
           </Stack>
           <Divider />
-          {isLoading && <SkeletonTemplate />}
-          {deal ? <DetailData deal={deal} /> : null}
+          {(isLoading || isRefetching) && <SkeletonTemplate />}
+          {deal && !isRefetching ? <DetailData deal={deal} /> : null}
         </>
       )}
     </>
