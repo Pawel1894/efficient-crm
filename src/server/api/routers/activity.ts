@@ -1,5 +1,5 @@
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { RequireAtLeastOne, getUser } from "@/utils/helper";
+import { type RequireAtLeastOne, getUser } from "@/utils/helper";
 import { ActivitySchema } from "@/utils/schema";
 import { type OrganizationMembership } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";

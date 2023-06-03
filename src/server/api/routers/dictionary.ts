@@ -86,6 +86,13 @@ export const dictionaryRouter = createTRPCRouter({
     });
   }),
   delete: protectedProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    if (ctx.user.role !== "admin") {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Only admin members can delete dictionaries",
+      });
+    }
+
     await ctx.prisma.dictionary.delete({
       where: {
         id: input,
@@ -109,6 +116,13 @@ export const dictionaryRouter = createTRPCRouter({
         });
       }
 
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Only admin members can update dictionaries",
+        });
+      }
+
       const dictionary = await ctx.prisma.dictionary.update({
         where: {
           id: input.id,
@@ -128,6 +142,13 @@ export const dictionaryRouter = createTRPCRouter({
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "No current team",
+      });
+    }
+
+    if (ctx.user.role !== "admin") {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "Only admin members can create dictionaries",
       });
     }
 
