@@ -88,7 +88,7 @@ export const analyticsRouter = createTRPCRouter({
       totalDeals: number;
     }> = await ctx.prisma
       .$queryRaw`SELECT MONTHNAME(updatedAt) as month, SUM(value) as sum, SUM(forecast) as forecast, count(*) AS totalDeals
-      FROM \`efficient-crm\`.deal
+      FROM Deal
       WHERE YEAR(updatedAt) = year(curdate()) and team = ${ctx.user.orgId}
       GROUP BY month order by updatedAt`;
 
