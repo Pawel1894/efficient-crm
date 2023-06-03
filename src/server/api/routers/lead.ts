@@ -2,9 +2,7 @@ import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
 import { getUser } from "@/utils/helper";
 import { LeadSchema } from "@/utils/schema";
 import { type OrganizationMembership } from "@clerk/nextjs/server";
-import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
-import dayjs from "dayjs";
 import * as yup from "yup";
 import { z } from "zod";
 export const leadRouter = createTRPCRouter({

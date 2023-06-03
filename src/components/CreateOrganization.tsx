@@ -15,7 +15,7 @@ export default function CreateOrganization({ itemRef, open, setOpen }: Props) {
   const { createOrganization, setActive } = useOrganizationList();
   const [organizationName, setOrganizationName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  const { mutate: createDicts } = api.dictionary.createDicts.useMutation();
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     if (createOrganization && organizationName) {
@@ -25,6 +25,7 @@ export default function CreateOrganization({ itemRef, open, setOpen }: Props) {
         setOrganizationName("");
         await setActive({ organization });
         setSettings(organization.id);
+        createDicts(organization.id);
         setOpen(false);
         setIsLoading(false);
       } catch (error) {

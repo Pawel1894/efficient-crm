@@ -209,17 +209,17 @@ function Navigation() {
               })}
 
               {membership?.role === "admin" ? (
-                <Link style={{ textDecoration: "unset" }} href={"/admin/settings"}>
-                  <ListItem key={"settings"} disablePadding>
+                <Link style={{ textDecoration: "unset" }} href={"/dictionary"}>
+                  <ListItem key={"Dictionary"} disablePadding>
                     <ListItemButton
                       sx={{
-                        backgroundColor: router.pathname.startsWith("/admin/settings") ? grey["800"] : "",
+                        backgroundColor: router.pathname.startsWith("/dictionary") ? grey["800"] : "",
                       }}
                     >
                       <ListItemIcon sx={{ minWidth: "auto", marginRight: "0.75rem" }}>
                         <Settings />
                       </ListItemIcon>
-                      <ListItemText sx={{ color: "#fff" }} primary="Settings" />
+                      <ListItemText sx={{ color: "#fff" }} primary="Dictionary" />
                     </ListItemButton>
                   </ListItem>
                 </Link>
