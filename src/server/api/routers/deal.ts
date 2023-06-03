@@ -5,6 +5,8 @@ import { type OrganizationMembership } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import * as yup from "yup";
 import { z } from "zod";
+import { MONTHS } from "./system";
+import dayjs from "dayjs";
 export const dealRouter = createTRPCRouter({
   deals: protectedProcedure.input(z.string().optional()).query(async ({ ctx, input }) => {
     if (!ctx.user.orgId || !ctx.user.id) {
@@ -83,6 +85,7 @@ export const dealRouter = createTRPCRouter({
         updatedBy: userDetails.publicUserData?.identifier ?? "undefined",
         createdBy: userDetails.publicUserData?.identifier ?? "undefined",
         team: ctx.user.orgId,
+        month: MONTHS[dayjs().get("month")]!,
         teamName: userDetails.organization.name,
         leadId: input.lead,
       },
@@ -124,6 +127,7 @@ export const dealRouter = createTRPCRouter({
           dictionaryId: input.data.stage,
           updatedBy: userDetails.publicUserData?.identifier ?? "undefined",
           teamName: userDetails.organization.name,
+          month: MONTHS[dayjs().get("month")]!,
           leadId: input.data.lead,
         },
       });

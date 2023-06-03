@@ -52,6 +52,7 @@ model Deal {
     lead          Lead?       @relation(fields: [leadId], references: [id])
     createdBy     String?
     updatedBy     String
+    month         String
     createdAt     DateTime    @default(now())
     updatedAt     DateTime    @updatedAt
     team          String

@@ -4,6 +4,21 @@ import { TRPCError } from "@trpc/server";
 import dayjs from "dayjs";
 import { z } from "zod";
 
+export const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
 export const systemRouter = createTRPCRouter({
   coldStart: protectedProcedure
     .input(
@@ -183,6 +198,7 @@ export const systemRouter = createTRPCRouter({
           updatedBy: ctx.user.id,
           team: input.id,
           teamName: input.name,
+          month: MONTHS[dayjs().get("month")]!,
           stage: {
             connect: {
               id: deal1.id,
@@ -205,6 +221,7 @@ export const systemRouter = createTRPCRouter({
           owner: ctx.user.id,
           ownerFullname: input.userName,
           updatedBy: ctx.user.id,
+          month: MONTHS[dayjs().get("month")]!,
           team: input.id,
           teamName: input.name,
           stage: {
@@ -232,6 +249,7 @@ export const systemRouter = createTRPCRouter({
           team: input.id,
           teamName: input.name,
           updatedAt: dayjs().set("M", 2).toISOString(),
+          month: MONTHS[2]!,
           stage: {
             connect: {
               id: deal1.id,
@@ -257,6 +275,7 @@ export const systemRouter = createTRPCRouter({
           team: input.id,
           teamName: input.name,
           updatedAt: dayjs().set("M", 1).toISOString(),
+          month: MONTHS[1]!,
           stage: {
             connect: {
               id: deal2.id,
