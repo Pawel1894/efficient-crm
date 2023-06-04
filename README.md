@@ -1,4 +1,4 @@
-# [Efficient CRM]()
+# [Efficient CRM](https://efficient-crm.vercel.app/)
 
 Free crm service, allowing you to work fast, create your own team and invite members.
 
@@ -15,7 +15,7 @@ Free crm service, allowing you to work fast, create your own team and invite mem
 
 ### Website
 
-[App live demo]()
+[App live demo](https://efficient-crm.vercel.app/)
 
 ### What it contains
 
