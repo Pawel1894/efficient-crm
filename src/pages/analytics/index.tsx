@@ -1,5 +1,5 @@
 import { api } from "@/utils/api";
-import { Box, Breadcrumbs, Stack, Typography } from "@mui/material";
+import { Box, Breadcrumbs, Stack, Typography, useMediaQuery } from "@mui/material";
 import React, { useEffect } from "react";
 import {
   BarChart,
@@ -18,6 +18,7 @@ import { grey } from "@mui/material/colors";
 import Head from "next/head";
 import { useSystemStore } from "../_app";
 export default function Page() {
+  const desktopbr = useMediaQuery("(min-width:600px)");
   const { data: valuesPerStage } = api.analytics.valuesByStage.useQuery();
   const { data: statusesGroup } = api.analytics.groupedByStatus.useQuery();
   const { data: valuePerMonth } = api.analytics.valuesThisYear.useQuery();
@@ -78,8 +79,18 @@ export default function Page() {
       <Head>
         <title>Analytics</title>
       </Head>
-      <Stack width={"100%"} height={"40vh"} flexDirection={"row"}>
-        <div style={{ width: 0, flex: 1 }}>
+      <Stack
+        width={"100%"}
+        height={!desktopbr ? "auto" : "40vh"}
+        flexDirection={"row"}
+        sx={{
+          flexDirection: {
+            xs: "column",
+            md: "row",
+          },
+        }}
+      >
+        <div style={{ width: !desktopbr ? "100%" : 0, flex: 1, height: !desktopbr ? "400px" : "auto" }}>
           <Typography>Deal values grouped by stages</Typography>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -101,7 +112,7 @@ export default function Page() {
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div style={{ width: 0, flex: 1 }}>
+        <div style={{ width: !desktopbr ? "100%" : 0, flex: 1, height: !desktopbr ? "400px" : "auto" }}>
           <Typography>Count of leads by status</Typography>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
