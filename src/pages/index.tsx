@@ -77,7 +77,7 @@ const Home: NextPage = () => {
               alignItems={"center"}
               justifyContent={"space-between"}
             >
-              <div>🍕</div>
+              <Image width={80} height={21} src={"/logo.png"} alt="Crm app logo" />
               <div>
                 <Link href={"/auth"}>
                   <Button color="primary">Login</Button>
@@ -107,7 +107,6 @@ const Home: NextPage = () => {
                 xs: "2rem",
                 md: "4rem",
               },
-              justifyItems: "center",
               gridTemplateColumns: {
                 xs: "1fr",
                 md: "1fr 1fr",
@@ -118,7 +117,7 @@ const Home: NextPage = () => {
             alignItems={"center"}
           >
             <Fade in={true} appear={true} timeout={800}>
-              <Box display={"flex"} justifyContent={"center"} flexDirection={"column"} gap={"1.5rem"}>
+              <Box display={"flex"} flexDirection={"column"} gap={"1.5rem"}>
                 <Typography
                   sx={{
                     textAlign: {
@@ -197,9 +196,16 @@ const Home: NextPage = () => {
                   xs: "none",
                   md: "block",
                 },
+                position: "relative",
+                width: "100%",
+                height: "100%",
               }}
             >
-              <Image width={450} height={450} src="/landingpage.gif" alt="person working on macbook" />
+              <img
+                style={{ maxWidth: "100%" }}
+                src={"/tech-company-rafiki.png"}
+                alt="Photo of a person writing on a laptop"
+              />
             </Box>
           </Box>
         </Container>
