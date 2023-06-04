@@ -23,7 +23,7 @@ Free crm service, allowing you to work fast, create your own team and invite mem
 - Safe authorization with Clerk service
 - Invite up to 2 people to your team (Clerk free version restriction)
 - RBAC 
-    - Admin - allowed to view all team's data, modify team, invite new members, edit dictionaries
+    - Admin - allowed to view all team's data, modify team, invite new members, edit dictionaries, can delete things
     - Member - allowed to only view entities assigned to them
 - Leads - potential clients
 - Deals - offer made for lead
