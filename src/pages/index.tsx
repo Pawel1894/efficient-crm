@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import handleViewport, { type InjectedViewportProps } from "react-in-viewport";
 import { grey } from "@mui/material/colors";
 import Link from "next/link";
+import landingImg from "../assets/tech-company-rafiki.png";
 
 function AboutBlock(props: InjectedViewportProps<HTMLDivElement>) {
   const { inViewport, forwardedRef } = props;
@@ -146,7 +147,6 @@ const Home: NextPage = () => {
                 </Typography>
 
                 <Typography
-                  maxWidth={"40ch"}
                   sx={{
                     textAlign: {
                       xs: "center",
@@ -155,6 +155,9 @@ const Home: NextPage = () => {
                     fontSize: {
                       xs: "16px",
                       md: "20px",
+                    },
+                    maxWidth: {
+                      md: "40ch",
                     },
                   }}
                   variant="body2"
@@ -203,7 +206,7 @@ const Home: NextPage = () => {
             >
               <img
                 style={{ maxWidth: "100%" }}
-                src={"/tech-company-rafiki.png"}
+                src={landingImg.src}
                 alt="Photo of a person writing on a laptop"
               />
             </Box>
