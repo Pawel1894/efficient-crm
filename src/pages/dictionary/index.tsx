@@ -44,7 +44,7 @@ export default function Page() {
         filterable: false,
         hideable: false,
         sortable: false,
-        minWidth: 0,
+        minWidth: 125,
         renderCell: (params) => {
           const data = params.row as Dictionary;
 

@@ -114,7 +114,7 @@ export default function Page() {
         flex: 1,
       },
       {
-        minWidth: 90,
+        minWidth: 150,
         field: "deals",
         headerName: "Deals No.",
         valueGetter: (params) => {

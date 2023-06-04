@@ -164,6 +164,7 @@ export default function Page() {
           );
         },
         flex: 1,
+        minWidth: 125,
       },
       {
         field: "First name",
@@ -173,6 +174,7 @@ export default function Page() {
         },
         headerName: "First name",
         flex: 1,
+        minWidth: 155,
       },
       {
         field: "Last name",
@@ -182,6 +184,7 @@ export default function Page() {
         },
         headerName: "Last name",
         flex: 1,
+        minWidth: 155,
       },
     ],
     [membership?.role]

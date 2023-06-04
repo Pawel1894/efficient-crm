@@ -127,9 +127,10 @@ export default function Grid({ leadId, heightSubstract, shouldFetch }: Props) {
         },
         headerName: "Stage",
         flex: 1,
+        minWidth: 125,
       },
-      { field: "ownerFullname", headerName: "Owner", flex: 1 },
-      { field: "comment", headerName: "Comment", flex: 1 },
+      { field: "ownerFullname", headerName: "Owner", flex: 1, minWidth: 175 },
+      { field: "comment", headerName: "Comment", flex: 1, minWidth: 175 },
       {
         field: "lead",
         headerName: "Lead",
@@ -138,6 +139,7 @@ export default function Grid({ leadId, heightSubstract, shouldFetch }: Props) {
           return data.lead ? data.lead?.firstName + " " + data.lead?.lastName : "";
         },
         flex: 1,
+        minWidth: 175,
       },
     ],
     []

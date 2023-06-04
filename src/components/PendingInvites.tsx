@@ -46,11 +46,13 @@ export default function PendingInvites() {
         field: "status",
         headerName: "Status",
         flex: 1,
+        minWidth: 170,
       },
       {
         field: "role",
         headerName: "Role",
         flex: 1,
+        minWidth: 170,
       },
       {
         field: "createdAt",
@@ -60,6 +62,7 @@ export default function PendingInvites() {
         },
         headerName: "Created At",
         flex: 1,
+        minWidth: 170,
       },
     ],
     [membership?.role]
