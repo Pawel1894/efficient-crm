@@ -11,6 +11,7 @@ import Head from "next/head";
 import Update from "./Update";
 import type { Activity, Deal, Dictionary, Lead } from "@prisma/client";
 import DeleteDialog from "@/components/DeleteDialog";
+import { useOrganization } from "@clerk/nextjs";
 
 export type LeadData = Lead & {
   status?: Dictionary | null;
@@ -40,7 +41,7 @@ export default function Page() {
     },
   });
   const context = api.useContext();
-
+  const { membership } = useOrganization();
   const columns: GridColDef[] = useMemo(
     () => [
       {
@@ -71,17 +72,19 @@ export default function Page() {
               >
                 <Edit />
               </IconButton>
-              <IconButton
-                onClick={() => {
-                  setUpdateData(data);
-                  setDeleteOpen(true);
-                }}
-                size="small"
-                color="warning"
-                title="Delete"
-              >
-                <Delete />
-              </IconButton>
+              {membership?.role === "admin" && (
+                <IconButton
+                  onClick={() => {
+                    setUpdateData(data);
+                    setDeleteOpen(true);
+                  }}
+                  size="small"
+                  color="warning"
+                  title="Delete"
+                >
+                  <Delete />
+                </IconButton>
+              )}
             </Stack>
           );
         },

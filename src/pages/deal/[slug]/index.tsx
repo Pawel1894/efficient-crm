@@ -12,6 +12,7 @@ import { Delete, Edit, KeyboardArrowLeft } from "@mui/icons-material";
 import DetailData from "./DetailData";
 import AdaptiveHeader from "@/components/AdaptiveHeader";
 import SkeletonTemplate from "@/pages/team/[slug]/Skeleton";
+import { useOrganization } from "@clerk/nextjs";
 
 export default function Page() {
   const router = useRouter();
@@ -31,6 +32,7 @@ export default function Page() {
   const [updateOpen, setUpdateOpen] = useState(false);
   const { mutate: deleteDeal, isLoading: isDeleting } = api.deal.delete.useMutation();
   const context = api.useContext();
+  const { membership } = useOrganization();
   useEffect(() => {
     setBreadcrumbs(
       <Breadcrumbs aria-label="breadcrumb">
@@ -89,18 +91,22 @@ export default function Page() {
               <KeyboardArrowLeft />
             </IconButton>
             <AdaptiveHeader>
-              <Button
-                onClick={() => {
-                  setUpdateData(deal);
-                  setDeleteOpen(true);
-                }}
-                color="warning"
-                variant="outlined"
-                title="Delete"
-                endIcon={<Delete />}
-              >
-                Delete
-              </Button>
+              {membership?.role === "admin" ? (
+                <Button
+                  onClick={() => {
+                    setUpdateData(deal);
+                    setDeleteOpen(true);
+                  }}
+                  color="warning"
+                  variant="outlined"
+                  title="Delete"
+                  endIcon={<Delete />}
+                >
+                  Delete
+                </Button>
+              ) : (
+                <></>
+              )}
               <Button
                 onClick={() => {
                   setUpdateData(deal);

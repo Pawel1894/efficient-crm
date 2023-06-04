@@ -9,6 +9,7 @@ import { api } from "@/utils/api";
 import type { DealData } from ".";
 import Link from "next/link";
 import { formatToThousands } from "@/helper";
+import { useOrganization } from "@clerk/nextjs";
 type Props = {
   leadId?: string;
   heightSubstract: number;
@@ -22,6 +23,7 @@ export default function Grid({ leadId, heightSubstract, shouldFetch }: Props) {
       await refetch();
     },
   });
+  const { membership } = useOrganization();
   const [insertOpen, setInsertOpen] = useState(false);
   const [updateData, setUpdateData] = useState<DealData>();
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -76,17 +78,19 @@ export default function Grid({ leadId, heightSubstract, shouldFetch }: Props) {
               >
                 <Edit />
               </IconButton>
-              <IconButton
-                onClick={() => {
-                  setUpdateData(data);
-                  setDeleteOpen(true);
-                }}
-                size="small"
-                color="warning"
-                title="Delete"
-              >
-                <Delete />
-              </IconButton>
+              {membership?.role === "admin" && (
+                <IconButton
+                  onClick={() => {
+                    setUpdateData(data);
+                    setDeleteOpen(true);
+                  }}
+                  size="small"
+                  color="warning"
+                  title="Delete"
+                >
+                  <Delete />
+                </IconButton>
+              )}
             </Stack>
           );
         },

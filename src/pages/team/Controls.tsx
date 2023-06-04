@@ -21,7 +21,7 @@ export default function Controls() {
   const [renameOpen, setRenameOpen] = useState(false);
   const [inviteOpen, setInviteOpen] = useState(false);
   const context = api.useContext();
-
+  const { membership } = useOrganization();
   async function deleteOrganization(confirm: boolean) {
     setIsDeleting(true);
     if (confirm && organization) {
@@ -57,15 +57,19 @@ export default function Controls() {
       <DeleteDialog isDeleting={isDeleting} open={deleteOpen} handleClose={deleteOrganization} />
       <Stack mb={3} direction={"row"} gap={2}>
         <AdaptiveHeader padding="0rem">
-          <Button
-            onClick={() => setDeleteOpen(true)}
-            color="warning"
-            variant="outlined"
-            title="Delete"
-            endIcon={<Delete />}
-          >
-            Delete
-          </Button>
+          {membership?.role === "admin" ? (
+            <Button
+              onClick={() => setDeleteOpen(true)}
+              color="warning"
+              variant="outlined"
+              title="Delete"
+              endIcon={<Delete />}
+            >
+              Delete
+            </Button>
+          ) : (
+            <></>
+          )}
           <Button
             onClick={() => setRenameOpen(true)}
             ref={renameRef}

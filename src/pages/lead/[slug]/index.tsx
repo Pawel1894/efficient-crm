@@ -15,6 +15,7 @@ import DealsGrid from "@/pages/deal/Grid";
 import ActivitiesGrid from "@/pages/activity/Grid";
 import AdaptiveHeader from "@/components/AdaptiveHeader";
 import SkeletonTemplate from "@/pages/team/[slug]/Skeleton";
+import { useOrganization } from "@clerk/nextjs";
 
 export default function Page() {
   const router = useRouter();
@@ -34,7 +35,7 @@ export default function Page() {
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
-
+  const { membership } = useOrganization();
   const context = api.useContext();
   useEffect(() => {
     setBreadcrumbs(
@@ -100,18 +101,22 @@ export default function Page() {
               <KeyboardArrowLeft />
             </IconButton>
             <AdaptiveHeader>
-              <Button
-                onClick={() => {
-                  setUpdateData(lead);
-                  setDeleteOpen(true);
-                }}
-                color="warning"
-                variant="outlined"
-                title="Delete"
-                endIcon={<Delete />}
-              >
-                Delete
-              </Button>
+              {membership?.role === "admin" ? (
+                <Button
+                  onClick={() => {
+                    setUpdateData(lead);
+                    setDeleteOpen(true);
+                  }}
+                  color="warning"
+                  variant="outlined"
+                  title="Delete"
+                  endIcon={<Delete />}
+                >
+                  Delete
+                </Button>
+              ) : (
+                <></>
+              )}
               <Button
                 onClick={() => {
                   setUpdateData(lead);

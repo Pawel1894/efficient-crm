@@ -9,6 +9,7 @@ import { api } from "@/utils/api";
 import type { ActivityData } from ".";
 import dayjs from "dayjs";
 import Link from "next/link";
+import { useOrganization } from "@clerk/nextjs";
 
 type Props = {
   leadId?: string;
@@ -24,6 +25,7 @@ export default function Grid({ heightSubstract, leadId, shouldFetch }: Props) {
       refetchOnWindowFocus: false;
     },
   });
+  const { membership } = useOrganization();
   const [insertOpen, setInsertOpen] = useState(false);
   const [updateData, setUpdateData] = useState<ActivityData>();
   const [updateOpen, setUpdateOpen] = useState(false);
@@ -81,17 +83,19 @@ export default function Grid({ heightSubstract, leadId, shouldFetch }: Props) {
               >
                 <Edit />
               </IconButton>
-              <IconButton
-                onClick={() => {
-                  setUpdateData(data);
-                  setDeleteOpen(true);
-                }}
-                size="small"
-                color="warning"
-                title="Delete"
-              >
-                <Delete />
-              </IconButton>
+              {membership?.role === "admin" && (
+                <IconButton
+                  onClick={() => {
+                    setUpdateData(data);
+                    setDeleteOpen(true);
+                  }}
+                  size="small"
+                  color="warning"
+                  title="Delete"
+                >
+                  <Delete />
+                </IconButton>
+              )}
             </Stack>
           );
         },

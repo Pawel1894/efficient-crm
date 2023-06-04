@@ -61,17 +61,19 @@ export default function Page() {
               >
                 <Edit />
               </IconButton>
-              <IconButton
-                onClick={() => {
-                  setUpdateData(data);
-                  setDeleteOpen(true);
-                }}
-                size="small"
-                color="warning"
-                title="Delete"
-              >
-                <Delete />
-              </IconButton>
+              {membership?.role === "admin" && (
+                <IconButton
+                  onClick={() => {
+                    setUpdateData(data);
+                    setDeleteOpen(true);
+                  }}
+                  size="small"
+                  color="warning"
+                  title="Delete"
+                >
+                  <Delete />
+                </IconButton>
+              )}
             </Stack>
           );
         },
