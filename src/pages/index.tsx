@@ -39,10 +39,10 @@ function AboutBlock(props: InjectedViewportProps<HTMLDivElement>) {
           What is Efficient CRM?
         </Typography>
         <Typography color={grey[400]} component={"p"} textAlign={"justify"} maxWidth={"60ch"}>
-          {`Happy to have you here! This CRM service was implemented for portfolio and practice purposes. It is a full stack app made using T3-stack and MUI library. If you want to see more of my projects, check out my github.`}
+          {`Happy to have you here! This CRM service was implemented for portfolio and practice purposes. It is a full stack app made using T3-stack and MUI library. If you want to see more of my projects, check out `}
           <Link style={{ textDecoration: "unset" }} href="https://github.com/Pawel1894">
             <Typography color={"primary.main"} component={"span"}>
-              my github
+              my github.
             </Typography>
           </Link>
         </Typography>
