@@ -49,7 +49,7 @@ export default function CreateOrganization({ itemRef, open, setOpen }: Props) {
         horizontal: "left",
       }}
     >
-      <Stack width={300} height={140}>
+      <Stack width={300} height={140} overflow={"hidden"}>
         {isLoading ? (
           <Stack mx={"auto"} mt={6}>
             <CircularProgress />
