@@ -108,8 +108,6 @@ export default function Layout({ children }: Props) {
     return <CenterLoad />;
   }
 
-  if (!isSignedIn || pathname === "/") return children;
-
   return (
     <>
       <AppBar position="fixed" open={open} desktopbr={desktopbr}>

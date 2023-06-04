@@ -1,4 +1,5 @@
-import { useOrganization } from "@clerk/nextjs";
+import { api } from "@/utils/api";
+import { clerkClient, useOrganization } from "@clerk/nextjs";
 import type { OrganizationMembershipRole } from "@clerk/nextjs/server";
 import {
   Box,
@@ -27,13 +28,24 @@ export default function InviteMember({ itemRef, open, setOpen }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState<string>("");
   const [role, setRole] = useState<OrganizationMembershipRole>("basic_member");
+  const { mutate: inviteUser } = api.system.inviteMember.useMutation({
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
-  async function submit(e: FormEvent) {
+  function submit(e: FormEvent) {
     e.preventDefault();
     if (organization && email && role) {
       setIsLoading(true);
       try {
-        await organization.inviteMember({ emailAddress: email, role });
+        inviteUser({
+          emailAddress: email,
+          role: role,
+          organizationId: organization.id,
+          redirectUrl: window.origin + "/auth/signup",
+        });
+        toast.success("Invite sent");
       } catch (error) {
         const err = error as {
           errors: Array<{ message: string }>;

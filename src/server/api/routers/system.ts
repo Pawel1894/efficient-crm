@@ -381,4 +381,38 @@ export const systemRouter = createTRPCRouter({
 
     return await clerkClient.organizations.getOrganizationMembershipList({ organizationId: ctx.user.orgId });
   }),
+  inviteMember: protectedProcedure
+    .input(
+      z.object({
+        emailAddress: z.string().email(),
+        role: z.union([z.literal("admin"), z.literal("basic_member"), z.literal("guest_member")]),
+        organizationId: z.string(),
+        redirectUrl: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.user.id) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No user id provided",
+        });
+      }
+
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Only admin are allowd to invite new member",
+        });
+      }
+
+      const { emailAddress, role, organizationId, redirectUrl } = input;
+
+      await clerkClient.organizations.createOrganizationInvitation({
+        emailAddress,
+        inviterUserId: ctx.user.id,
+        organizationId,
+        role,
+        redirectUrl,
+      });
+    }),
 });

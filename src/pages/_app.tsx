@@ -18,6 +18,7 @@ import "@/styles/react-toastify.css";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useRouter } from "next/router";
 
 const darkTheme = createTheme({
   palette: {
@@ -47,7 +48,10 @@ export function useSystemStore<T>(selector?: (state: SystemSlice) => T, equals?:
   return useStore(systemStore, selector!, equals);
 }
 
+const unprotectedPaths = ["/", "/auth", "/auth/signup", "/auth/signin"];
+
 const MyApp: AppType = ({ Component, pageProps }) => {
+  const router = useRouter();
   return (
     <ClerkProvider
       {...pageProps}
@@ -58,9 +62,13 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <ThemeProvider theme={darkTheme}>
         <CssBaseline />
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <Layout>
+          {unprotectedPaths.includes(router.pathname) ? (
             <Component {...pageProps} />
-          </Layout>
+          ) : (
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          )}
           <ReactQueryDevtools initialIsOpen={false} />
         </LocalizationProvider>
       </ThemeProvider>
