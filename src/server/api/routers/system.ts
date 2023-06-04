@@ -407,12 +407,23 @@ export const systemRouter = createTRPCRouter({
 
       const { emailAddress, role, organizationId, redirectUrl } = input;
 
-      await clerkClient.organizations.createOrganizationInvitation({
-        emailAddress,
-        inviterUserId: ctx.user.id,
-        organizationId,
-        role,
-        redirectUrl,
-      });
+      const users = await clerkClient.users.getUserList();
+
+      const test = users.find((u) => u.emailAddresses.find((email) => email.emailAddress === emailAddress));
+
+      if (test)
+        await clerkClient.organizations.createOrganizationMembership({
+          organizationId,
+          userId: test.id,
+          role,
+        });
+      else
+        await clerkClient.organizations.createOrganizationInvitation({
+          emailAddress,
+          inviterUserId: ctx.user.id,
+          organizationId,
+          role,
+          redirectUrl,
+        });
     }),
 });
