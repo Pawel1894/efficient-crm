@@ -6,8 +6,8 @@ import { useEffect, useState } from "react";
 import handleViewport, { type InjectedViewportProps } from "react-in-viewport";
 import { grey } from "@mui/material/colors";
 import Link from "next/link";
-import landingImg from "../assets/person-writing-on-mac.png";
 import logo from "../assets/logo.png";
+import landingImg from "../assets/person-writing-on-mac.svg";
 
 function AboutBlock(props: InjectedViewportProps<HTMLDivElement>) {
   const { inViewport, forwardedRef } = props;
@@ -205,6 +205,7 @@ const Home: NextPage = () => {
             >
               <img
                 style={{ maxWidth: "100%" }}
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment
                 src={landingImg.src}
                 alt="Photo of a person writing on a laptop"
               />
