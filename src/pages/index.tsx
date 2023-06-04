@@ -39,9 +39,7 @@ function AboutBlock(props: InjectedViewportProps<HTMLDivElement>) {
           What is Efficient CRM?
         </Typography>
         <Typography color={grey[400]} component={"p"} textAlign={"justify"} maxWidth={"60ch"}>
-          {`I\'m happy to see you here! This crm service was implemented for portfolio and practice
-              purpose. It is fullstack app made with T3-stack and mui library. If you want to see more of
-              my projects check out `}
+          {`Happy to have you here! This CRM service was implemented for portfolio and practice purposes. It is a full stack app made using T3-stack and MUI library. If you want to see more of my projects, check out my github.`}
           <Link style={{ textDecoration: "unset" }} href="https://github.com/Pawel1894">
             <Typography color={"primary.main"} component={"span"}>
               my github
@@ -165,9 +163,9 @@ const Home: NextPage = () => {
                   component={"p"}
                   color={grey["300"]}
                 >
-                  Simple and efficient crm application created using modern tools.
+                  Simple and efficient CRM application created using modern tools.
                 </Typography>
-                <Link href={"/auth"}>
+                <Link style={{ width: "fit-content" }} href={"/auth"}>
                   <Button
                     sx={{
                       width: {
