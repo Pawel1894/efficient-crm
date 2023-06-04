@@ -28,7 +28,17 @@ export default function TodayActivities() {
                           Title
                         </Typography>
                         <br />
-                        <Typography component="span" variant="body2">
+                        <Typography
+                          textOverflow={"ellipsis"}
+                          overflow={"hidden"}
+                          whiteSpace={"nowrap"}
+                          width={"100%"}
+                          display={"inline-block"}
+                          p={0}
+                          m={0}
+                          component="span"
+                          variant="body2"
+                        >
                           {`${item.title ?? ""}`}
                         </Typography>
                       </Grid>
@@ -37,7 +47,17 @@ export default function TodayActivities() {
                           Status
                         </Typography>
                         <br />
-                        <Typography component="span" variant="body2">
+                        <Typography
+                          textOverflow={"ellipsis"}
+                          overflow={"hidden"}
+                          whiteSpace={"nowrap"}
+                          width={"100%"}
+                          display={"inline-block"}
+                          p={0}
+                          m={0}
+                          component="span"
+                          variant="body2"
+                        >
                           {`${item.status?.label ?? "None"}`}
                         </Typography>
                       </Grid>
@@ -46,7 +66,17 @@ export default function TodayActivities() {
                           Date
                         </Typography>
                         <br />
-                        <Typography component="span" variant="body2">
+                        <Typography
+                          textOverflow={"ellipsis"}
+                          overflow={"hidden"}
+                          whiteSpace={"nowrap"}
+                          width={"100%"}
+                          display={"inline-block"}
+                          p={0}
+                          m={0}
+                          component="span"
+                          variant="body2"
+                        >
                           {`${dayjs(item.date?.toString()).format("DD/MM/YYYY HH:mm")}`}
                         </Typography>
                       </Grid>
@@ -59,6 +89,13 @@ export default function TodayActivities() {
                         {item.lead ? (
                           <Link style={{ textDecoration: "unset" }} href={`/lead/${item.lead.id}`}>
                             <Typography
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"nowrap"}
+                              width={"100%"}
+                              display={"inline-block"}
+                              p={0}
+                              m={0}
                               sx={{
                                 textDecoration: "underline",
                               }}

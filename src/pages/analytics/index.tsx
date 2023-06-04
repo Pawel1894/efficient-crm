@@ -90,7 +90,13 @@ export default function Page() {
           },
         }}
       >
-        <div style={{ width: !desktopbr ? "100%" : 0, flex: 1, height: !desktopbr ? "400px" : "auto" }}>
+        <div
+          style={{
+            width: !desktopbr ? "100%" : 0,
+            flex: !desktopbr ? "unset" : 1,
+            height: !desktopbr ? "400px" : "auto",
+          }}
+        >
           <Typography>Deal values grouped by stages</Typography>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
@@ -112,7 +118,14 @@ export default function Page() {
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div style={{ width: !desktopbr ? "100%" : 0, flex: 1, height: !desktopbr ? "400px" : "auto" }}>
+        <div
+          style={{
+            width: !desktopbr ? "100%" : 0,
+            flex: !desktopbr ? "unset" : 1,
+            height: !desktopbr ? "400px" : "auto",
+            marginTop: !desktopbr ? "3rem" : "0",
+          }}
+        >
           <Typography>Count of leads by status</Typography>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart

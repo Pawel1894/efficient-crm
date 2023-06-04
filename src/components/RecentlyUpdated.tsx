@@ -38,7 +38,17 @@ export default function RecentlyUpdated({
                           Name
                         </Typography>
                         <br />
-                        <Typography component="span" variant="body2">
+                        <Typography
+                          textOverflow={"ellipsis"}
+                          overflow={"hidden"}
+                          whiteSpace={"nowrap"}
+                          width={"100%"}
+                          display={"inline-block"}
+                          p={0}
+                          m={0}
+                          component="span"
+                          variant="body2"
+                        >
                           {`${item.firstName ?? ""} ${item.lastName ?? ""}`}
                         </Typography>
                       </Grid>
@@ -50,6 +60,13 @@ export default function RecentlyUpdated({
                         {item.ownerFullname?.trim() ? (
                           <Link style={{ textDecoration: "unset" }} href={`/team/${item.owner ?? ""}`}>
                             <Typography
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"nowrap"}
+                              width={"100%"}
+                              display={"inline-block"}
+                              p={0}
+                              m={0}
                               sx={{
                                 textDecoration: "underline",
                               }}
@@ -71,7 +88,17 @@ export default function RecentlyUpdated({
                           Updated by
                         </Typography>
                         <br />
-                        <Typography sx={{ display: "inline" }} component="span" variant="body2">
+                        <Typography
+                          textOverflow={"ellipsis"}
+                          overflow={"hidden"}
+                          whiteSpace={"nowrap"}
+                          width={"100%"}
+                          display={"inline-block"}
+                          p={0}
+                          m={0}
+                          component="span"
+                          variant="body2"
+                        >
                           {item.updatedBy?.trim() ? item.updatedBy : "None"}
                         </Typography>
                       </Grid>
@@ -80,7 +107,17 @@ export default function RecentlyUpdated({
                           Updated at
                         </Typography>
                         <br />
-                        <Typography sx={{ display: "inline" }} component="span" variant="body2">
+                        <Typography
+                          textOverflow={"ellipsis"}
+                          overflow={"hidden"}
+                          whiteSpace={"nowrap"}
+                          width={"100%"}
+                          display={"inline-block"}
+                          p={0}
+                          m={0}
+                          component="span"
+                          variant="body2"
+                        >
                           {dayjs(item.updatedAt?.toString()).format("DD/MM/YYYY HH:mm")}
                         </Typography>
                       </Grid>
