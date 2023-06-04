@@ -1,4 +1,4 @@
-import { Box, Button, Container, Fade, Typography } from "@mui/material";
+import { Box, Button, Container, Fade, Typography, useMediaQuery } from "@mui/material";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
@@ -56,6 +56,8 @@ const IntersectAboutBlock = handleViewport(AboutBlock, {
 }) as React.FC;
 
 const Home: NextPage = () => {
+  const desktopbr = useMediaQuery("(min-width:600px)");
+
   return (
     <>
       <Head>
@@ -165,7 +167,7 @@ const Home: NextPage = () => {
                 >
                   Simple and efficient CRM application created using modern tools.
                 </Typography>
-                <Link style={{ width: "fit-content" }} href={"/auth"}>
+                <Link style={{ width: desktopbr ? "fit-content" : "100%" }} href={"/auth"}>
                   <Button
                     sx={{
                       width: {
