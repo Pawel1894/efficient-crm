@@ -6,7 +6,8 @@ import { useEffect, useState } from "react";
 import handleViewport, { type InjectedViewportProps } from "react-in-viewport";
 import { grey } from "@mui/material/colors";
 import Link from "next/link";
-import landingImg from "../assets/tech-company-rafiki.png";
+import landingImg from "../assets/person-writing-on-mac.png";
+import logo from "../assets/logo.png";
 
 function AboutBlock(props: InjectedViewportProps<HTMLDivElement>) {
   const { inViewport, forwardedRef } = props;
@@ -78,7 +79,7 @@ const Home: NextPage = () => {
               alignItems={"center"}
               justifyContent={"space-between"}
             >
-              <Image width={80} height={21} src={"/logo.png"} alt="Crm app logo" />
+              <Image width={80} height={21} src={logo.src} alt="Crm app logo" />
               <div>
                 <Link href={"/auth"}>
                   <Button color="primary">Login</Button>
