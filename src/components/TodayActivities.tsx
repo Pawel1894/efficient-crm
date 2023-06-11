@@ -1,14 +1,24 @@
 import { api } from "@/utils/api";
 import { Visibility } from "@mui/icons-material";
-import { Box, Divider, IconButton, List, ListItemText, Typography } from "@mui/material";
+import { Box, Divider, IconButton, List, ListItemText, Skeleton, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import dayjs from "dayjs";
 import Link from "next/link";
 import React from "react";
 
 export default function TodayActivities() {
-  const { data } = api.activity.today.useQuery();
-  return (
+  const { data, isLoading } = api.activity.today.useQuery();
+  return isLoading ? (
+    <Box height={256}>
+      <Skeleton
+        sx={{ borderRadius: "0.3rem" }}
+        animation="wave"
+        variant="rectangular"
+        width="100%"
+        height="100%"
+      />
+    </Box>
+  ) : (
     <Box p={2} height={256}>
       <Typography>Today&apos;s activities</Typography>
       <List style={{ height: "85%", overflowY: "auto", overflowX: "hidden" }}>

@@ -19,7 +19,13 @@ export default function RecentlyUpdated({
 }) {
   return isLoading ? (
     <Box height={300}>
-      <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
+      <Skeleton
+        sx={{ borderRadius: "0.3rem" }}
+        animation="wave"
+        variant="rectangular"
+        width="100%"
+        height="100%"
+      />
     </Box>
   ) : (
     <Box p={2} position="relative">
