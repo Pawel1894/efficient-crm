@@ -1,4 +1,4 @@
-import { Box, Divider, IconButton, List, ListItemText, Typography } from "@mui/material";
+import { Box, Divider, IconButton, List, ListItemText, Skeleton, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
 import type { Lead } from "@prisma/client";
 import React from "react";
@@ -10,12 +10,18 @@ export default function RecentlyUpdated({
   data,
   title,
   pathname,
+  isLoading,
 }: {
   data?: Array<Partial<Lead>>;
   title: string;
   pathname: string;
+  isLoading: boolean;
 }) {
-  return (
+  return isLoading ? (
+    <Box height={300}>
+      <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
+    </Box>
+  ) : (
     <Box p={2} position="relative">
       <Typography component={"span"}>{title}</Typography>
       <Box position={"absolute"} top={16} right={16}>
