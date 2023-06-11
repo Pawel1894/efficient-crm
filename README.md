@@ -1,12 +1,12 @@
 # [Efficient CRM](https://efficient-crm.vercel.app/)
 
-Free crm service, allowing you to work fast, create your own team and invite members.
+CRM service that allows you to work faster, create your own teams and invite members.
 
 ## Table of contents
 
 - [Overview](#overview)
   - [Website](#website)
-  - [What it contains](#What-it-contains)
+  - [What it contains](#what-it-contains)
 - [Built with](#built-with)
 - [Install process](#install-process)
 - [Build process](#build-process)
@@ -19,37 +19,38 @@ Free crm service, allowing you to work fast, create your own team and invite mem
 
 ### What it contains
 
-- Creating teams
-- Safe authorization with Clerk service
-- Invite up to 2 people to your team (Clerk free version restriction)
-- RBAC 
-    - Admin - allowed to view all team's data, modify team, invite new members, edit dictionaries, can delete things
-    - Member - allowed to only view entities assigned to them
-- Leads - potential clients
-- Deals - offer made for lead
-- Activities - appointments/event assigned to lead
-- Analytics dashboard for quick view of current work state
-- Dictionaries allowing you to fully customize your workflow
+- Creating teams;
+- Safe authorization with Clerk service;
+- Ability to invite up to 2 people to your team (Clerk free version restriction);
+- RBAC:
+  - Admin – allowed to view all teams’ data, modify teams, invite new members, edit dictionaries and delete data and/or entities;
+  - Member – allowed to only view entities assigned to them;
+- Leads – potential clients;
+- Deals – offers made to a lead;
+- Activities – appointments/events assigned to a lead;
+- Analytics dashboard for quick view of current work state;
+- Dictionaries allowing full customization of workflow.
+
 
 ## Built with
 
-- [clerk](https://clerk.com/)
-- [mui](https://mui.com/)
-- [recharts](https://recharts.org/en-US/)
+- [Clerk](https://clerk.com/)
+- [MUI](https://mui.com/)
+- [Recharts](https://recharts.org/en-US/)
 - [tRPC](https://trpc.io/)
 - [Prisma](https://www.prisma.io/)
 - [Next](https://nextjs.org/)
-- [Typescript](https://www.typescriptlang.org/)
-- [Planetscale](https://planetscale.com/)
-- [React-query](https://react-query-v3.tanstack.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [PlanetScale](https://planetscale.com/)
+- [TanStack Query](https://react-query-v3.tanstack.com/)
 - [Formik](https://formik.org/)
 - [Zod](https://zod.dev/)
 - [Yup](https://www.npmjs.com/package/yup)
 
 ## Install process
 
-1. Install [nodejs](https://nodejs.org/en/download/)
-2. Navigate project folder in command line
+1. Install [Node.js](https://nodejs.org/en/download/)
+2. Navigate to project folder in command line
 3. Run `npm install`
 4. Set all required env variables
 5. Run `npm start`
