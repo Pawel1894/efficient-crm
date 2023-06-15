@@ -28,9 +28,13 @@ export default function InviteMember({ itemRef, open, setOpen }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState<string>("");
   const [role, setRole] = useState<OrganizationMembershipRole>("basic_member");
+  const context = api.useContext();
   const { mutate: inviteUser } = api.system.inviteMember.useMutation({
     onError: (error) => {
       toast.error(error.message);
+    },
+    onSettled: async () => {
+      await context.invalidate();
     },
   });
 
