@@ -11,7 +11,11 @@ export default function TeamSwitcher() {
   const { organization, isLoaded: isLoadedOrganization } = useOrganization();
   const { data: userSettings, isSuccess } = api.user.settings.useQuery(undefined);
   const { mutate: setSettings } = api.user.setSettings.useMutation();
-  const { mutate: coldStart } = api.system.coldStart.useMutation();
+  const { mutate: coldStart } = api.system.coldStart.useMutation({
+    onSettled: async () => {
+      await context.invalidate();
+    },
+  });
   const [currentOrg, setCurrentOrg] = useState<string | null>(null);
   const context = api.useContext();
   useEffect(() => {
@@ -47,10 +51,15 @@ export default function TeamSwitcher() {
           const orgName = user?.firstName ? `${user.firstName}'s team` : "first team";
           const organization = await createOrganization({ name: orgName });
           setSettings(organization.id);
+
+          const userName = user.primaryEmailAddress
+            ? user.primaryEmailAddress.emailAddress
+            : user.fullName ?? "Unknown username";
+
           coldStart({
             id: organization.id,
             name: organization.name,
-            userName: `${user.firstName ?? ""} ${user.lastName ?? ""}`,
+            userName: userName,
           });
           await setActive({ organization: organization.id });
         } else {
