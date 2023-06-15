@@ -7,8 +7,8 @@ import Link from "next/link";
 import React from "react";
 
 export default function TodayActivities() {
-  const { data, isLoading } = api.activity.today.useQuery();
-  return isLoading ? (
+  const { data, isLoading, isRefetching } = api.activity.today.useQuery();
+  return isLoading || isRefetching ? (
     <Box height={256}>
       <Skeleton
         sx={{ borderRadius: "0.3rem" }}

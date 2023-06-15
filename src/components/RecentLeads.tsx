@@ -5,7 +5,7 @@ import RecentlyUpdated from "./RecentlyUpdated";
 
 export default function RecentLeads() {
   const { data: recentLeads, isLoading } = api.lead.recentlyUpdated.useQuery(undefined, {
-    refetchInterval: 10000,
+    refetchInterval: 3000,
   });
 
   return (
