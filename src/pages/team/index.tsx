@@ -23,6 +23,7 @@ import { type OrganizationMembershipRole } from "@clerk/nextjs/server";
 import { api } from "@/utils/api";
 import Link from "next/link";
 import { removeMember, updateRole } from "@/helper";
+import { toast } from "react-toastify";
 
 type Member = {
   role: string;
@@ -46,7 +47,11 @@ export default function Page() {
     refetch,
     isRefetching,
     isInitialLoading,
-  } = api.system.getMembershipList.useQuery(undefined);
+  } = api.system.getMembershipList.useQuery(undefined, {
+    onError: (err) => {
+      toast.error(err?.message);
+    },
+  });
 
   const { user } = useUser();
   const setBreadcrumbs = useSystemStore((state) => state.setBreadcrumbs);

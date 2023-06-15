@@ -5,10 +5,30 @@ import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import React, { useMemo } from "react";
 import { Cancel } from "@mui/icons-material";
 import dayjs from "dayjs";
+import { api } from "@/utils/api";
+import { toast } from "react-toastify";
 
 export default function PendingInvites() {
-  const { invitationList, membership } = useOrganization({
-    invitationList: {},
+  const { membership } = useOrganization();
+
+  const {
+    data: invitationList,
+    refetch,
+    isRefetching,
+    isInitialLoading,
+  } = api.system.getInvitedList.useQuery(undefined, {
+    onError: (err) => {
+      toast.error(err?.message);
+    },
+  });
+
+  const { mutate: revokeInv, isLoading: revokingInv } = api.system.revokeInv.useMutation({
+    onError: (err) => {
+      toast.error(err?.message);
+    },
+    onSuccess: async () => {
+      await refetch();
+    },
   });
 
   const columns: GridColDef[] = useMemo(
@@ -25,7 +45,7 @@ export default function PendingInvites() {
           return membership?.role === "admin" && data ? (
             <IconButton
               onClick={() => {
-                void data.revoke();
+                revokeInv(data.id);
               }}
               size="small"
               color="warning"
@@ -74,9 +94,9 @@ export default function PendingInvites() {
         Pending invites
       </Typography>
       <Box my={3} height={"50vh"} minHeight={400} width={"100%"}>
-        {!invitationList ? (
+        {isRefetching || isInitialLoading || revokingInv ? (
           <Skeleton animation="wave" variant="rectangular" width="100%" height="100%" />
-        ) : invitationList.length > 0 ? (
+        ) : invitationList?.length ? (
           <DataGrid
             initialState={{
               columns: {

@@ -381,6 +381,32 @@ export const systemRouter = createTRPCRouter({
 
     return await clerkClient.organizations.getOrganizationMembershipList({ organizationId: ctx.user.orgId });
   }),
+  getInvitedList: protectedProcedure.query(async ({ ctx }) => {
+    if (!ctx.user.id || !ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "No team selected",
+      });
+    }
+
+    return await clerkClient.organizations.getPendingOrganizationInvitationList({
+      organizationId: ctx.user.orgId,
+    });
+  }),
+  revokeInv: protectedProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    if (!ctx.user.id || !ctx.user.orgId) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "No team selected",
+      });
+    }
+
+    return await clerkClient.organizations.revokeOrganizationInvitation({
+      organizationId: ctx.user.orgId,
+      invitationId: input,
+      requestingUserId: ctx.user.id,
+    });
+  }),
   inviteMember: protectedProcedure
     .input(
       z.object({

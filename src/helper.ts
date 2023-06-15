@@ -12,7 +12,6 @@ export async function removeMember(
   callback: () => Promise<void>,
   member: OrganizationMembershipResource | undefined
 ) {
-  console.log("member", organization);
   if (!member || member.publicUserData.userId === userId) return;
   if (member.publicUserData.userId) {
     console.log("tst");
