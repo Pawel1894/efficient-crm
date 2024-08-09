@@ -1,4 +1,4 @@
-# [Efficient CRM](https://efficient-crm.vercel.app/)
+# Efficient CRM
 
 CRM service that allows you to work faster, create your own teams and invite members.
 
