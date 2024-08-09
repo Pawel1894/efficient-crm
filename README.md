@@ -15,7 +15,7 @@ CRM service that allows you to work faster, create your own teams and invite mem
 
 ### Website
 
-[App live demo](https://efficient-crm.vercel.app/)
+[App live demo](https://efficient-crm.vercel.app/) unfortunately not working currently, my free database was turned down.
 
 ### What it contains
 
